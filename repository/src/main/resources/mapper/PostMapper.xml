@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.PostMapper">
+
+    <sql id="table">
+        post
+    </sql>
+
+    <sql id="selectAll">
+        SELECT id,title,url,origin_content,summary,status,create_time,modify_time
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <sql id="sort">
+        ORDER BY create_time desc
+    </sql>
+
+    <resultMap id="baseMapper" type="app.isparks.core.pojo.entity.Post">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+        <result property="originContent" column="origin_content"/>
+        <result property="summary" column="summary"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <!-- 新增 -->
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="title != null and title != ''">title,</if>
+        <if test="url != null and url != ''">url,</if>
+        <if test="originContent != null and originContent != ''">origin_content,</if>
+        <if test="summary != null and summary != ''">summary,</if>
+        id,create_time,modify_time,status
+        )
+        VALUES
+        (
+        <if test="title != null and title != ''">#{title},</if>
+        <if test="url != null and url != ''">#{url},</if>
+        <if test="originContent != null and originContent != ''">#{originContent},</if>
+        <if test="summary != null and summary != ''">#{summary},</if>
+        #{id},#{createTime},#{modifyTime},#{status}
+        )
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByCond">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="title != null and title != ''">
+                AND title = #{title}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="originContent != null and originContent != ''">
+                AND originContent = #{originContent}
+            </if>
+            <if test="summary != null and summary != ''">
+                AND summary = #{summary}
+            </if>
+        </where>
+    </delete>
+
+
+    <!-- 更新 -->
+    <update id="update">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="originContent != null and originContent != ''">origin_content = #{originContent},</if>
+            <if test="summary != null and summary != ''">summary = #{summary},</if>
+            <if test="status != null">status = #{status},</if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查找所有数据 -->
+    <select id="selectAll" resultMap="baseMapper" resultType="list">
+        <include refid="selectAll"/>
+    </select>
+
+    <!-- 根据条件查询 -->
+    <select id="selectByCond" resultMap="baseMapper" resultType="list">
+        <include refid="selectAll"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="title != null and title != ''">
+                AND title = #{title}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="originContent != null and originContent != ''">
+                AND originContent = #{originContent}
+            </if>
+            <if test="summary != null and summary != ''">
+                AND summary = #{summary}
+            </if>
+        </where>
+        <include refid="sort"/>
+    </select>
+
+    <!-- 根据ID查询数据 -->
+    <select id="selectById" resultMap="baseMapper">
+        <include refid="selectAll"/>
+        WHERE id = #{id}
+    </select>
+
+    <!-- 统计 -->
+    <select id="countByCond" resultType="int">
+        SELECT count(1) FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="title != null and title != ''">
+                AND title = #{title}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="originContent != null and originContent != ''">
+                AND originContent = #{originContent}
+            </if>
+            <if test="summary != null and summary != ''">
+                AND summary = #{summary}
+            </if>
+        </where>
+    </select>
+</mapper>

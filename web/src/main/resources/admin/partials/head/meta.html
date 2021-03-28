@@ -1,0 +1,8 @@
+<!-- meta -->
+<head th:fragment="fra(title,description,author,keywords)">
+    <title th:text="${title + '-' + pageName}"></title>
+    <link rel="icon" th:href="@{/static/images/favicon.ico}" >
+    <meta name="keywords" th:content="${keywords}">
+    <meta name="description" th:content="${description}">
+    <meta name="author" th:content="${author}">
+</head>

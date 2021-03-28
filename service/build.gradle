@@ -1,0 +1,8 @@
+group = 'app.isparks'
+version = '0.0.1'
+dependencies {
+    // 依赖其他模块
+    implementation project(":core")
+    implementation project(":repository")
+    implementation project(":plugin")
+}

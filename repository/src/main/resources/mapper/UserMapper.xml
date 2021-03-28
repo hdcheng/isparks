@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.UserMapper">
+
+    <!-- table name -->
+    <sql id="table">
+        users
+    </sql>
+
+    <!-- select all column sql -->
+    <sql id="selectAll">
+        SELECT id,nick_name,user_name,email,password,avatar,status,create_time,modify_time
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <!-- mapper -->
+    <resultMap id="BaseMapper" type="app.isparks.core.pojo.entity.User">
+        <id property="id" column="id"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="avatar" column="avatar"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <!-- insert -->
+    <insert id="insert" parameterType="app.isparks.core.pojo.entity.User">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="nickName != null and nickName != ''">nick_name,</if>
+        <if test="userName != null and userName != ''">user_name,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="avatar != null and avatar != ''">avatar,</if>
+        <if test="email != null and email != ''">email,</if>
+        id,create_time,modify_time,status
+        )
+        VALUES
+        (
+        <if test="nickName != null and nickName != ''">#{nickName},</if>
+        <if test="userName != null and userName != ''">#{userName},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="avatar != null and avatar != ''">#{avatar},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        #{id},#{createTime},#{modifyTime},#{status}
+        )
+    </insert>
+
+    <!-- 根据id删除 -->
+    <delete id="deleteById">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE id = #{userId}
+    </delete>
+
+    <!-- 根据条件删除 -->
+    <delete id="deleteBy">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND nick_name = #{nickName}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name = #{userName}
+            </if>
+            <if test="email != null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="password != null and password != ''">
+                AND password = #{password}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                AND avatar = #{avatar}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </delete>
+
+
+    <!-- 查找所有user -->
+    <select id="selectAll" resultMap="BaseMapper">
+        SELECT * FROM
+        <include refid="table"/>
+    </select>
+
+    <!-- 统计 -->
+    <select id="count" resultType="int">
+        SELECT count(1) FROM
+        <include refid="table"/>
+    </select>
+
+    <!-- 统计 -->
+    <select id="countBy" resultType="int">
+        SELECT count(1) FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND nick_name = #{nickName}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name = #{userName}
+            </if>
+            <if test="email != null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="password != null and password != ''">
+                AND password = #{password}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                AND avatar = #{avatar}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查找 -->
+    <select id="selectByCondition" resultType="list" resultMap="BaseMapper"
+            parameterType="app.isparks.core.pojo.entity.User">
+        <include refid="selectAll"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                AND nick_name = #{nickName}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name = #{userName}
+            </if>
+            <if test="email != null and email != ''">
+                AND email = #{email}
+            </if>
+            <if test="password != null and password != ''">
+                AND password = #{password}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                AND avatar = #{avatar}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据id 更新 -->
+    <update id="updateById">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE id = #{id}
+        AND status != -1
+    </update>
+
+
+</mapper>

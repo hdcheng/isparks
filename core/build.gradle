@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    // spring
+    compile "org.springframework:spring-core:$springVersion"
+    compile "org.springframework:spring-context:$springVersion"
+    compile "org.springframework:spring-beans:$springVersion"
+    compile "org.springframework:spring-aop:$springVersion"
+    compile "org.springframework:spring-expression:$springVersion"
+    compile "org.springframework:spring-webmvc:$springVersion"
+
+    // mybatis
+    compile "org.mybatis:mybatis:$mybatisVersion"
+    compile "org.mybatis:mybatis-spring:$mybatisSpringVersion"
+
+    // page helper
+    compile "com.github.pagehelper:pagehelper:$pageHelperVersion"
+
+    // aspectj
+    compile "org.aspectj:aspectjweaver:$aspectjVersion"
+
+    // validation
+    compile "javax.validation:validation-api:$javaxValidationVersion"
+
+    // map struct
+    compile "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+    // yaml
+    compile "org.yaml:snakeyaml:$yamlVersion"
+
+    // pf4j
+    compile "org.pf4j:pf4j:$pf4jVersion"
+    annotationProcessor "org.pf4j:pf4j:$pf4jVersion"
+
+    // io工具包
+    compile "commons-io:commons-io:$commonsioVersion"
+
+    // servlet api
+    providedCompile "javax.servlet:javax.servlet-api:$servletVersion"
+
+    // gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
+    // jwt
+    // implementation 'com.auth0:java-jwt:$jwtVersion'
+    // jose4j
+    implementation "org.bitbucket.b_c:jose4j:$jose4jVersion"
+
+    // shiro
+    compile "org.apache.shiro:shiro-core:$shiroVersion"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

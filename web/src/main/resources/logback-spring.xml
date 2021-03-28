@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- appender 的配置表示打印到控制台。 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为 PatternLayoutEncoder -->
+        <encoder>
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+            <pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger) - %cyan(%msg%n)</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <!-- 文件存放路径 -->
+        <!--        <file>./logs/info.log</file>-->
+        <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+        <!--            <fileNamePattern>/logs/info/%d{yyyy-MM-dd}.log</fileNamePattern>&lt;!&ndash; 每天归档 &ndash;&gt;-->
+        <!--            <maxHistory>7</maxHistory>&lt;!&ndash; 日志存放周期（天） &ndash;&gt;-->
+        <!--        </rollingPolicy>-->
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger level="info" name="org.springframework.boot.autoconfigure.logging"  additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+
+</configuration>

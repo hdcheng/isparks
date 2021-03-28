@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <title >tag</title>
+        <meta charset="utf-8"/>
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+        <link rel="icon" href="../../../../static/images/favicon.ico"  >
+        <meta name="description" content="设置页面">
+        <meta name="author" content="chenghd">
+        <link href="../../../../static/css/uikit.min.css"  rel="stylesheet"/>
+        <link href="../../../../static/css/uikit-rtl.min.css" rel="stylesheet"/>
+        <link href="../../../../static/css/main.css" rel="stylesheet"/>
+    </head>
+<body>
+
+<!-- 模板内容开始 -->
+<section th:fragment="fra" style="height: 100%;width: 100%;display: flex;justify-content: center;align-items: center;">
+<style>
+    .tag-item{
+        align-items: center;
+        height: 35px;
+        width: auto;
+        border: 1px solid gray;
+        border-radius: 30px;
+        display: flex;
+        margin: 3px;
+    }
+    .tag-item .tag-post-number{
+        margin-left:0 ;
+        background-color: royalblue;
+        color: white;
+        padding: 5px;
+        height: 20px;
+        font-size: 100%;
+        text-align: center;
+        line-height: 10px;
+        border-radius: 5px;
+    }
+    .tag-item span,.tag-item a,.tag-item input{
+        margin: auto 15px;
+    }
+    .tag-item a{
+        margin-left:0 ;
+    }
+    .tag-item input{
+        width: 60px;
+        height: 30px;
+        padding: 3px;
+        border:.5px solid rgba(128, 128, 128, 0.349);
+        text-align: center;
+    }
+</style>
+
+<div id="tage-page" style="width: 100%;display: flex;flex-wrap: wrap;justify-content: center;align-items:center;padding: 3rem;" v-cloak uk-scrollspy="cls: uk-animation-slide-bottom; target:>div;delay: 300;">
+    <div class="tag-item">
+        <input  type="text" placeholder="tag" v-model="newTag.name"><a uk-icon="plus"  style="color: rgb(0, 204, 255);font-weight: bold;" @click="create"></a>
+    </div>
+    <div class="tag-item" v-for="tag in tags">
+        <span >{{tag.name}}</span><span class="tag-post-number">{{tag.properties.postNumber}}</span><a uk-icon="close" style="color: rgb(255, 0, 0);font-weight: bold;" @click="deleteByName(tag.name)"></a>
+    </div>
+    <div style="width: 100%;display: flex;justify-content: center;margin-top: 2rem;">
+        <button class="uk-button uk-button-link" @click="more"><span uk-icon="more"></span></button>
+    </div>
+</div>
+
+<script>
+function pageLoaded(config){
+    var app = new Vue({
+        el: '#tage-page',
+        data:{
+            newTag:{
+                name:"",
+                description:""
+            },
+            tags:[],
+            page:1,
+            size:5,
+            totalPage:0,
+            totalData:0
+        },
+        methods:{
+            initPageData(){
+                axios.get("/api/admin/tag/page",{
+                    params:{
+                        page:this.page,
+                        size:this.size
+                    }
+                }).then(res => {
+                    console.log(res);
+                    this.tags = res.data.data.data;
+                    this.page = res.data.data.page;
+                    this.totalPage = res.data.data.totalPage;
+                    this.totalData = res.data.data.totalData;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            create(){
+                if(this.newTag.name == ""){
+                    return;
+                }
+
+                axios.post("/api/admin/tag/create",this.newTag).then(res => {
+                    this.newTag.name = "";
+                    this.newTag.description = "";
+                    this.initPageData();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            deleteByName(tagName){
+                axios.get("/api/admin/tag/delete/by/name",{
+                    params:{
+                        name:tagName
+                    }
+                }).then(res => {
+                    this.initPageData();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            more(){
+                if(this.size < this.totalData){
+                    this.size += 5;
+                    this.initPageData();
+                }else{
+                    Utils.popup.info("没有更多了");
+                }
+            },
+            pre(){
+                if(this.page > 1){
+                    this.page = this.page - 1;
+                    this.initPageData();
+                }
+            },
+            next(){
+                if(this.page < this.totalPage){
+                    this.page = this.page + 1 ;
+                    this.initPageData();
+                }
+            },
+            skip(page){
+                console.log(page);
+                if(page > 0 && page <= this.totalPage && page != this.page){
+                    this.page = page;
+                    this.initPageData();
+                }
+            }
+        },
+        created(){
+            this.initPageData();
+        }
+    });
+
+}
+</script>
+</section>
+<!-- 模板内容结束 -->
+
+</body>
+<script src="../../../../static/js/uikit.min.js" type="text/javascript"></script>
+<script src="../../../../static/js/uikit-icons.min.js" type="text/javascript"></script>
+<script src="../../../../static/js/app.js" type="text/javascript"></script>
+</html>
+

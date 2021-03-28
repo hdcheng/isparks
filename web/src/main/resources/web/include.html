@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>include</title>
+<meta th:replace="partials/head :: meta"/>
+<link th:replace="partials/head :: link"/>
+<style th:replace = "partials/head :: style"></style>
+</head>
+<body>
+<div th:insert = "partials/header :: nav" style="background-color: black;"></div>
+<div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
+    about
+</div>
+<footer th:replace = "partials/footer :: fra"></footer>
+</body>
+<script th:replace="partials/script :: fra"></script>
+</html>

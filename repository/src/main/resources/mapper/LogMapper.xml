@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.LogMapper">
+
+    <!-- table -->
+    <sql id="table">
+        log
+    </sql>
+
+    <sql id="count">
+        SELECT count(1)
+        FROM
+        <include refid="table"/>
+    </sql>
+
+
+    <!-- result map -->
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Log">
+        <id property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="ip" column="ip"/>
+        <result property="date" column="date"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectAll">
+        SELECT id,type,content,ip,date,create_time
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <!-- insert -->
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="type != null and type != ''">type,</if>
+        <if test="content != null and content != ''">content,</if>
+        <if test="ip != null and ip != ''">ip,</if>
+        <if test="date != null and date != ''">date,</if>
+        id,create_time
+        )
+        VALUES
+        (
+        <if test="type != null and type != ''">#{type},</if>
+        <if test="content != null and content != ''">#{content},</if>
+        <if test="ip != null and ip != ''">#{ip},</if>
+        <if test="date != null and date != ''">#{date},</if>
+        #{id},#{createTime}
+        )
+    </insert>
+
+
+    <!-- 查询所有数据 -->
+    <select id="selectAll" resultMap="resultMap">
+        <include refid="selectAll"/>
+    </select>
+
+    <!-- 根据条件查询 -->
+    <select id="selectByCond" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据 id 删除 -->
+    <delete id="deleteByCond">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 更新 -->
+    <update id="updateByCond" >
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="type != null and type != ''">type = #{type} ,</if>
+            <if test="content != null and content != ''">content = #{content} ,</if>
+            <if test="ip != null and ip != ''">ip = #{ip} ,</if>
+            <if test="date != null and date != ''">date = #{date} ,</if>
+            <if test="status != null and status != ''">status = #{status} ,</if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!-- 统计 -->
+    <select id="countByCond" resultType="long">
+        <include refid="count"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+    </select>
+</mapper>

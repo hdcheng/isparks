@@ -1,0 +1,10 @@
+group = 'app.isparks'
+version = '0.0.1'
+description '插件'
+
+dependencies {
+
+    // 插件库
+    implementation project(":core")
+
+}

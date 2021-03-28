@@ -1,0 +1,27 @@
+isparks:
+  root: ${user.home}
+  # api 文档可用否： disable（禁用）/able（可用）
+  doc: able
+  # 缓存
+  cache: true
+  templates:
+    prefix: D:\MyProject\fence-admin-uikit3
+
+server:
+  port: 8174
+  tomcat:
+    # tomcat uri 编码
+    uri-encoding: UTF-8
+
+# spring
+spring:
+  application:
+    name: Sparks For Person
+  profiles:
+    active: dev
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    #aop:
+    #使用 cglib 生成代理
+    #proxy-target-class: true
