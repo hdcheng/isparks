@@ -12,17 +12,15 @@ import java.io.File;
 public class ISparksProperties {
 
     static {
-
-
+        String homeBase = System.getProperty("is.home") == null ? System.getProperties().getProperty("user.home") : System.getProperty("is.home");
+        USER_HOME = homeBase + File.separator + ISparksConstant.BASE_APP_DIR_NAME;
     }
 
     /**
      * user home
      * 用户目录
-     * Linux:/home/username
-     * Windows:c:/Users/username
      */
-    public static String USER_HOME = System.getProperties().getProperty("user.home") + File.separator + ISparksConstant.BASE_APP_DIR_NAME;
+    public static String USER_HOME ;
 
     /**
      * app home is the installation directory by default

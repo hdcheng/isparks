@@ -40,14 +40,6 @@ public class WebProperties implements ApplicationRunner {
         }
     }
 
-    /**
-     * 根目录
-     */
-    public static String workDir;
-
-    @Value("${isparks.root}")
-    public void setWorkDir(String rootPath) {
-    }
 
     /**
      * 配置文件名
@@ -77,16 +69,6 @@ public class WebProperties implements ApplicationRunner {
     @Value("${isparks.cache}")
     public void setCache(boolean cache) {
         WebProperties.cache = cache;
-    }
-
-    /**
-     * 后台模板路径
-     */
-    public static String templatePrefix;
-
-    @Value("${isparks.templates.prefix}")
-    public void setTemplatePath(String prefix) {
-        WebProperties.templatePrefix = prefix;
     }
 
 }

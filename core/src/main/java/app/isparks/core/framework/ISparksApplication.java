@@ -42,6 +42,7 @@ public class ISparksApplication implements IBoot{
     }
 
     public static ISparksContext run(String ... args){
+
         // 系统初始化
         instance().boot(args);
 
@@ -52,7 +53,8 @@ public class ISparksApplication implements IBoot{
         IOCUtils.applicationContext = context;
 
         ISysService sysService = IOCUtils.getBeanByClass(ISysService.class).orElseThrow(() -> new SystemException("can't find ISysService"));
-        if(sysService.hasConfigFile()){
+
+        if(sysService.checkConfigFile()){
             // 数据库信息与配置信息同步
             sysService.syncConfig();
         }else{

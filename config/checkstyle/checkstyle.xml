@@ -7,12 +7,14 @@
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
 
-    <!--To configure the check to report on the first instance in each file-->
-    <module name="FileTabCharacter"/>
+    <property name="severity" value="warning"/>
 
-    <module name="RegexpSingleline">
-        <property name="format" value="^.*System\.(out|err).*$"/>
-        <property name="message" value="Don't use System.out/err, use SLF4J instead."/>
-    </module>
+    <!--To configure the check to report on the first instance in each file-->
+
+
+<!--    <module name="RegexpSingleline">-->
+<!--        <property name="format" value="^.*System\.(out|err).*$"/>-->
+<!--        <property name="message" value="Don't use System.out/err, use SLF4J instead."/>-->
+<!--    </module>-->
 
 </module>

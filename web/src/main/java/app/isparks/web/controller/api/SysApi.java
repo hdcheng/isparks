@@ -62,7 +62,7 @@ public class SysApi {
 
         optionService.saveOrUpdate(config);
 
-        sysService.syncToConfig();
+        sysService.syncToConfigFile();
 
         return ResultUtils.success();
     }

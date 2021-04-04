@@ -228,7 +228,6 @@ function pageLoaded(config){
         }
     });
     const bar = document.getElementById('js-progressbar');
-    console.log(Utils.auth.getToken());
     UIkit.upload('.js-upload', {
 
         url: '/api/admin/file/upload',
@@ -256,12 +255,6 @@ function pageLoaded(config){
         },
 
         completeAll: function () {
-            //const len = arguments.length;
-            // const res = [];
-            // for(let i = 0 ; i < len ; ++i){
-            //     res.push(JSON.parse(arguments[i].response));
-            // }
-            //console.log(arguments);
             app.initPageData();
             setTimeout(function () {
                 bar.setAttribute('hidden', 'hidden');

@@ -56,14 +56,14 @@ public interface ISysService {
      * 将数据库中的配置数据同步到本地配置文件
      * 与 syncConfig() 功能相反
      */
-    void syncToConfig();
+    void syncToConfigFile();
 
     /**
-     * 系统配置文件是否存在
+     * 检测系统配置文件
      *
      * @return boolean
      */
-    boolean hasConfigFile();
+    boolean checkConfigFile();
 
     /**
      * 执行SQL语句

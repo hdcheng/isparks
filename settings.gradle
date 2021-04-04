@@ -5,5 +5,3 @@ include 'repository'
 include 'plugin'
 include 'web'
 include 'addons'
-include 'ImageManagePlugin'
-

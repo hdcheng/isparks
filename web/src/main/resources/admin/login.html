@@ -112,10 +112,11 @@ function pageLoaded(config){
             login(){
                 axios.post("/api/admin/authenticate",this.loginParams).then(res => {
                     console.log(res);
-
-                    Utils.popup.success("登录成功");
-                    Utils.auth.setToken(res.data.data);
-                    window.location.href = "/admin";
+                    if(res.data.code == 8101){
+                        Utils.popup.success("登录成功");
+                        Utils.auth.setToken(res.data.data);
+                        window.location.href = "/admin";
+                    }
 
                 }).catch(err => {
                     Utils.popup.error(err.msg);

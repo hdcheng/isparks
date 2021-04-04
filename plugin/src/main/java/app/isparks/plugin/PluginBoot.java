@@ -25,6 +25,10 @@ public class PluginBoot implements IBoot {
 
     private static Map<String,IPlugin> plugins = new ConcurrentHashMap<>();
 
+    public PluginBoot(String ... args){
+
+    }
+
     @Override
     public void boot(Object... args) {
         IOCUtils.getBeanByClass(PluginManager.class).ifPresent(pm -> {

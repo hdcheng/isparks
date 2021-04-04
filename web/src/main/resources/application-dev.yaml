@@ -1,17 +1,4 @@
 spring:
-  datasource:
-    # ====================
-    # postgresql 数据库
-    # driver-class-name: org.postgresql.Driver
-    # url: jdbc:postgresql://106.14.200.14:5432/fence
-    # username: postgres
-    # password: 123456
-    # ====================
-    # h2数据库
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:~/.fence/h2/db;DB_CLOSE_ON_EXIT=TRUE;FILE_LOCK=NO
-    username: sa
-    password:
   h2: # h2内嵌数据库
     console:
       enabled: true

@@ -92,11 +92,11 @@ public class DBConfig {
      * 更新配置信息
      */
     public static synchronized void update(IDatabaseEnum database,Map<String,Object> config){
-        String ip = String.valueOf(config.get(DatabaseProperties.DATABASE_IP.getKey()));
-        String port = String.valueOf(config.get(DatabaseProperties.DATABASE_PORT.getKey()));
-        String userName = String.valueOf(config.get(DatabaseProperties.DATABASE_USERNAME.getKey()));
-        String password = String.valueOf(config.get(DatabaseProperties.DATABASE_PASSWORD.getKey()));
-        String dbPrefix = String.valueOf(config.get(DatabaseProperties.DATABASE_NAME_PREFIX.getKey()));
+        String ip = String.valueOf(config.getOrDefault(DatabaseProperties.DATABASE_IP.getKey(),DatabaseProperties.DATABASE_IP.getDefaultValue()));
+        String port = String.valueOf(config.getOrDefault(DatabaseProperties.DATABASE_PORT.getKey(),DatabaseProperties.DATABASE_PORT.getDefaultValue()));
+        String userName = String.valueOf(config.getOrDefault(DatabaseProperties.DATABASE_USERNAME.getKey(),DatabaseProperties.DATABASE_USERNAME.getDefaultValue()));
+        String password = String.valueOf(config.getOrDefault(DatabaseProperties.DATABASE_PASSWORD.getKey(),DatabaseProperties.DATABASE_PASSWORD.getDefaultValue()));
+        String dbPrefix = String.valueOf(config.getOrDefault(DatabaseProperties.DATABASE_NAME_PREFIX.getKey(),DatabaseProperties.DATABASE_NAME_PREFIX.getDefaultValue()));
         update(database,ip,port,userName,password,dbPrefix);
     }
 

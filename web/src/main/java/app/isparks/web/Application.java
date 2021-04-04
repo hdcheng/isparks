@@ -37,15 +37,15 @@ public class Application {
         Arrays.asList(args).forEach((arg) -> {
             System.out.println(arg);
         });
-        ISparksApplication.instance().register("plugin",new PluginBoot());
 
-        ISparksApplication.instance().register("service",new ServiceBoot());
+        ISparksApplication.instance().register("plugin",new PluginBoot(args));
+
+        ISparksApplication.instance().register("service",new ServiceBoot(args));
 
         applicationContext = SpringApplication.run(Application.class, args);
 
         ISparksApplication.run(applicationContext,args);
 
     }
-
 
 }

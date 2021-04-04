@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class BlogApi implements BaseApi , ApplicationEventPublisherAware{
 
-
     private IBlogService blogService;
 
     private ApplicationEventPublisher publisher;
@@ -41,7 +40,6 @@ public class BlogApi implements BaseApi , ApplicationEventPublisherAware{
         long visits = newVisits == null ? 1 : (long)newVisits;
 
         if (publisher != null) {
-            System.out.println("主线程："+ Thread.currentThread().getName() + "将执行文章访问事件");
             publisher.publishEvent(new PostVisitEvent(this,postId,visits));
         }
 

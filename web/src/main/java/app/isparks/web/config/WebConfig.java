@@ -55,17 +55,13 @@ public class WebConfig extends WebMvcConfigurationSupport {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String staticDir = FileUtils.parseToUrl(WebProperties.templatePrefix) +" static";
 
         String homeStaticDir = FileUtils.parseToUrl(ISparksProperties.RESOURCES_FILE_PATH);
 
         registry.addResourceHandler(WebProperties.STATIC_REQUEST_MAP)
                 .addResourceLocations("classpath:/static/")
-                //.addResourceLocations("classpath:/templates/static/")
-                .addResourceLocations(staticDir)
                 .addResourceLocations(homeStaticDir);
 
-        //registry.addResourceHandler(FenceWebProperties.STATIC_REQUEST_MAP).addResourceLocations(FileUtils.parseToUrl(workDir));
 
         //api doc 是否展示
         if (WebProperties.docAvailable) {

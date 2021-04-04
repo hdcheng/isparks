@@ -4,8 +4,6 @@ isparks:
   doc: able
   # 缓存
   cache: true
-  templates:
-    prefix: D:\MyProject\fence-admin-uikit3
 
 server:
   port: 8174

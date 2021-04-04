@@ -10,6 +10,22 @@
 <script>
     if(localStorage.getItem("isparks") == "true"){
         window.location.href = "/admin";
+    }else{
+        const url = "/api/sys/installed";
+        const request = new XMLHttpRequest();
+        request.open('GET', url, false); // 同步
+        request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 
+        request.onreadystatechange = function () {
+            if (request.readyState == 4 && request.status == 200) {
+                res = JSON.parse(request.responseText);
+                console.log(res);
+                if(res.data){
+                    localStorage.setItem(key,true);
+                    window.location.href = "/admin/login";
+                }
+            }
+        };
+        request.send();
     }
 </script>
 <style>

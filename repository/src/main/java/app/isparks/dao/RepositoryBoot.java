@@ -10,7 +10,9 @@ import app.isparks.dao.dialect.enums.Database;
  */
 public class RepositoryBoot implements IBoot {
 
-    public RepositoryBoot(){
+    public RepositoryBoot(String ... args){
+
+
         // 默认数据库配置
         DBConfig.update(Database.H2,"127.0.0.1","8082","sa","");
 

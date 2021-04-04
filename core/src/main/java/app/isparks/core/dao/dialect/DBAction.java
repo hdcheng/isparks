@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 
-import javax.print.DocFlavor;
 import java.io.*;
 import java.sql.*;
 import java.util.Optional;
@@ -111,7 +110,7 @@ public abstract class DBAction implements DDLAction, DMLAction{
 
         isResolved();
 
-        if(!exits()){
+        if(!exist()){
             try {
                 createDB();
             }catch (RepositoryException e){
@@ -134,7 +133,7 @@ public abstract class DBAction implements DDLAction, DMLAction{
      *
      * @return boolean
      */
-    public boolean exits() {
+    public boolean exist() {
 
         try{
             Connection conn = DriverManager.getConnection(getUrl(), userName(), userPwd());

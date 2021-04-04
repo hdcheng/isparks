@@ -65,10 +65,8 @@ public class SysServiceImpl extends BaseService implements ISysService {
     @Override
     public boolean initDB() {
 
-        // 初始化数据
         if(DBConfig.getDatabase() == null){
-            throw new SystemException("database initialize fail.because the database type do not set.");
-            //DatabaseProperties.setDatabase(Database.H2);
+            throw new SystemException("database initialize fail , because the database type do not set.");
         }
 
         Database database = (Database) DBConfig.getDatabase();
@@ -144,7 +142,7 @@ public class SysServiceImpl extends BaseService implements ISysService {
     @Override
     public boolean isInstalled() {
 
-        if(!hasConfigFile()){
+        if(!checkConfigFile()){
             return false;
         }
         return true;
@@ -172,20 +170,18 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
         Map<String,Object> config = ISparksUtils.readYaml(Map.class,file).orElse(new HashMap());
 
-        String type = (String)config.get(SystemProperties.DATABASE_TYPE.getKey());
+        // 获取配置文件中的数据库配置
+        String type = (String)config.getOrDefault(SystemProperties.DATABASE_TYPE.getKey(),SystemProperties.DATABASE_TYPE.getValue());
         Database database = IEnum.nameToEnum(Database.class,type);
         Database oldDatabase = (Database) DBConfig.getDatabase();
-
         if(database != oldDatabase){
-
             DBConfig.update(database,config);
-
         }
 
         //database.equals();
         DBAction action = DBConfig.getDatabase().getDBAction();
 
-        if (action.exits()){
+        if (action.exist()){
             if(!action.trySQL("SELECT COUNT(1) FROM option").isPresent()){
                 action.init();
             }
@@ -210,7 +206,7 @@ public class SysServiceImpl extends BaseService implements ISysService {
     }
 
     @Override
-    public void syncToConfig() {
+    public void syncToConfigFile() {
         File file = new File(ISparksProperties.CONFIG_FILE);
         Map<String,Object> config = ISparksUtils.readYaml(Map.class,file).orElse(new HashMap());
 
@@ -252,8 +248,14 @@ public class SysServiceImpl extends BaseService implements ISysService {
     }
 
     @Override
-    public boolean hasConfigFile() {
-        return new File(ISparksProperties.CONFIG_FILE).exists();
+    public boolean checkConfigFile() {
+
+        if(!new File(ISparksProperties.CONFIG_FILE).exists()){
+            log.info("system config file does not exist");
+            return false;
+        }
+
+        return true;
     }
 
     @Override

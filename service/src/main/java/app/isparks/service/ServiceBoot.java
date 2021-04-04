@@ -1,22 +1,35 @@
 package app.isparks.service;
 
-import app.isparks.core.exception.SystemException;
+import app.isparks.core.config.ISparksConstant;
+import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.framework.IBoot;
 import app.isparks.core.framework.ISparksApplication;
-import app.isparks.core.service.ISysService;
-import app.isparks.core.util.IOCUtils;
 import app.isparks.dao.RepositoryBoot;
 
+import java.io.File;
+import java.util.Arrays;
+
 /**
- * xxx.
- *
  * @author： chenghd
  * @date： 2021/3/15
  */
 public class ServiceBoot implements IBoot {
 
-    public ServiceBoot(){
-        ISparksApplication.instance().register("repository",new RepositoryBoot());
+
+
+
+    public ServiceBoot(String ... args){
+
+        Arrays.asList(args).forEach(arg -> {
+
+            if(arg.startsWith("is.home=")){
+                System.setProperty("is.home",arg.substring(arg.indexOf("is.home=")+8) );
+            }
+
+        });
+
+        Object o = ISparksProperties.APP_HOME;
+        ISparksApplication.instance().register("repository",new RepositoryBoot(args));
     }
 
     @Override

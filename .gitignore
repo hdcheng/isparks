@@ -29,3 +29,5 @@ hs_err_pid*
 /repository/build/*
 /service/build/*
 /web/build/*
+/build/*
+/addons/build/*

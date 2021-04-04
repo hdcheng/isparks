@@ -120,6 +120,7 @@ checkstyle {
 // config checkstyle
 // 参考：https://blog.csdn.net/yuanjw2014/article/details/52851485/
 check.dependsOn 'checkstyle'
+
 task checkstyle(type: Checkstyle) {
     configFile file("${project.projectDir}/config/checkstyle/checkstyle.xml")// Where my checkstyle config is...
     //configProperties.checkstyleSuppressionsPath = file("${project.projectDirr}/config/quality/suppressions.xml").absolutePath // Where is my suppressions file for checkstyle is...
@@ -129,6 +130,7 @@ task checkstyle(type: Checkstyle) {
     exclude "**/test/**"
     classpath = files()
 }
+
 subprojects {
     dependencies {
         // lombok
