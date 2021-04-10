@@ -1,4 +1,4 @@
-package app.isparks.web.util;
+package app.isparks.core.util;
 
 import app.isparks.core.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;

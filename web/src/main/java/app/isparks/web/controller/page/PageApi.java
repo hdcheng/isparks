@@ -9,6 +9,7 @@ import app.isparks.core.pojo.dto.PostArchiveDTO;
 import app.isparks.core.pojo.enums.LinkType;
 import app.isparks.core.service.IFileService;
 import app.isparks.core.service.ILinkService;
+import app.isparks.core.util.UrlUtils;
 import app.isparks.plugin.enhance.web.dto.IndexPostDTO;
 import app.isparks.core.pojo.dto.PostDTO;
 import app.isparks.core.pojo.enums.DataStatus;
@@ -178,10 +179,7 @@ public class PageApi {
 
         PageData<FileDTO> dtos = fileService.pageValidByMediaType(page <= 0 ? 1 : page,size <= 0 ? 10 : size, MediaType.IMAGE);
 
-        dtos.getData().forEach(dto -> {
-            String url = FileApi.parseToUrlLink(dto.getLocation());
-            dto.setLocation(url);
-        });
+        FileApi.parseResourceLocationToLinks(dtos);
 
         GalleryPageVO vo = new GalleryPageVO();
         vo.setPageData(dtos);

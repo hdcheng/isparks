@@ -12,8 +12,13 @@ import java.io.File;
 public class ISparksProperties {
 
     static {
-        String homeBase = System.getProperty("is.home") == null ? System.getProperties().getProperty("user.home") : System.getProperty("is.home");
-        USER_HOME = homeBase + File.separator + ISparksConstant.BASE_APP_DIR_NAME;
+        if(System.getProperty("is.home") == null){
+            USER_HOME = System.getProperties().getProperty("user.home") + File.separator + ISparksConstant.BASE_APP_DIR_NAME;
+        }else{
+            String suffix = ISparksConstant.BASE_APP_DIR_NAME.replace(".","");
+            USER_HOME = System.getProperty("is.home") + File.separator + suffix;
+
+        }
     }
 
     /**

@@ -109,7 +109,7 @@
 
     <ul class="uk-pagination uk-flex-center" uk-margin uk-scrollspy="cls: uk-animation-slide-bottom; target: >li; delay: 300; repeat: true">
         <li><a href="#" th:href="${PageData.page > 1} ? '/index?page=' + ${PageData.page - 1} : '/index'"><span uk-pagination-previous></span></a></li>
-        <li th:each="number : ${#numbers.sequence(1,PageData.totalPage)}" th:class="${number == PageData.page} ? 'is-current-page':''">
+        <li th:each="number : ${#numbers.sequence(1,PageData.totalPage > 0 ? PageData.totalPage : 1)}" th:class="${number == PageData.page} ? 'is-current-page':''">
             <a href="#" th:text="${number}">1</a>
         </li>
         <li><a href="#" th:href="${PageData.page < PageData.totalPage} ? '/index?page=' + ${PageData.page + 1} : '/index'" ><span uk-pagination-next></span></a></li>

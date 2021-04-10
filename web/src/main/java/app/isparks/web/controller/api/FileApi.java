@@ -10,10 +10,9 @@ import app.isparks.core.pojo.dto.FileDTO;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.service.IFileService;
-import app.isparks.core.util.StringUtils;
+import app.isparks.core.util.UrlUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
-import app.isparks.web.config.WebProperties;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +48,8 @@ public class FileApi {
             return ResultUtils.fail("上传失败");
         }
 
-        String link = parseToUrlLink(result.get().getLocation());
+        //String link = parseToUrlLink(result.get().getLocation());
+        String link = UrlUtils.parseStaticResourceToUrlLink(result.get().getLocation());
 
         result.get().setLocation(link);
 
@@ -89,13 +89,11 @@ public class FileApi {
         int p = Integer.valueOf(page);
         int s = Integer.valueOf(size);
 
-        PageData<FileDTO> dtos = fileService.pageValidFile(p <= 0 ? 1 : p,s <= 0 ? 10 : s);
+        PageData<FileDTO> dtoPage = fileService.pageValidFile(p <= 0 ? 1 : p,s <= 0 ? 10 : s);
 
-        dtos.update((dto)->{
-            dto.setLocation(parseToUrlLink(dto.getLocation()));
-        });
+        parseResourceLocationToLinks(dtoPage);
 
-        return ResultUtils.build(dtos);
+        return ResultUtils.build(dtoPage);
     }
 
     @ApiOperation("列出指定类型的文件")
@@ -109,9 +107,7 @@ public class FileApi {
 
         PageData<FileDTO> dtos = fileService.pageValidByFileType(p <= 0 ? 1 : p,s <= 0 ? 10 : s,type);
 
-        dtos.update((dto)->{
-            dto.setLocation(parseToUrlLink(dto.getLocation()));
-        });
+        parseResourceLocationToLinks(dtos);
 
         return ResultUtils.build(dtos);
     }
@@ -131,34 +127,18 @@ public class FileApi {
                 }
         }
 
-        PageData<FileDTO> dtos = fileService.pageValidByMediaType(p <= 0 ? 1 : p,s <= 0 ? 10 : s,type);
+        PageData<FileDTO> dtoPage = fileService.pageValidByMediaType(p <= 0 ? 1 : p,s <= 0 ? 10 : s,type);
 
-        dtos.update((dto)->{
-            dto.setLocation(parseToUrlLink(dto.getLocation()));
-        });
+        parseResourceLocationToLinks(dtoPage);
 
-        return ResultUtils.build(dtos);
+        return ResultUtils.build(dtoPage);
     }
 
     /**
-     * 将本地文件转换成当地
-     * @param location
-     * @return
+     * 更新 FileDTO 的链接
      */
-    public static String parseToUrlLink(String location){
-
-        if(StringUtils.isEmpty(location)){
-            return "";
-        }
-
-        if(location.startsWith("http://") || location.startsWith("https://")){
-            return location;
-        }
-
-        location = location.replace(ISparksProperties.RESOURCES_FILE_PATH,"");
-        location = location.replace(ISparksConstant.PATH_SEPARATOR,ISparksConstant.URL_SEPARATOR);
-
-        return WebProperties.HOST + WebProperties.STATIC_REQUEST_MAP.replace("/**",location);
+    public static void parseResourceLocationToLinks(PageData<FileDTO> pageData){
+        UrlUtils.parseStaticResourceToUrlLinks(pageData.getData(),dto -> dto.getLocation(), (dto,location) -> dto.setLocation(location));
     }
 
 }

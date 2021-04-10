@@ -6,8 +6,11 @@ package app.isparks.core.web.property;
  */
 public final class WebConstant {
 
+    // 通配符
+    public final static String WEB_URL_WILDCARD = "/**";
+
     // 静态文件请求路径
-    public final static String STATIC_REQUEST_URL = "/static/**";
+    public final static String STATIC_REQUEST_URL = "/static" + WEB_URL_WILDCARD;
 
     // admin页面模板路径
     public final static String ADMIN_TEMPLATE_PATH = "admin";

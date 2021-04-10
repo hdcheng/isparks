@@ -1,5 +1,6 @@
 package app.isparks.web;
 
+import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.framework.ISparksApplication;
 import app.isparks.plugin.PluginBoot;
 import app.isparks.service.ServiceBoot;
@@ -45,6 +46,8 @@ public class Application {
         applicationContext = SpringApplication.run(Application.class, args);
 
         ISparksApplication.run(applicationContext,args);
+
+        System.out.println("home path:"+ ISparksProperties.USER_HOME);
 
     }
 
