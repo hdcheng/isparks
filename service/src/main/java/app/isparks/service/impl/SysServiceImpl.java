@@ -269,6 +269,7 @@ public class SysServiceImpl extends BaseService implements ISysService {
         return result.isPresent();
     }
 
+
     /**
      * 从配置文件中获取值，如果没有则使用默认值
      *

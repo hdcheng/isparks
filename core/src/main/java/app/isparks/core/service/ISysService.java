@@ -74,4 +74,6 @@ public interface ISysService {
      * 检测表格是否存在
      */
     boolean existTable(String tableName);
+
+
 }

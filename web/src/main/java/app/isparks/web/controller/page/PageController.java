@@ -49,7 +49,7 @@ public class PageController {
     @ApiOperation("预览")
     @RequestMapping(value = "post/temp/{key}",method = {RequestMethod.GET})
     public String postTemp(@PathVariable("key")String key, Model model){
-        
+
         String postId = postService.getTempLinkPostIdByKey(key);
 
         if(StringUtils.isEmpty(postId)){
@@ -62,14 +62,10 @@ public class PageController {
     @ApiOperation("首页")
     @RequestMapping(value = {"","index"},method = {RequestMethod.GET})
     public String index(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model,HttpServletRequest request, HttpServletResponse response){
-
         Object pageData = pageApi.index(pageFilter(page),sizeFilter(size)).getData();
-
         model.addAttribute(PAGE_DATA_MODEL_KEY,pageData);
-
         return WebPage.INDEX.file();
     }
-
 
     @ApiOperation("post页面")
     @RequestMapping(value = "post/{id}",method = {RequestMethod.GET})
@@ -111,8 +107,6 @@ public class PageController {
     @ApiOperation("关于")
     @RequestMapping(value = "about",method = {RequestMethod.GET})
     public String about(Model model){
-
-
 
         model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.about(1,10).getData());
 

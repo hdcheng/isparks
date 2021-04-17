@@ -1,7 +1,8 @@
 package app.isparks.web.config;
 
-import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.web.property.WebConstant;
+import app.isparks.web.service.ThemeServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +22,13 @@ import java.util.Map;
 @Configuration
 public class ThymeleafConfig {
 
-    private final static String ADMIN_URL_PREFIX = "/" + WebConstant.ADMIN_TEMPLATE_PATH;
+    private final static String ADMIN_URL_PREFIX = "/" + WebConstant.ADMIN_TEMPLATE_PATH_NAME;
+
 
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private ThemeServiceImpl themeService;
 
     public ThymeleafConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -70,13 +75,13 @@ public class ThymeleafConfig {
                                                                 final String characterEncoding,
                                                                 final Map<String, Object> templateResolutionAttributes){
 
-                if(template.startsWith(WebConstant.PLUGIN_TEMPLATE_PATH)){
+                if(template.startsWith(WebConstant.PLUGIN_TEMPLATE_PATH_NAME)){
                     // plugin 页面路径
                     String filePath = resourceName.replaceFirst(ADMIN_URL_PREFIX,"");
                     return super.computeTemplateResource(configuration,ownerTemplate,template,filePath,characterEncoding,templateResolutionAttributes);
                 }
 
-                if(template.startsWith(WebConstant.WEB_TEMPLATE_PATH) || (ownerTemplate != null && ownerTemplate.startsWith(WebConstant.WEB_TEMPLATE_PATH))){
+                if(template.startsWith(WebConstant.WEB_TEMPLATE_PATH_NAME) || (ownerTemplate != null && ownerTemplate.startsWith(WebConstant.WEB_TEMPLATE_PATH_NAME))){
 
                     // web页面路径
                     String filePath ;
@@ -86,7 +91,7 @@ public class ThymeleafConfig {
                     }else{
                         filePath = resourceName.replaceFirst(ADMIN_URL_PREFIX,"");
                     }
-
+                    filePath = themeService.resolveTheme(filePath);
                     return super.computeTemplateResource(configuration,ownerTemplate,template,filePath,characterEncoding,templateResolutionAttributes);
                 }
 
@@ -107,6 +112,7 @@ public class ThymeleafConfig {
 
         return templateResolver;
     }
+
 
 
 }

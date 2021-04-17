@@ -127,10 +127,13 @@ public class ResourcesUtils {
         }
 
         return readResources(SQL_FILE_DIR + File.separator + filename);
-
     }
 
-
-
+    /**
+     * 转换程 uri 形式的路径
+     */
+    public static String parseFilePathToURI(String filePath){
+        return new File(filePath).toURI().getPath();
+    }
 
 }
