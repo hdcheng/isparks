@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
-    <meta th:replace="partials/head/meta :: fra(${title},${description},${author},${keywords})"></meta>
-    <link th:replace="partials/head/link :: fra" rel="stylesheet"/>
+    <meta th:replace="partials/head/meta :: fra(${title},${description},${author},${keywords})"/>
+    <div th:replace="partials/head/link :: fra" rel="stylesheet"></div>
     <script>
         const key = "isparks";
         if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){

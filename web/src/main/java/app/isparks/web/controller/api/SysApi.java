@@ -5,6 +5,8 @@ import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.service.IOptionService;
 import app.isparks.core.service.ISysService;
+import app.isparks.core.service.IThemeService;
+import app.isparks.core.service.inter.AbstractThemeService;
 import app.isparks.core.web.property.WebProperties;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
@@ -35,9 +37,12 @@ public class SysApi {
 
     private IOptionService optionService;
 
-    public SysApi(SysServiceImpl sysService, OptionServiceImpl optionService) {
+    private AbstractThemeService themeService;
+
+    public SysApi(SysServiceImpl sysService, OptionServiceImpl optionService, AbstractThemeService themeService) {
         this.sysService = sysService;
         this.optionService = optionService;
+        this.themeService = themeService;
     }
 
     @RequestMapping(value = "installed",method = {RequestMethod.GET})
@@ -75,6 +80,7 @@ public class SysApi {
         String logo = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_LOGO,String.class);
         String name = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_TITLE,String.class);
         String description = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_DESCRIPTION,String.class);
+        String themeId = themeService.getThemeId();
 
         Map<String,String> webConfig = new HashMap<>();
         webConfig.put("copy",copy);
@@ -83,6 +89,7 @@ public class SysApi {
         webConfig.put("logText",logoText);
         webConfig.put("logo",logo);
         webConfig.put("description",description);
+        webConfig.put("themeId",themeId);
 
         return ResultUtils.success("success",webConfig);
     }

@@ -121,7 +121,6 @@
 
 </body>
 <script th:inline="javascript">
-    const data = [[${PageData}]];
     function visit(id){
         if(id != null && id != ""){
             axios.get("/api/plugin/post/visit",{

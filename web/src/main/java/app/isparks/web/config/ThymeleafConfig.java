@@ -113,6 +113,4 @@ public class ThymeleafConfig {
         return templateResolver;
     }
 
-
-
 }
