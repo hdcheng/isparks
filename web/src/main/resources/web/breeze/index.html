@@ -14,33 +14,36 @@
 </style>
 <body >
 
-<!-- <div th:replace = "partials/header :: nav"></div> -->
-<div uk-slideshow  class=" uk-visible-toggle uk-light">
-    <ul class="uk-slideshow-items">
-        <li>
-            <img src="/static/images/banner.jpg" alt="" uk-cover>
-            <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
-            <div class="uk-position-center uk-position-medium uk-text-center">
-                <div uk-slideshow-parallax="scale: 1,1,0.8">
-                    <h2 uk-slideshow-parallax="x: 200,0,0">Heading</h2>
-                    <p uk-slideshow-parallax="x: 400,0,0;">Lorem ipsum dolor sit amet.</p>
+<div th:replace = "partials/header :: nav"></div>
+<div>
+    <div uk-slideshow  class=" uk-visible-toggle uk-light">
+        <ul class="uk-slideshow-items">
+            <li>
+                <img src="/static/images/banner.jpg" alt="" uk-cover>
+                <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
+                <div class="uk-position-center uk-position-medium uk-text-center">
+                    <div uk-slideshow-parallax="scale: 1,1,0.8">
+                        <h2 uk-slideshow-parallax="x: 200,0,0">Heading</h2>
+                        <p uk-slideshow-parallax="x: 400,0,0;">Lorem ipsum dolor sit amet.</p>
+                    </div>
                 </div>
-            </div>
-        </li>
-        <li>
-            <img src="/static/images/banner1.jpg" alt="" uk-cover>
-            <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
-            <div class="uk-position-center uk-position-medium uk-text-center">
-                <div uk-slideshow-parallax="scale: 1,1,0.8">
-                    <h2 uk-slideshow-parallax="x: 200,0,0">Heading</h2>
-                    <p uk-slideshow-parallax="x: 400,0,0;">Lorem ipsum dolor sit amet.</p>
+            </li>
+            <li>
+                <img src="/static/images/banner1.jpg" alt="" uk-cover>
+                <div class="uk-position-cover" uk-slideshow-parallax="opacity: 0,0,0.2; backgroundColor: #000,#000"></div>
+                <div class="uk-position-center uk-position-medium uk-text-center">
+                    <div uk-slideshow-parallax="scale: 1,1,0.8">
+                        <h2 uk-slideshow-parallax="x: 200,0,0">Heading</h2>
+                        <p uk-slideshow-parallax="x: 400,0,0;">Lorem ipsum dolor sit amet.</p>
+                    </div>
                 </div>
-            </div>
-        </li>
-    </ul>
-
-    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
-    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+            </li>
+        </ul>
+    
+        <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+        <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+    
+    </div>
 
 </div>
 

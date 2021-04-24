@@ -3,7 +3,7 @@ package app.isparks.addons.blog.api;
 import app.isparks.addons.blog.event.PostVisitEvent;
 import app.isparks.addons.blog.service.BlogServiceImpl;
 import app.isparks.addons.blog.service.IBlogService;
-import app.isparks.core.web.support.BaseApi;
+import app.isparks.core.web.support.BaseWebApi;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletRequest;
  * @date： 2021/3/20
  */
 @RestController
-public class BlogApi implements BaseApi , ApplicationEventPublisherAware{
+public class BlogWebApi implements BaseWebApi, ApplicationEventPublisherAware{
 
     private IBlogService blogService;
 
     private ApplicationEventPublisher publisher;
 
-    public BlogApi(BlogServiceImpl blogService){
+    public BlogWebApi(BlogServiceImpl blogService){
         this.blogService = blogService;
     }
 

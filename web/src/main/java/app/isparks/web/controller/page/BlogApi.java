@@ -9,7 +9,7 @@ import app.isparks.core.pojo.dto.PostArchiveDTO;
 import app.isparks.core.pojo.enums.LinkType;
 import app.isparks.core.service.IFileService;
 import app.isparks.core.service.ILinkService;
-import app.isparks.core.util.UrlUtils;
+import app.isparks.core.web.support.BasePageApi;
 import app.isparks.plugin.enhance.web.dto.IndexPostDTO;
 import app.isparks.core.pojo.dto.PostDTO;
 import app.isparks.core.pojo.enums.DataStatus;
@@ -40,7 +40,7 @@ import java.util.*;
  */
 @RestController("webPageApi")
 @RequestMapping("api")
-public class PageApi {
+public class BlogApi implements BasePageApi {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 

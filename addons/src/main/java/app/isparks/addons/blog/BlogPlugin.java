@@ -1,6 +1,6 @@
 package app.isparks.addons.blog;
 
-import app.isparks.addons.blog.api.BlogApi;
+import app.isparks.addons.blog.api.BlogWebApi;
 import app.isparks.addons.blog.dao.PostAttachMapper;
 import app.isparks.addons.blog.entity.PostAttach;
 import app.isparks.addons.blog.listener.PostVisitListener;
@@ -54,9 +54,9 @@ public class BlogPlugin implements IPlugin {
 
         IOCUtils.registerBean(BlogServiceImpl.class,"blogServiceImpl");
 
-        IOCUtils.registerBean(BlogApi.class,"blogApi");
+        IOCUtils.registerBean(BlogWebApi.class,"blogApi");
 
-        pm.registerHttpApi(BlogApi.class);
+        pm.registerHttpApi(BlogWebApi.class);
 
         IOCUtils.registerBean(PostVisitListener.class,"visitListener");
         IOCUtils.getBeanByClass(ApplicationEventMulticaster.class).ifPresent(applicationEventMulticaster -> {

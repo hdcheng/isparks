@@ -2,10 +2,10 @@ package app.isparks.web.controller.page;
 
 import app.isparks.core.service.IPostService;
 import app.isparks.core.util.StringUtils;
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
 import app.isparks.core.web.property.WebConstant;
-import app.isparks.plugin.enhance.web.*;
+import app.isparks.core.web.support.BasePageApi;
+import app.isparks.core.web.support.Result;
 import app.isparks.web.controller.Router;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author： chenghd
@@ -28,7 +27,7 @@ import java.util.List;
 @Api("")
 @Controller
 @RequestMapping
-public class PageController {
+public class PageController implements BasePageApi {
 
     private final static String PAGE_DATA_MODEL_KEY = WebConstant.PAGE_DATA_KEY;
 
@@ -39,11 +38,10 @@ public class PageController {
     private IPostService postService;
 
     @Autowired
-    private PageApi pageApi;
+    private BlogApi blogApi;
 
     @Autowired
     private AdminController adminController;
-
 
 
     @ApiOperation("预览")
@@ -62,9 +60,15 @@ public class PageController {
     @ApiOperation("首页")
     @RequestMapping(value = {"","index"},method = {RequestMethod.GET})
     public String index(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model,HttpServletRequest request, HttpServletResponse response){
-        Object pageData = pageApi.index(pageFilter(page),sizeFilter(size)).getData();
+        //Object pageData = blogApi.index(pageFilter(page),sizeFilter(size)).getData();
+        Object pageData = index(pageFilter(page),sizeFilter(size)).getData();
         model.addAttribute(PAGE_DATA_MODEL_KEY,pageData);
         return WebPage.INDEX.file();
+    }
+
+    @Override
+    public Result index(int page, int size) {
+        return blogApi.index(page,size);
     }
 
     @ApiOperation("post页面")
@@ -75,7 +79,7 @@ public class PageController {
             return "404";
         }
 
-        model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.post(id).getData());
+        model.addAttribute(PAGE_DATA_MODEL_KEY, blogApi.post(id).getData());
 
         return WebPage.POST.file();
     }
@@ -87,7 +91,7 @@ public class PageController {
         int p = page == null ? 1 : page;
         int s = size == null ? 10:size;
 
-        model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.archive(p,s).getData());
+        model.addAttribute(PAGE_DATA_MODEL_KEY, blogApi.archive(p,s).getData());
 
         return WebPage.ARCHIVE.file();
     }
@@ -99,7 +103,7 @@ public class PageController {
         int p = page == null ? 1 : page;
         int s = size == null ? 10:size;
 
-        model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.link(p,s).getData());
+        model.addAttribute(PAGE_DATA_MODEL_KEY, blogApi.link(p,s).getData());
 
         return WebPage.LINK.file();
     }
@@ -108,7 +112,7 @@ public class PageController {
     @RequestMapping(value = "about",method = {RequestMethod.GET})
     public String about(Model model){
 
-        model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.about(1,10).getData());
+        model.addAttribute(PAGE_DATA_MODEL_KEY, blogApi.about(1,10).getData());
 
         return WebPage.ABOUT.file();
     }
@@ -120,7 +124,7 @@ public class PageController {
         int p = page == null ? 1 : page;
         int s = size == null ? 10 : size;
 
-        model.addAttribute(PAGE_DATA_MODEL_KEY,pageApi.gallery(p,s).getData());
+        model.addAttribute(PAGE_DATA_MODEL_KEY, blogApi.gallery(p,s).getData());
 
         return WebPage.GALLERY.file();
     }

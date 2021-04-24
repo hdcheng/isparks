@@ -3,7 +3,7 @@ package app.isparks.core.plugin;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
 import app.isparks.core.repository.BaseMapper;
-import app.isparks.core.web.support.BaseApi;
+import app.isparks.core.web.support.BaseWebApi;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -49,7 +49,7 @@ public interface PluginManager {
      * @param controller
      * @param method
      */
-    void registerHttpApi(String[] urls, RequestMethod[] methods, BaseApi controller, String method, Class<?>... parameterTypes);
+    void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes);
 
     /**
      * 注册API

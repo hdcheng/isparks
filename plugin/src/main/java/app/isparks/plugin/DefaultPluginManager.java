@@ -9,7 +9,7 @@ import app.isparks.core.service.ILinkService;
 import app.isparks.core.util.IOCUtils;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
-import app.isparks.core.web.support.BaseApi;
+import app.isparks.core.web.support.BaseWebApi;
 import app.isparks.plugin.enhance.web.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
@@ -52,7 +52,7 @@ public class DefaultPluginManager extends AbstractPluginManager {
     }
 
     @Override
-    public void registerHttpApi(String[] urls, RequestMethod[] methods, BaseApi controller, String method, Class<?>... parameterTypes) {
+    public void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes) {
         try {
             RequestMappingInfo info = RequestMappingInfo.paths(urls).methods(methods).build();
 
