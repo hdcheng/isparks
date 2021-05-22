@@ -15,7 +15,7 @@ public abstract class StringUtils {
      * @return 是/否
      */
     public static boolean isEmpty(String s) {
-        return s == null || "".equals(s);
+        return s == null || s.isEmpty();
     }
 
     /**

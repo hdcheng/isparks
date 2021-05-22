@@ -23,12 +23,14 @@ public class ThemeApi {
     @RequestMapping(value = "list",method = {RequestMethod.GET})
     public Result listThemes(){
         Map<String,String> themes = themeService.listThemes();
+
+
         return ResultUtils.success().setData(themes);
     }
 
     @RequestMapping(value = "update",method = {RequestMethod.GET})
-    public Result update(@RequestParam("themeId")String themeId){
-        themeService.updateThemeId(themeId);
+    public Result update(@RequestParam(value = "themeId",required = false)String themeId){
+        themeService.active(themeId);
         return ResultUtils.success();
     }
 

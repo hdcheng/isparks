@@ -42,6 +42,7 @@ public abstract class PageableCurd<E,ID> extends BatchCurd<E,ID> implements IPag
         Page page = PageHelper.startPage(pageInfo.getPage(), pageInfo.getSize(), true);
         page.setOrderBy("create_time DESC"); // 默认排序方式
 
+
         List<E> pageData;
 
         try {

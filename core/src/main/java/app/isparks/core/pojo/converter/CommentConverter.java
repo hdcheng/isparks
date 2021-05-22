@@ -2,6 +2,7 @@ package app.isparks.core.pojo.converter;
 
 import app.isparks.core.pojo.dto.CommentDTO;
 import app.isparks.core.pojo.entity.Comment;
+import app.isparks.core.pojo.param.CommentParam;
 import org.mapstruct.Mapper;
 
 /**
@@ -12,5 +13,7 @@ import org.mapstruct.Mapper;
 public interface CommentConverter {
 
     CommentDTO map(Comment source);
+
+    Comment map(CommentParam param);
 
 }

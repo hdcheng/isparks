@@ -1,13 +1,13 @@
 package app.isparks.plugin.enhance.web;
 
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
-import app.isparks.plugin.enhance.web.vo.IndexPageVO;
+import app.isparks.core.pojo.base.BaseVO;
 
 /**
  * @author： chenghd
  * @date： 2021/3/23
  */
-public final class IndexPageEnhancer extends AbstractViewModelEnhancer<IndexPageVO> {
+public final class IndexPageEnhancer extends AbstractViewModelEnhancer<BaseVO> {
 
     private static AbstractViewModelEnhancer enhancer;
 

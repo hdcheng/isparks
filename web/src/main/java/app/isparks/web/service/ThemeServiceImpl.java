@@ -3,15 +3,20 @@ package app.isparks.web.service;
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.exception.ThemeException;
+import app.isparks.core.service.IOptionService;
+import app.isparks.core.service.ISysService;
 import app.isparks.core.service.inter.AbstractThemeService;
 import app.isparks.core.util.ResourcesUtils;
 import app.isparks.core.web.property.WebConstant;
+import app.isparks.core.web.property.WebProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -28,9 +33,15 @@ public class ThemeServiceImpl extends AbstractThemeService {
     @Autowired
     private TemplateEngine templateEngine;
 
+    @Autowired
+    private IOptionService optionService;
+
+    @Autowired
+    private ISysService sysService;
+
     @Override
     protected String resolveCustomizeTheme(String filePath) {
-        String themeId = getThemeId();
+        String themeId = themeId();
         String pathUri = FILE_PREFIX +ResourcesUtils.parseFilePathToURI(CUSTOMIZE_THEME_FILE_PATH + themeId);
 
         return filePath.replaceFirst(WEB_TEMPLATE_CLASSPATH,pathUri);
@@ -38,14 +49,29 @@ public class ThemeServiceImpl extends AbstractThemeService {
 
     @Override
     protected void activeCustomizeTheme(String themeId) {
-        updateCustomizeThemeId(themeId);
+
+        customizeThemes().entrySet().forEach(entry -> {
+            if(entry.getKey().equals(themeId)){
+                ACTIVE_THEME_ID = entry.getKey();
+                ACTIVE_THEME_URI = entry.getValue();
+            }
+        });
+
     }
 
     @Override
-    protected void updateCustomizeThemeId(String themeId) {
-        synchronized (this){
-            updateThemeId(themeId);
-        }
+    public void updateThemeConfig(String themeId) {
+        // 1.储存数据库配置
+        storeThemeConfig(themeId);
+        // 2.同步到本地配置文件
+        sysService.syncToConfigFile();
+    }
+
+    @Override
+    protected void storeThemeConfig(String themeId) {
+        Map<String,Object> config = new HashMap<>();
+        config.put(WebProperties.WEBSITE_THEME_NAME.getKey(), themeId);
+        optionService.saveOrUpdate(config);
     }
 
     @Override
@@ -54,8 +80,15 @@ public class ThemeServiceImpl extends AbstractThemeService {
         templateEngine.getCacheManager().clearAllCaches();
     }
 
+    @Override
+    public void initTheme() {
+        setThemeId(null);
+        String themeId = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_THEME_NAME,String.class);
+        active(themeId);
+    }
+
     private void checkThemePath(){
-        String themeId = getThemeId();
+        String themeId = themeId();
         new File(ISparksProperties.CUSTOMIZE_THEME_FILE_PATH);
     }
     private void checkThemePath(File filePath){
@@ -65,21 +98,19 @@ public class ThemeServiceImpl extends AbstractThemeService {
     }
 
     @Override
-    protected void customizeTheme(final Map<String, String> themesMap) {
+    protected Map<String,String> customizeThemes() {
         File[] files = new File(ISparksProperties.CUSTOMIZE_THEME_FILE_PATH).listFiles();
+        Map<String,String> customizeThemes = new HashMap<>();
         Arrays.stream(files).forEach(file -> {
            if(file.isDirectory()){
                String themeid = file.getName();
                File config = new File(file,THEME_CONFIG_FILE_NAME);
                if(config.exists()){
-                   themesMap.put(themeid,themeid);
+                   customizeThemes.put(themeid,themeid);
                }
            }
         });
-    }
-
-    public static void main(String[] args) {
-        String fi= new ThemeServiceImpl().resolveCustomizeTheme("hell");
+        return customizeThemes;
     }
 
 }

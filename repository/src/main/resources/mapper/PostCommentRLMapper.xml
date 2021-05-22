@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.PostCommentRLMapper">
+
+    <sql id="table">
+        post_comment_rl
+    </sql>
+
+    <sql id="selectAll">
+        SELECT id,post_id,comment_id,create_time,modify_time FROM
+        <include refid="table"/>
+    </sql>
+
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.relation.PostCommentRL">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="commentId" column="comment_id"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="postId != ''">post_id,</if>
+        <if test="commentId != ''">comment_id,</if>
+        id,create_time,modify_time,status
+        )
+        VALUES
+        (
+        <if test="postId != ''">#{postId},</if>
+        <if test="commentId != ''">#{commentId},</if>
+        #{id},#{createTime},#{modifyTime},#{status}
+        )
+    </insert>
+
+    <delete id="deleteByPost">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE post_id = #{postId}
+    </delete>
+
+    <delete id="deleteBy">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+
+            <if test="postId != null and postId != ''">
+                AND post_id = #{postId}
+            </if>
+            <if test="commentId != null and commentId != ''">
+                AND comment_id = #{commentId}
+            </if>
+        </where>
+    </delete>
+
+    <delete id="deleteByComment">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE comment_id = #{commentId}
+    </delete>
+
+    <select id="selectByCond" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        <where>
+            <if test="postId != null and postId != ''">
+                AND post_id = #{postId}
+            </if>
+            <if test="commentId != null and commentId != ''">
+                AND comment_id = #{commentId}
+            </if>
+        </where>
+        ORDER BY modify_time DESC
+    </select>
+
+    <select id="selectByPost" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        WHERE post_id = #{postId}
+    </select>
+
+    <select id="countByPost" resultType="int">
+        SELECT count(1)
+        FROM
+        <include refid="table"/>
+        WHERE post_id = #{postId}
+    </select>
+
+    <select id="countBy" resultType="int">
+        SELECT count(1)
+        FROM
+        <include refid="table"/>
+        <where>
+            <if test="postId != null and postId != ''">
+                AND post_id = #{postId}
+            </if>
+            <if test="commentId != null and commentId != ''">
+                AND comment_id = #{commentId}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateById">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="categoryId != null and categoryId != ''">category_id = #{categoryId} ,</if>
+            <if test="commentId != null and commentId != ''">comment_id = #{commentId} ,</if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+</mapper>

@@ -41,13 +41,6 @@ public class ISparksApplication implements IBoot{
         return application;
     }
 
-    public static ISparksContext run(String ... args){
-
-        // 系统初始化
-        instance().boot(args);
-
-        return null;
-    }
 
     public static ISparksContext run(ApplicationContext context,String ... args){
         IOCUtils.applicationContext = context;
@@ -62,7 +55,9 @@ public class ISparksApplication implements IBoot{
             sysService.initDB();
         }
 
-        return run(args);
+        instance().boot(args);
+
+        return null;
     }
 
 
@@ -92,7 +87,6 @@ public class ISparksApplication implements IBoot{
 
     @Override
     public void boot(Object ... args) {
-
         boots.values().forEach((ib)->{
             ib.boot(args);
         });

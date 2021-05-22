@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -31,7 +32,6 @@ public class IOCUtils {
      */
     public static Optional<Object> getBeanByName(String name) {
         check();
-
 
         try {
             Object bean = applicationContext.getBean(name);
@@ -129,6 +129,36 @@ public class IOCUtils {
         } catch (BeanDefinitionStoreException e) {
             log.info("注册 bean[{}] 失败", beanName, e);
         }
+    }
+
+    /**
+     *
+     * @param tClass
+     * @param <T>
+     */
+    public static <T> void registerBean(Class<T> tClass) {
+        check();
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(tClass);
+        AbstractBeanDefinition beanDefinition= builder.getBeanDefinition();
+        try {
+
+            if(beanFactory.containsBean(beanDefinition.getBeanClassName())){
+                log.warn("注册失败，bean[{}] 已存在", beanDefinition.getBeanClassName());
+                return;
+            }
+            beanFactory.registerBeanDefinition(beanDefinition.getBeanClassName(),beanDefinition);
+            log.info("注册 bean[{}] 成功", beanDefinition.getBeanClassName());
+        } catch (BeanDefinitionStoreException e) {
+            log.info("注册 bean[{}] 失败", beanDefinition.getBeanClassName() , e);
+        }
+    }
+
+    /**
+     * 获取应用上下文
+     */
+    public static ApplicationContext getApplicationContext(){
+        check();
+        return applicationContext;
     }
 
     private static void check() {

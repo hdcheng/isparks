@@ -31,4 +31,5 @@ public class CommentDTO extends BaseDTO {
      */
     private String address;
 
+
 }

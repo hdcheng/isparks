@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * @author chenghd
  * @date 2020/8/12
  */
-public class PageData<D> {
+public class PageData<O> {
 
     public PageData() {
 
@@ -36,7 +35,7 @@ public class PageData<D> {
     /**
      * 数据
      */
-    private List<D> data;
+    private List<O> data;
 
     /**
      * 共多少页
@@ -64,11 +63,11 @@ public class PageData<D> {
         this.size = size;
     }
 
-    public List<D> getData() {
+    public List<O> getData() {
         return data;
     }
 
-    public void setData(List<D> data) {
+    public void setData(List<O> data) {
         this.data = data;
     }
 
@@ -88,7 +87,7 @@ public class PageData<D> {
         this.totalData = totalData;
     }
 
-    public PageData withData(List<D> data) {
+    public PageData withData(List<O> data) {
         setData(data);
         return this;
     }
@@ -123,16 +122,21 @@ public class PageData<D> {
      * @param <N>
      * @return
      */
-    public <N> PageData<N> convertData(Function<D,N> convertFunc){
+    public <N> PageData<N> convertData(Function<O,N> convertFunc){
         PageData<N> pageData = new PageData<>();
         pageData.setPage(page);
         pageData.setSize(size);
         pageData.setTotalData(totalData);
         pageData.setTotalPage(totalPage);
-        List<D> oldD = getData();
+        List<O> oldD = getData();
         List<N> newD = new ArrayList<>(oldD.size());
 
-        oldD.forEach((d)->newD.add(convertFunc.apply(d)));
+        oldD.forEach((d)->{
+            N n = convertFunc.apply(d);
+            if(n != null){
+                newD.add(n);
+            }
+        });
 
         pageData.setData(newD);
         return pageData;
@@ -142,7 +146,7 @@ public class PageData<D> {
      * 更新date数据
      * @param func
      */
-    public void update(Consumer<D> func){
+    public void update(Consumer<O> func){
         getData().stream().forEach(func);
     }
 

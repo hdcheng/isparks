@@ -5,7 +5,6 @@ import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.service.IOptionService;
 import app.isparks.core.service.ISysService;
-import app.isparks.core.service.IThemeService;
 import app.isparks.core.service.inter.AbstractThemeService;
 import app.isparks.core.web.property.WebProperties;
 import app.isparks.core.web.support.Result;
@@ -80,7 +79,7 @@ public class SysApi {
         String logo = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_LOGO,String.class);
         String name = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_TITLE,String.class);
         String description = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_DESCRIPTION,String.class);
-        String themeId = themeService.getThemeId();
+        String themeId = themeService.themeId();
 
         Map<String,String> webConfig = new HashMap<>();
         webConfig.put("copy",copy);

@@ -1,5 +1,6 @@
 package app.isparks.plugin;
 
+import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.exception.SystemException;
 import app.isparks.core.plugin.PluginListener;
 import app.isparks.core.pojo.entity.Link;
@@ -9,12 +10,13 @@ import app.isparks.core.service.ILinkService;
 import app.isparks.core.util.IOCUtils;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
-import app.isparks.core.web.support.BaseWebApi;
 import app.isparks.plugin.enhance.web.*;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.MethodIntrospector;
 import org.springframework.stereotype.Component;
@@ -24,9 +26,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,6 +40,9 @@ public class DefaultPluginManager extends AbstractPluginManager {
 
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     private AbstractViewModelEnhancer postPageEnhancer;
 
     private Map<String,AbstractViewModelEnhancer> enhancers = new ConcurrentHashMap<>();
@@ -51,23 +54,26 @@ public class DefaultPluginManager extends AbstractPluginManager {
         });
     }
 
-    @Override
-    public void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes) {
-        try {
-            RequestMappingInfo info = RequestMappingInfo.paths(urls).methods(methods).build();
-
-            RequestMappingHandlerMapping rmm = getRequestMappingHandlerMapping();
-
-            rmm.registerMapping(info,controller,controller.getClass().getMethod(method,parameterTypes));
-
-        }catch (Exception e){
-            log.error("注册Controller失败",e);
-        }
-    }
+//    @Override
+//    public void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes) {
+//        try {
+//            RequestMappingInfo info = RequestMappingInfo.paths(urls).methods(methods).build();
+//
+//            RequestMappingHandlerMapping rmm = getRequestMappingHandlerMapping();
+//
+//            rmm.registerMapping(info,controller,controller.getClass().getMethod(method,parameterTypes));
+//
+//        }catch (Exception e){
+//            log.error("注册Controller失败",e);
+//        }
+//    }
 
     @Override
     public <T> void registerHttpApi(Class<T> controllerType) {
         try {
+            // 先注册成bean
+            IOCUtils.registerBean(controllerType);
+
             IOCUtils.getBeanByClass(controllerType).ifPresent(controller -> {
                 RequestMappingHandlerMapping rmm = getRequestMappingHandlerMapping();
                 //see : AbstractHandlerMethodMapping line:268
@@ -90,14 +96,40 @@ public class DefaultPluginManager extends AbstractPluginManager {
     }
 
     private RequestMappingInfo getMappingForMethod(Method method,Class controllerType){
+
+        RequestMapping classMappingAnnotation = (RequestMapping)controllerType.getAnnotation(RequestMapping.class);
+        String[] parentPaths = null;
+        if(classMappingAnnotation != null){
+            parentPaths = classMappingAnnotation.value();
+        }
+
         RequestMapping mappingAnnotation = method.getAnnotation(RequestMapping.class);
         if(mappingAnnotation != null){
             String[] paths = mappingAnnotation.value();
             RequestMethod[] methods = mappingAnnotation.method();
             String[] headers = mappingAnnotation.headers();
 
+            String[] urls ;
+            if(parentPaths != null && parentPaths.length != 0){
+                List<String> us = new ArrayList<>(parentPaths.length * paths.length);
+                for(String pp : parentPaths){
+                    for(String cp : paths){
+                        String tmp = pp + ISparksConstant.URL_SEPARATOR + cp;
+                        tmp = tmp.replaceAll("/+",ISparksConstant.URL_SEPARATOR);
+                        us.add(tmp);
+                    }
+                }
+
+                urls = new String[us.size()];
+                us.toArray(urls);
+            }else{
+                urls = paths;
+            }
+
+
             return RequestMappingInfo
-                    .paths(paths)
+                    //.paths(paths)
+                    .paths(urls)
                     .methods(methods)
                     .headers(headers)
                     .build();
@@ -107,7 +139,6 @@ public class DefaultPluginManager extends AbstractPluginManager {
 
     @Override
     public <E extends ApplicationEvent> void registerAsynchronousListener(PluginListener<E> listener) {
-
 
     }
 
@@ -135,22 +166,6 @@ public class DefaultPluginManager extends AbstractPluginManager {
             switch (webPage){
                 case INDEX:
                     enhancer = IndexPageEnhancer.singleton(); break;
-                case POST:
-                    enhancer = PostPageEnhancer.singleton();break;
-                case ARCHIVE:
-                    enhancer = ArchivePageEnhancer.singleton();break;
-                case LINK:
-                    enhancer = LinkPageEnhancer.singleton();break;
-                case ABOUT:
-                    enhancer = AboutPageEnhancer.singleton();break;
-                case GALLERY:
-                    enhancer = GalleryPageEnhancer.singleton();break;
-                case CATEGORY:
-                    enhancer = CategoryPageEnhancer.singleton();break;
-                case TAG:
-                    enhancer = TagPageEnhancer.singleton();break;
-                default:
-                    enhancer = OtherPageEnhancer.singleton();
             }
         }
 

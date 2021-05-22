@@ -77,7 +77,7 @@
         <set>
             <if test="status != null and status != ''">status = #{status} ,</if>
             <if test="key != null and key != ''">key = #{key} ,</if>
-            <if test="value != null and value != ''">value = #{value} ,</if>
+            <if test="value != null">value = #{value} ,</if>
             <if test="type != null ">value = #{type} ,</if>
             modify_time = #{modifyTime}
         </set>

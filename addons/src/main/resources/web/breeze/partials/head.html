@@ -1,0 +1,28 @@
+<meta th:fragment="meta" charset="utf-8">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+</meta>
+<link th:fragment="link" href="../static/images/favicon.ico" th:href="@{/static/images/favicon.ico}" rel="shortcut icon">
+<!--<link href="../static/css/uikit-rtl.min.css" th:href="@{/static/css/uikit-rtl.min.css}" rel="stylesheet"/>-->
+<link href="../static/css/uikit.min.css" th:href="@{/static/css/uikit.min.css}" rel="stylesheet"/>
+</link>
+<style th:fragment="style">
+    *{
+        box-sizing: border-box;
+    }
+    body::-webkit-scrollbar {/*滚动条整体样式*/
+        width: 3px;     /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+    }
+
+    body::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+        border-radius: 3px;
+        -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+        background: #535353;
+    }
+
+    body::-webkit-scrollbar-track {/*滚动条里面轨道*/
+        -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+        border-radius: 3px;
+        background: #EDEDED;
+    }
+</style>

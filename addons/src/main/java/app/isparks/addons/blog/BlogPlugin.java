@@ -1,9 +1,12 @@
 package app.isparks.addons.blog;
 
-import app.isparks.addons.blog.api.BlogWebApi;
+import app.isparks.addons.blog.api.BlogApi;
+import app.isparks.addons.blog.api.BlogController;
 import app.isparks.addons.blog.dao.PostAttachMapper;
 import app.isparks.addons.blog.entity.PostAttach;
 import app.isparks.addons.blog.listener.PostVisitListener;
+import app.isparks.addons.blog.pojo.dto.IndexPostDTO;
+import app.isparks.addons.blog.pojo.vo.IndexPageVO;
 import app.isparks.addons.blog.service.BlogServiceImpl;
 import app.isparks.addons.blog.service.IBlogService;
 import app.isparks.core.exception.PluginException;
@@ -11,13 +14,18 @@ import app.isparks.core.framework.ISparksApplication;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.plugin.IPlugin;
 import app.isparks.core.plugin.PluginManager;
-import app.isparks.core.pojo.base.BaseDTO;
 import app.isparks.core.pojo.base.BaseProperty;
-import app.isparks.core.pojo.base.WebPageVO;
+import app.isparks.core.pojo.dto.PostDTO;
+import app.isparks.core.pojo.enums.DataStatus;
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.service.IPostService;
 import app.isparks.core.service.ISysService;
+import app.isparks.core.service.IThemeService;
 import app.isparks.core.util.IOCUtils;
 import app.isparks.core.framework.enhance.WebPage;
+import app.isparks.core.web.property.WebConstant;
 import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -54,50 +62,57 @@ public class BlogPlugin implements IPlugin {
 
         IOCUtils.registerBean(BlogServiceImpl.class,"blogServiceImpl");
 
-        IOCUtils.registerBean(BlogWebApi.class,"blogApi");
+        pm.registerHttpApi(BlogApi.class);
 
-        pm.registerHttpApi(BlogWebApi.class);
+        pm.registerHttpApi(BlogController.class);
 
         IOCUtils.registerBean(PostVisitListener.class,"visitListener");
         IOCUtils.getBeanByClass(ApplicationEventMulticaster.class).ifPresent(applicationEventMulticaster -> {
             applicationEventMulticaster.addApplicationListenerBean("visitListener");
-
         });
 
-        IOCUtils.getBeanByClass(IBlogService.class).ifPresent(blogService -> {
-            pm.registerWebPageEnhancer(new AbstractViewModelEnhancer<BaseProperty>() {
-                @Override
-                public void enhance(BaseProperty vo) {
-                    // 热门文章
-                    vo.setProperty("hots",blogService.listMostVisits(3,null));
-
-                    // 文章阅读量
-                    if(vo instanceof WebPageVO){
-                        ((WebPageVO<BaseDTO>)vo).getData().forEach(dto -> {
-                            Optional<PostAttach> postAttach = blogService.getByPostId(dto.getId());
-                            long visits = 0L;
-                            if(postAttach.isPresent()){
-                                visits = postAttach.get().getVisits();
-                            }
-                            dto.getProperties().putIfAbsent("visits",visits);
-                        });
-                    }
-//                    vo.getData().forEach(dto -> {
-//                        Optional<PostAttach> postAttach = blogService.getByPostId(dto.getId());
-//                        long visits = 0L;
-//                        if(postAttach.isPresent()){
-//                            visits = postAttach.get().getVisits();
-//                        }
-//                        dto.getProperties().putIfAbsent("visits",visits);
-//                    });
-
-                }
-            },WebPage.INDEX);
-
-        });
-
+        index(pm);
     }
 
+    private void index(PluginManager pm){
+        IOCUtils.getBeanByClass(IBlogService.class).ifPresent(blogService -> pm.registerWebPageEnhancer(new AbstractViewModelEnhancer<BaseProperty>() {
+            @Override
+            public void enhance(Model model) {
+                IOCUtils.getBeanByClass(IPostService.class).ifPresent(postService -> {
+                    PageData<PostDTO> dtoData = postService.page(1,5, DataStatus.VALID);
+
+                    PageData<IndexPostDTO> voData = dtoData.convertData((dto)->{
+                        IndexPostDTO vo = new IndexPostDTO();
+                        vo.setId(dto.getId());
+                        vo.setCreateTime(dto.getCreateTime());
+                        vo.setModifyTime(dto.getModifyTime());
+                        vo.setProperties(dto.getProperties());
+                        vo.setTitle(dto.getTitle());
+                        vo.setSummary(dto.getSummary());
+
+                        // visit
+                        Optional<PostAttach> postAttach = blogService.getByPostId(dto.getId());
+                        long visits = 0L;
+                        if(postAttach.isPresent()){
+                            visits = postAttach.get().getVisits();
+                        }
+                        vo.getProperties().putIfAbsent("visits",visits);
+
+                        return vo;
+                    });
+
+                    IndexPageVO indexVo = new IndexPageVO();
+                    indexVo.setFooter("copy right ");
+                    indexVo.setPageData(voData);
+
+                    indexVo.setProperty("hots",blogService.listMostVisits(3,null));
+                    model.addAttribute(WebConstant.PAGE_DATA_KEY,indexVo);
+
+                });
+            }
+        },WebPage.INDEX));
+    }
+    
     private void initDB(ISysService sysService){
         boolean b = sysService.existTable("post_visit");
         if(b){ return; }
@@ -112,6 +127,5 @@ public class BlogPlugin implements IPlugin {
                 ");";
         sysService.executeSQL(createTable);
     }
-
 
 }

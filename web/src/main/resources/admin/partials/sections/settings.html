@@ -129,7 +129,8 @@
                     <div class="uk-margin">
                         <label class="uk-form-label" for="form-stacked-text">选择主题</label>
                         <select class="uk-select" id="form-horizontal-select" v-model="webSettings.themeId">
-                            <option v-for="(theme,index) in themeSettings.themeids" v-bind:value="theme.themeId" >{{theme.name}}</option>
+                            <option></option>
+                            <option v-for="(theme,index) in themeSettings.themeids" v-bind:value="theme.themeId" >{{theme.themeId}}</option>
                         </select>
                         <button class="uk-button uk-button-default" style="float: right;margin-top: 5px;" @click="updateTheme">更新</button>
                     </div>
@@ -186,8 +187,9 @@ function pageLoaded(config){
                 axios.get("/api/admin/theme/list").then(res => {
                     const data = res.data.data;
                     for(let key in data){
-                        this.themeSettings.themeids.push({'themeId':key,'name':data[key]});
+                        this.themeSettings.themeids.push({'themeId':key,'path':data[key]});
                     }
+
                 }).catch(res => {
                     console.log(res);
                 });

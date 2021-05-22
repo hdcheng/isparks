@@ -8,7 +8,7 @@
 
 **I Sparks** 是一个简单易用的建站系统，你可以用他创建你自己的个人博客、个人官网或者个人论坛等。这个小项目旨在创建一个插件化、易于定制的建站系统。
 
-**sparks** `[spɑːks]` 取自一部很喜欢的日剧 ([《火花》](https://movie.douban.com/subject/26635329/)) 中男主的 [漫才](https://baike.baidu.com/item/%E6%BC%AB%E6%89%8D/3030676?fr=aladdin) 组合名，前面的 **i** `[aɪ]` 意为 “我” 。
+**sparks** `[spɑːks]` 取自一部很喜欢的日剧 ([《火花》](https://movie.douban.com/subject/26635329/)) 中男主的 [漫才](https://baike.baidu.com/item/%E6%BC%AB%E6%89%8D/3030676?fr=aladdin) 组合名，前面的 **i** `[aɪ]` 意为 “自己” 。
 
 ## 特性
 

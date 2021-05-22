@@ -29,7 +29,6 @@ public class OptionServiceTest {
     public void before(){
         ISparksApplication.instance().register("service",new ServiceBoot());
 
-        ISparksApplication.run();
 
         applicationContext = new AnnotationConfigApplicationContext(ServiceConfig.class);
     }

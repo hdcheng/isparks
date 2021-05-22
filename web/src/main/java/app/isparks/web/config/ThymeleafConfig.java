@@ -91,6 +91,7 @@ public class ThymeleafConfig {
                     }else{
                         filePath = resourceName.replaceFirst(ADMIN_URL_PREFIX,"");
                     }
+
                     filePath = themeService.resolveTheme(filePath);
                     return super.computeTemplateResource(configuration,ownerTemplate,template,filePath,characterEncoding,templateResolutionAttributes);
                 }

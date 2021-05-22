@@ -3,9 +3,7 @@ package app.isparks.core.plugin;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
 import app.isparks.core.repository.BaseMapper;
-import app.isparks.core.web.support.BaseWebApi;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Optional;
 
@@ -43,15 +41,6 @@ public interface PluginManager {
     void setLinkButton(String htmlFileName, String pluginName, String htmlDom);
 
     /**
-     * 注册 http 请求接口
-     *
-     * @param urls
-     * @param controller
-     * @param method
-     */
-    void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes);
-
-    /**
      * 注册API
      */
     <T> void registerHttpApi(Class<T> controller);
@@ -70,4 +59,5 @@ public interface PluginManager {
      * 注册web页面增强器
      */
     void registerWebPageEnhancer(AbstractViewModelEnhancer enhancer, WebPage webPage);
+
 }

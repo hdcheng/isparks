@@ -4,6 +4,12 @@ description '插件'
 
 dependencies {
 
+    // thymeleaf
+//    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf"){
+//        exclude group : "org.slf4j"
+//        exclude group : "org.apache.logging"
+//    }
+
     // 插件库
     implementation project(":core")
 

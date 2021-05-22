@@ -20,4 +20,6 @@ public abstract class AbstractPostCurd extends AbstractCurd<Post> {
     }
 
 
+
+
 }

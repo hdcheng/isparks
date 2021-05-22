@@ -52,7 +52,7 @@ public enum  WebProperties implements PropertyEnum {
     /**
      * theme
      */
-    WEBSITE_THEME_NAME("web_theme_name","default",String.class)
+    WEBSITE_THEME_NAME("web_theme_name","",String.class)
     ;
 
 

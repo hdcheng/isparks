@@ -1,6 +1,7 @@
 package app.isparks.core.framework.enhance;
 
 import app.isparks.core.pojo.base.BaseProperty;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,17 @@ public abstract class AbstractViewModelEnhancer<VO extends BaseProperty> impleme
 
     @Override
     public void enhance(VO o) {
+
+    }
+
+    public void execute(Model model){
+        enhance(model);
+        if(nextEnhancer != null){
+            nextEnhancer.execute(model);
+        }
+    }
+
+    public void enhance(Model model){
 
     }
 

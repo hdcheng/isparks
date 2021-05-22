@@ -160,6 +160,19 @@ CREATE TABLE post_tag_rl (
 );
 
 -- ----------------------------
+-- Table structure for post_comment_rl
+-- ----------------------------
+DROP TABLE IF EXISTS post_comment_rl;
+CREATE TABLE post_comment_rl (
+  id VARCHAR PRIMARY KEY,
+  status int4,
+  create_time BIGINT,
+  modify_time BIGINT,
+  post_id VARCHAR,
+  comment_id VARCHAR
+);
+
+-- ----------------------------
 -- Table structure for option
 -- ----------------------------
 DROP TABLE IF EXISTS option;

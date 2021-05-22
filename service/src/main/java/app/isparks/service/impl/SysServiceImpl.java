@@ -178,7 +178,6 @@ public class SysServiceImpl extends BaseService implements ISysService {
             DBConfig.update(database,config);
         }
 
-        //database.equals();
         DBAction action = DBConfig.getDatabase().getDBAction();
 
         if (action.exist()){
@@ -243,6 +242,10 @@ public class SysServiceImpl extends BaseService implements ISysService {
         // copy
         String copy = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_FOOTER_COPY,String.class);
         config.put(WebProperties.WEBSITE_FOOTER_COPY.getKey(), copy);
+
+        // theme
+        String themeId = optionService.getByPropertyOrDefault(WebProperties.WEBSITE_THEME_NAME,String.class);
+        config.put(WebProperties.WEBSITE_THEME_NAME.getKey(),themeId);
 
         ISparksUtils.saveYaml(config,file);
     }

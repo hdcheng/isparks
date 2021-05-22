@@ -1,0 +1,129 @@
+<!-- 模板内容开始 -->
+<section th:fragment="fra" style="height: 100%;width: 100%;display: flex;justify-content: center;align-items: flex-start;">
+<style>
+
+</style>
+<div id="comment-page" style="width: 100%;padding-top: 2rem;" v-cloak >
+    <div class="uk-container-expand">
+        <div id="comment-detail-modal" class="uk-flex-top" uk-modal>
+            <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+        
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+        
+                <div>
+                    127.0.0.1
+                    eastry@qq.com
+                    www.dbwos.com
+                </div>
+        
+            </div>
+        </div>
+        <div class="uk-grid-small uk-child-width-expand@s" uk-grid style="position: inherit;">
+            <div class="uk-card uk-card-default uk-card-body uk-width-1-4@m uk-width-1-1@s" v-for="comment in comments" style="margin-left: 1rem;">
+                <div v-if="comment.properties.status == 1" class="uk-card-badge uk-label">已审核</div>
+                <div v-if="comment.properties.status == 0" class="uk-card-badge uk-label" style="background-color: #ff7b54;">未审核</div>
+                <h3 class="uk-card-title" >{{comment.name}}<span style="font-size: small;font-weight: 300;margin-left: 1rem;">{{formatDate(comment.createTime)}}</span></h3>
+                
+                <p>{{comment.content}}</p>
+                <ul class="uk-iconnav">
+                    <li><a href="#" uk-icon="icon: close" @click="invalid(comment.id)"></a></li>
+                    <li><a href="#" uk-icon="icon: check" @click="valid(comment.id)"></a></li>
+                    <li><a href="#" uk-icon="icon: trash" @click="deleteById(comment.id)"></a></li>
+                    <li><a href="#comment-detail-modal" @click="showDetailModal(comment.id)" uk-icon="icon: tablet"></a></li>
+                </ul>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+<script>
+function pageLoaded(config){
+    const app = new Vue({
+        el: '#comment-page',
+        data:{
+            page:1,
+            size:5,
+            totalPage:0,
+            totalData:0,
+            comments:[]
+        },
+        methods:{
+            initPageData(){
+                let url = "/api/admin/comment/page/all";
+                axios.get(url,{
+                    params:{
+                        page:this.page,
+                        size:this.size
+                    }
+                }).then(res => {
+                    if(res.status == 200){
+                        console.log(res.data.data.data);
+                        this.comments = res.data.data.data;
+                        this.page = res.data.data.page;
+                        this.totalPage = res.data.data.totalPage;
+                        this.totalData = res.data.data.totalData;
+                    }
+                }).catch(err => {console.log(err);});
+            },
+            showDetailModal(id){
+                console.log(id);
+                UIkit.modal(document.getElementById("comment-detail-modal")).show();
+            },
+            formatDate(ms){
+                const date = new Date(ms);
+                return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " +
+                       date.getDate().toString() + ":" + date.getMinutes().toString() ;
+            },
+            valid(id){
+                axios.get("/api/admin/comment/valid?id="+id).then(res => {
+                    if(res.status == 200){
+                        this.initPageData();
+                    }
+                });
+            },
+            invalid(id){
+                axios.get("/api/admin/comment/invalid?id="+id).then(res => {
+                    if(res.status == 200){
+                        this.initPageData();
+                    }
+                });
+            },
+            deleteById(id){
+                axios.get("/api/admin/comment/delete?id="+id).then(res => {
+                    if(res.status == 200){
+                        this.initPageData();
+                    }
+                });
+            },
+            pre(){
+                if(this.page > 1){
+                    this.page = this.page - 1;
+                    this.initPageData();
+                }
+            },
+            next(){
+                if(this.page < this.totalPage){
+                    this.page = this.page + 1 ;
+                    this.initPageData();
+                }
+            },
+            skip(page){
+                console.log(page);
+                if(page > 0 && page <= this.totalPage && page != this.page){
+                    this.page = page;
+                    this.initPageData();
+                }
+            }
+
+        },
+        created(){
+            this.initPageData();
+        }
+    });
+
+}
+</script>
+</section>
+<!-- 模板内容结束 -->

@@ -28,8 +28,6 @@ public class LinkServiceTest {
     public void before(){
         ISparksApplication.instance().register("service",new ServiceBoot());
 
-        ISparksApplication.run();
-
         applicationContext = new AnnotationConfigApplicationContext(ServiceConfig.class);
     }
 

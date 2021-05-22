@@ -37,9 +37,10 @@ public final class ISparksUtils {
      */
     public static <V> V stringParse(String valueString,Class<V> valueType){
 
-        if (valueString == null || "".equals(valueString)){
+        if (valueString == null || ("".equals(valueString) && !valueType.isAssignableFrom(String.class))){
             throw new InvalidValueException("value string must not be empty.");
         }
+
         if (valueType == null){
             throw new InvalidValueException("value type must not be null.");
         }
