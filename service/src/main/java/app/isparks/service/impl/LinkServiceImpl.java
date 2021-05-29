@@ -136,21 +136,21 @@ public class LinkServiceImpl extends AbstractService<Link> implements ILinkServi
     }
 
     /**
-     * dao 转 dto
+     * dao to dto
      */
     private LinkDTO converter(Link link){
         return CONVERTER.map(link);
     }
 
     /**
-     * dao 转 dto
+     * dao to dto
      */
     private Optional<LinkDTO> converter(Optional<Link> link){
         return Optional.ofNullable(converter(link.get()));
     }
 
     /**
-     * daos 转 dtos
+     * daos to dtos
      */
     private List<LinkDTO> converters(List<Link> links){
         if(links == null){

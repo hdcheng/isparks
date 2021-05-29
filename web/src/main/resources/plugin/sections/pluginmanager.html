@@ -1,0 +1,61 @@
+<section th:fragment="fra" style="height: 100%;width: 100%;">
+<style>
+    .plugin-box{
+        box-shadow: 0 0 28px rgb(0 0 0 / 27%);
+        border-radius: 5px;
+        height:150px;
+        padding:1rem;
+        display:flex;
+        justify-content: space-between;
+    }
+    .plugin-box>.plugin-box-left{
+        width:100%;overflow: hidden;
+    }
+    .plugin-box>.plugin-box-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    }
+</style>
+<div id="plugins-page" class="uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid>
+    <div v-for="p in plugins">
+        <div class="plugin-box" >
+            <div class="plugin-box-left uk-child-width-expand@s">
+                <h3>{{p.id}}</h3>
+                <p>{{p.version}}</p>
+                <p>{{p.provider}}</p>
+            </div>
+            <div class="plugin-box-right">
+                <button class="uk-button uk-button-text"><span uk-icon="nut"></span></button>
+                <button class="uk-button uk-button-text"><span uk-icon="lock"></span></button>
+                <button class="uk-button uk-button-text"><span uk-icon="unlock"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function pageLoaded(config){
+    let app = new Vue({
+        el: '#plugins-page',
+        data:{
+            plugins:[]
+        },
+        methods:{
+            initPage(){
+                let url = "/api/admin/plugin/all";
+                axios.get(url).then(res => {
+                    console.log(res);
+                    if(res.status == 200){
+                      this.plugins = res.data.data;
+                    }
+                });
+            },
+        },
+        created(){
+            this.initPage();
+        }
+    });
+}
+</script>
+</section>

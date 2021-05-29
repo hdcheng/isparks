@@ -25,5 +25,6 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+<!--    <logger name="app.isparks.dao.mybatis.mapper.PostCommentRLMapper" level="DEBUG"></logger>-->
 
 </configuration>

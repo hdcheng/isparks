@@ -17,7 +17,6 @@ public class ISparksProperties {
         }else{
             String suffix = ISparksConstant.BASE_APP_DIR_NAME.replace(".","");
             USER_HOME = System.getProperty("is.home") + File.separator + suffix;
-
         }
     }
 
@@ -47,6 +46,11 @@ public class ISparksProperties {
      * 插件文件路径
      */
     public static String PLUGINS_FILE_PATH = RESOURCES_FILE_PATH + ISparksConstant.PATH_SEPARATOR + ISparksConstant.PLUGINS_DIR_NAME;
+
+    /**
+     * markdown 文件路径
+     */
+    public static String MARKDOWN_FILE_PATH = RESOURCES_FILE_PATH + ISparksConstant.PATH_SEPARATOR + ISparksConstant.MARKDOWN_DIR_NAME;
 
     /**
      * 自定义主题文件路径

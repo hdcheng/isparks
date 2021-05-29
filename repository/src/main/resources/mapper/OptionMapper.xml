@@ -21,7 +21,6 @@
         <result column="type" property="type"/>
     </resultMap>
 
-    <!-- 增 -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -40,7 +39,6 @@
         )
     </insert>
 
-    <!-- 删 -->
     <delete id="deleteByCond">
         DELETE FROM
         <include refid="table"/>
@@ -70,7 +68,6 @@
         </where>
     </delete>
 
-    <!-- 改 -->
     <update id="updateById">
         UPDATE
         <include refid="table"/>
@@ -85,7 +82,6 @@
         id = #{id}
     </update>
 
-    <!-- 查 -->
     <select id="selectByCond" resultMap="baseResultMap" resultType="list">
         <include refid="selectAll"/>
         <where>

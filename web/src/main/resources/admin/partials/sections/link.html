@@ -42,52 +42,60 @@
             </ul>
             <ul class="uk-switcher uk-margin">
                 <li>
-                    <!-- 站外链接 start -->
-                    <table class="uk-table uk-table-responsive uk-table-divider">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left;">名称</th>
-                                <th style="text-align: left;">链接</th>
-                                <th style="text-align: left;">图标</th>
-                                <th style="text-align: left;">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(link,i) in offsiteLink.links">
-                                <td>{{link.name}}</td>
-                                <td>{{link.url}}</td>
-                                <td ><div v-html="link.logo" class="linkLogoBox"></div></td>
-                                <td>
-                                    <ul class="uk-iconnav" style="height:35px;display: flex;align-items: center;">
-                                        <li style="padding-left: 0;"><a href="#" uk-icon="icon: minus-circle" @click="deleteById(link.id)"></a></li>
-                                        <li><a href="#" uk-icon="icon: file-edit" @click="showUpdateModel(link.id)"></a></li>
-                                        <li><a :href="link.url" uk-icon="icon: link" target="_blank"></a></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- 站外链接 end -->
+                <!-- 站外链接 start -->
+                <table class="uk-table uk-table-responsive uk-table-divider">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">名称</th>
+                            <th style="text-align: left;">链接</th>
+                            <th style="text-align: left;">图标</th>
+                            <th style="text-align: left;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(link,i) in offsiteLink.links">
+                            <td>{{link.name}}</td>
+                            <td>{{link.url}}</td>
+                            <td ><div v-html="link.logo" class="linkLogoBox"></div></td>
+                            <td>
+                                <ul class="uk-iconnav" style="height:35px;display: flex;align-items: center;">
+                                    <li style="padding-left: 0;"><a href="#" uk-icon="icon: minus-circle" @click="deleteById(link.id)"></a></li>
+                                    <li><a href="#" uk-icon="icon: file-edit" @click="showUpdateModel(link.id)"></a></li>
+                                    <li><a :href="link.url" uk-icon="icon: link" target="_blank"></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 站外链接 end -->
                 </li>
                 <li>
-                    <!-- 站内链接 start -->
-                    <table class="uk-table uk-table-divider">
-                        <thead>
-                            <tr>
-                                <th style="text-align: left;">Table Heading</th>
-                                <th style="text-align: left;">Table Heading</th>
-                                <th style="text-align: left;">Table Heading</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Table Data</td>
-                                <td>Table Data</td>
-                                <td>Table Data</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- 站内链接 end -->
+                <!-- 站内链接 start -->
+                <table class="uk-table uk-table-responsive uk-table-divider">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">名称</th>
+                            <th style="text-align: left;">链接</th>
+                            <th style="text-align: left;">图标</th>
+                            <th style="text-align: left;">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(link,i) in siteLink.links">
+                            <td>{{link.name}}</td>
+                            <td>{{link.url}}</td>
+                            <td ><div v-html="link.logo" class="linkLogoBox"></div></td>
+                            <td>
+                                <ul class="uk-iconnav" style="height:35px;display: flex;align-items: center;">
+                                    <li style="padding-left: 0;"><a href="#" uk-icon="icon: minus-circle" @click="deleteById(link.id)"></a></li>
+                                    <li><a href="#" uk-icon="icon: file-edit" @click="showUpdateModel(link.id)"></a></li>
+                                    <li><a :href="link.url" uk-icon="icon: link" ></a></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- 站内链接 end -->
                 </li>
             </ul>
         </div>
@@ -162,16 +170,24 @@ function pageLoaded(config){
                 logo:""
             },
             offsiteLink:{
-                links:[]
+                links:[],
+                page:1,
+                size:10,
+                totalPage:0,
+                totalData:0
             },
-            page:1,
-            size:5,
-            totalPage:0,
-            totalData:0
+            siteLink:{
+                links:[],
+                page:1,
+                size:10,
+                totalPage:0,
+                totalData:0
+            }
         },
         methods:{
             initPageData(){
                 this.loadOffSiteLink();
+                this.loadSiteLink();
             },
             clearNewLink(){
                 this.newLink.id = "";
@@ -181,7 +197,8 @@ function pageLoaded(config){
                 this.newLink.type = 4;
             },
             saveLink(){
-                axios.post("/api/admin/link/save",this.newLink).then(res => {
+                let url = "/api/admin/link/save";
+                axios.post(url,this.newLink).then(res => {
                     this.initPageData();
                     UIkit.modal(document.getElementById("createModel")).hide();
                     this.clearNewLink();
@@ -200,7 +217,8 @@ function pageLoaded(config){
                         link = links[i]
                         break;
                     }
-                }                
+                }
+
 
                 if(link != null){
                     this.updateLink.id = id;
@@ -212,18 +230,38 @@ function pageLoaded(config){
                 }
             },
             loadOffSiteLink(){ // 加载站外链接
-                axios.get("/api/admin/link/page/by/type",{
+                let url = "/api/admin/link/page/by/type";
+                axios.get(url,{
                     params:{
                         type:4,
-                        page:1,
-                        size:10
+                        page:this.offsiteLink.page,
+                        size:this.offsiteLink.size
                     }
                 }).then(res => {
-                    console.log(res);
-                    this.offsiteLink.links = res.data.data.data;
-                }).catch(err => {
-                    console.log(err);
-                });
+                    if(res.status == 200){
+                        this.offsiteLink.links = res.data.data.data;
+                        this.offsiteLink.page = res.data.data.page;
+                        this.offsiteLink.totalData = res.data.data.totalData;
+                        this.offsiteLink.totalPage = res.data.data.totalPage;
+                    }
+                }).catch(err => {console.log(err);});
+            },
+            loadSiteLink(){
+                let url = "/api/admin/link/page/by/type";
+                axios.get(url,{
+                    params:{
+                        type:1,
+                        page:this.siteLink.page,
+                        size:this.siteLink.size
+                    }
+                }).then(res => {
+                    if(res.status == 200){
+                        this.siteLink.links = res.data.data.data;
+                        this.siteLink.page = res.data.data.page;
+                        this.siteLink.totalData = res.data.data.totalData;
+                        this.siteLink.totalPage = res.data.data.totalPage;
+                    }
+                }).catch(err => {console.log(err);});
             },
             deleteById(id){
                 if(id == "" || id == null ){
@@ -250,7 +288,7 @@ function pageLoaded(config){
                     console.log(err);
                 });
             },
-            pre(){
+            pre(type){
                 if(this.page > 1){
                     this.page = this.page - 1;
                     this.initPageData();

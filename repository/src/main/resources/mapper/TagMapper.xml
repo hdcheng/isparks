@@ -20,7 +20,6 @@
         <result column="modify_time" property="modifyTime"/>
     </resultMap>
 
-    <!-- 保存 -->
     <insert id="insert" parameterType="app.isparks.core.pojo.entity.Tag">
         INSERT INTO
         <include refid="table"/>
@@ -37,24 +36,20 @@
         )
     </insert>
 
-    <!-- 查找 -->
     <select id="selectAll" resultMap="BaseMapper">
         <include refid="selectAll"/>
     </select>
 
-    <!-- 根据标签名查询 -->
     <select id="selectByName" resultMap="BaseMapper" resultType="list">
         <include refid="selectAll"/>
         WHERE name = #{name}
     </select>
 
-    <!-- 根据id查询 -->
     <select id="selectById" resultMap="BaseMapper">
         <include refid="selectAll"/>
         WHERE id = #{id}
     </select>
 
-    <!-- 根据ids查询 -->
     <select id="selectByIds" resultMap="BaseMapper">
         <include refid="selectAll"/>
         WHERE id IN
@@ -63,7 +58,6 @@
         </foreach>
     </select>
 
-    <!-- 根据id更新 -->
     <update id="updateById">
         UPDATE
         <include refid="table"/>
@@ -77,7 +71,6 @@
         id = #{id}
     </update>
 
-    <!-- 根据条件查询 -->
     <select id="selectByCond" resultMap="BaseMapper" resultType="list">
         <include refid="selectAll"/>
         <where>
@@ -102,14 +95,12 @@
         </where>
     </select>
 
-    <!-- 删除 -->
     <delete id="deleteByName">
         DELETE FROM
         <include refid="table"/>
         WHERE name = #{name}
     </delete>
 
-    <!-- 删除 -->
     <delete id="deleteById">
         DELETE FROM
         <include refid="table"/>

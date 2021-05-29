@@ -1,11 +1,6 @@
 package app.isparks.core.plugin;
 
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
-import app.isparks.core.framework.enhance.WebPage;
-import app.isparks.core.repository.BaseMapper;
-import org.springframework.context.ApplicationEvent;
-
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @author： chenghd
@@ -14,50 +9,63 @@ import java.util.Optional;
 public interface PluginManager {
 
     /**
-     * 插件数量
+     * 插件总数量
      */
     int size();
 
     /**
-     * 安装插件
-     * @param name 插件名
-     * @param plugin 插件实例
+     * 所有插件信息
      */
-    IPlugin install(String name,final IPlugin plugin);
+    List<PluginInfo> plugins();
 
     /**
-     * 卸载已经注册的插件
-     * @param name 插件名
+     * 根据状态获取插件信息
      */
-    void uninstall(String name);
+    List<PluginInfo> plugins(PluginStatus status);
 
     /**
-     * 这是插件前端显示按钮
-     *
-     * @param htmlFileName 插件前端页面名
-     * @param pluginName 插件名称
-     * @param htmlDom 显示样式，如：<span uk-icon='image'></span>
+     * 获取插件
      */
-    void setLinkButton(String htmlFileName, String pluginName, String htmlDom);
+    PluginInfo plugin(String pluginId);
 
     /**
-     * 注册API
+     * 根据路径加载插件
      */
-    <T> void registerHttpApi(Class<T> controller);
+    void load(String path);
 
     /**
-     * 注册异步监听事件
+     * 批量加载
      */
-    <E extends ApplicationEvent> void registerAsynchronousListener(PluginListener<E> listener);
+    void loads();
 
     /**
-     * 注册mapper
+     * 启动所有插件
      */
-    <M extends BaseMapper> Optional<M> registerMyBatisMapper(String beanName, Class<M> mapper);
+    void startPlugins();
 
     /**
-     * 注册web页面增强器
+     * 启动指定插件
      */
-    void registerWebPageEnhancer(AbstractViewModelEnhancer enhancer, WebPage webPage);
+    void startPlugin(String pluginId);
 
+    /**
+     * 关闭所有启动的插件
+     */
+    void stopPlugins();
+
+    /**
+     * 停止指定的插件，并返回插件状态
+     */
+    PluginStatus stopPlugin(String pluginId);
+
+    /**
+     * 删除已经停止和无效的插件
+     */
+    boolean deletePlugin(String id);
+
+
+    /**
+     * 刷新
+     */
+    void refresh();
 }

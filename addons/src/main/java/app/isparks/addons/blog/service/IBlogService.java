@@ -12,6 +12,17 @@ import java.util.Optional;
  */
 public interface IBlogService {
 
+
+    /**
+     * about page content(markdown)
+     */
+    String aboutPageMDContent();
+
+    /**
+     *
+     */
+    void updateAboutPageMDContent(String mdContent);
+
     /**
      * 增加文章访问量
      *

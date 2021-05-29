@@ -26,7 +26,7 @@ public abstract class StringUtils {
      */
     public static boolean hasEmpty(String... texts) {
         for (String text : texts)
-            if (text == null || "".equals(text))
+            if (text == null || text.isEmpty())
                 return true;
         return false;
     }

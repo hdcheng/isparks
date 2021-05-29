@@ -1,4 +1,4 @@
-package app.isparks.web.pojo.vo;
+package app.isparks.plugin.vo;
 
 import lombok.Data;
 

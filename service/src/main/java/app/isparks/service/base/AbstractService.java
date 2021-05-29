@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * 抽象逻辑层
+ * General abstract service class
  *
  * @author： chenghd
  * @date： 2021/1/14

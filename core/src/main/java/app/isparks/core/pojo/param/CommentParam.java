@@ -28,6 +28,11 @@ public class CommentParam {
     private String address;
 
     /**
+     * 评论人的网站地址
+     */
+    private String ip;
+
+    /**
      * post id
      */
     private String postId;

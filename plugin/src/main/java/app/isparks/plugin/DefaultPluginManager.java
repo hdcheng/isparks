@@ -2,24 +2,18 @@ package app.isparks.plugin;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.exception.SystemException;
-import app.isparks.core.plugin.PluginListener;
-import app.isparks.core.pojo.entity.Link;
-import app.isparks.core.pojo.enums.LinkType;
-import app.isparks.core.repository.BaseMapper;
-import app.isparks.core.service.ILinkService;
-import app.isparks.core.util.IOCUtils;
 import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.framework.enhance.WebPage;
-import app.isparks.plugin.enhance.web.*;
+import app.isparks.core.plugin.PluginListener;
+import app.isparks.core.repository.BaseMapper;
+import app.isparks.core.util.IOCUtils;
+import app.isparks.plugin.enhance.web.IndexPageEnhancer;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.core.MethodIntrospector;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -33,41 +27,55 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author： chenghd
  * @date： 2021/3/17
  */
-@Component
-public class DefaultPluginManager extends AbstractPluginManager {
+public final class DefaultPluginManager extends AbstractPluginManager {
 
-    private Logger log = LoggerFactory.getLogger(DefaultPluginManager.class);
-
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
-
-    @Autowired
-    private ApplicationContext applicationContext;
+    private static Logger log = LoggerFactory.getLogger(DefaultPluginManager.class);
 
     private AbstractViewModelEnhancer postPageEnhancer;
 
-    private Map<String,AbstractViewModelEnhancer> enhancers = new ConcurrentHashMap<>();
+    private static volatile RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-    @Override
-    public void setLinkButton(String htmlFileName, String pluginName, String htmlDom) {
-        IOCUtils.getBeanByClass(ILinkService.class).ifPresent((linkService) -> {
-            initLink(linkService,htmlFileName,pluginName,htmlDom);
-        });
+    private static Map<String, AbstractViewModelEnhancer> enhancers = new ConcurrentHashMap<>();
+
+    private static DefaultPluginManager defaultPluginManager;
+
+    private DefaultPluginManager(){
+        super();
+        requestMappingHandlerMapping = (RequestMappingHandlerMapping) IOCUtils.getBeanByName("requestMappingHandlerMapping").orElseThrow( () ->new SystemException("RequestMappingHandlerMapping bean no find"));
     }
 
-//    @Override
-//    public void registerHttpApi(String[] urls, RequestMethod[] methods, BaseWebApi controller, String method, Class<?>... parameterTypes) {
-//        try {
-//            RequestMappingInfo info = RequestMappingInfo.paths(urls).methods(methods).build();
-//
-//            RequestMappingHandlerMapping rmm = getRequestMappingHandlerMapping();
-//
-//            rmm.registerMapping(info,controller,controller.getClass().getMethod(method,parameterTypes));
-//
-//        }catch (Exception e){
-//            log.error("注册Controller失败",e);
-//        }
-//    }
+    /**
+     * 获取实例
+     */
+    public static DefaultPluginManager instance(){
+        if(defaultPluginManager == null){
+            synchronized (AbstractPluginManager.class){
+                if(defaultPluginManager == null){
+                    defaultPluginManager = new DefaultPluginManager();
+                }
+            }
+        }
 
+        return defaultPluginManager;
+    }
+
+    /**
+     * 获取 RequestMappingHandlerMapping 对象用于注册前端接口
+     */
+    private RequestMappingHandlerMapping getRequestMappingHandlerMapping(){
+        if(requestMappingHandlerMapping == null){
+            synchronized (AbstractPluginManager.class){
+                if(requestMappingHandlerMapping == null){
+                    requestMappingHandlerMapping = (RequestMappingHandlerMapping) IOCUtils.getBeanByName("requestMappingHandlerMapping").orElseThrow( () ->new SystemException("RequestMappingHandlerMapping bean no find"));
+                }
+            }
+        }
+        return requestMappingHandlerMapping;
+    }
+
+    /**
+     * 注册API
+     */
     @Override
     public <T> void registerHttpApi(Class<T> controllerType) {
         try {
@@ -77,16 +85,20 @@ public class DefaultPluginManager extends AbstractPluginManager {
             IOCUtils.getBeanByClass(controllerType).ifPresent(controller -> {
                 RequestMappingHandlerMapping rmm = getRequestMappingHandlerMapping();
                 //see : AbstractHandlerMethodMapping line:268
-                Map<Method,RequestMappingInfo> methods = resolveAnnotationInfoFromController(controllerType);
+                Map<Method, RequestMappingInfo> methods = resolveAnnotationInfoFromController(controllerType);
                 methods.forEach((method,mapping)->{
                     rmm.registerMapping(mapping,controller,method);
                 });
             });
+
         }catch (Exception e){
             log.error("注册Controller失败",e);
         }
     }
 
+    /**
+     * 解析类上的注解
+     */
     private <T> Map<Method,RequestMappingInfo> resolveAnnotationInfoFromController(Class<T> controllerType){
 
         Map<Method,RequestMappingInfo> methods = MethodIntrospector.
@@ -95,6 +107,9 @@ public class DefaultPluginManager extends AbstractPluginManager {
         return methods == null ? new HashMap<>() : methods;
     }
 
+    /**
+     * 解析方法上的注解
+     */
     private RequestMappingInfo getMappingForMethod(Method method,Class controllerType){
 
         RequestMapping classMappingAnnotation = (RequestMapping)controllerType.getAnnotation(RequestMapping.class);
@@ -137,11 +152,17 @@ public class DefaultPluginManager extends AbstractPluginManager {
         return null;
     }
 
+    /**
+     * 注册异步监听事件
+     */
     @Override
     public <E extends ApplicationEvent> void registerAsynchronousListener(PluginListener<E> listener) {
 
     }
 
+    /**
+     * 注册mapper
+     */
     @Override
     public <M extends BaseMapper> Optional<M> registerMyBatisMapper(String mapperName, Class<M> mapperClass) {
         Optional<SqlSessionFactory> sqlSessionFactory = IOCUtils.getBeanByClass(SqlSessionFactory.class);
@@ -157,6 +178,9 @@ public class DefaultPluginManager extends AbstractPluginManager {
         return Optional.empty();
     }
 
+    /**
+     * 注册增强器
+     */
     @Override
     public synchronized void registerWebPageEnhancer(AbstractViewModelEnhancer nextEnhancer, WebPage webPage) {
 
@@ -173,36 +197,6 @@ public class DefaultPluginManager extends AbstractPluginManager {
 
         enhancers.put(webPage.toString(),nextEnhancer);
 
-    }
-
-    /**
-     * 获取RequestMappingHandlerMapping实例
-     */
-    public RequestMappingHandlerMapping getRequestMappingHandlerMapping(){
-        if(requestMappingHandlerMapping == null){
-            synchronized (this){
-                if(requestMappingHandlerMapping == null){
-                    requestMappingHandlerMapping = (RequestMappingHandlerMapping) IOCUtils
-                            .getBeanByName("requestMappingHandlerMapping")
-                            .orElseThrow( () ->new SystemException("bean no find"));
-                }
-            }
-        }
-        return requestMappingHandlerMapping;
-    }
-
-    /**
-     * 初始化Link数据
-     */
-    private void initLink(ILinkService linkService, String htmlFileName, String pluginName, String htmlDom){
-
-        Link link = new Link();
-        link.setUrl("http://127.0.0.1:8174/admin/plugin/"+htmlFileName);
-        //link.setLogo("<span uk-icon='image' class='uk-box-shadow-hover-small'></span>");
-        link.setLogo(htmlDom);
-        link.setName(pluginName);
-        link.setType(LinkType.PLUGIN.getCode());
-        linkService.saveIfUrlAbsent(link);
     }
 
 }

@@ -1,7 +1,9 @@
 package app.isparks.dao.mybatis.mapper;
 
+import app.isparks.core.pojo.entity.Comment;
 import app.isparks.core.pojo.entity.relation.PostCommentRL;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,6 +27,9 @@ public interface PostCommentRLMapper {
 
     // 根据 post 查找
     List<PostCommentRL> selectByPost(String postId);
+
+    // 根据 post id 查找 comment
+    List<Comment> selectCommentByPost(@Param("cond") Comment cond,@Param("postId") String postId);
 
     // 统计数量
     int countByPost(String postId);

@@ -17,6 +17,7 @@ public interface CommentMapper {
     // 根据条件查找
     List<Comment> selectByCond(Comment c);
 
+
     // 根据条件统计数量
     int countBy(Comment c);
 

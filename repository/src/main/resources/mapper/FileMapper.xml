@@ -30,7 +30,6 @@
         <result column="location" property="location"/>
     </resultMap>
 
-    <!-- 新增数据 -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -53,7 +52,6 @@
         )
     </insert>
 
-    <!-- 根据id删除 -->
     <delete id="delete">
         DELETE FROM
         <include refid="table"/>
@@ -94,7 +92,6 @@
         </where>
     </delete>
 
-    <!-- 根据条件更新 -->
     <update id="updateById">
         UPDATE
         <include refid="table"/>
@@ -106,7 +103,6 @@
         id = #{id}
     </update>
 
-    <!-- 根据条件查找 -->
     <select id="selectByCond" resultType="list" resultMap="resultMap">
         <include refid="selectAll"/>
         <where>
@@ -140,7 +136,6 @@
         </where>
     </select>
 
-    <!-- 根据条件统计 -->
     <select id="countByCond" resultType="long">
         <include refid="count"/>
         <where>

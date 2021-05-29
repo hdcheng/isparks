@@ -49,7 +49,7 @@ public class PageController {
         indexPageEnhancer = IndexPageEnhancer.singleton();
     }
 
-    @ApiOperation("预览")
+    @ApiOperation("预览文章")
     @RequestMapping(value = "post/temp/{key}",method = {RequestMethod.GET})
     public String postTemp(@PathVariable("key")String key, Model model){
 
@@ -62,7 +62,7 @@ public class PageController {
         return adminController.postReview(postId,model);
     }
 
-    @ApiOperation("首页")
+    @ApiOperation("网站首页")
     @RequestMapping(value = {"","index"},method = {RequestMethod.GET})
     public String index(Model model){
 

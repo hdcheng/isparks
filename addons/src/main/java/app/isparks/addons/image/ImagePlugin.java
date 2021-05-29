@@ -23,14 +23,14 @@ import java.util.Map;
  * @author： chenghd
  * @date： 2021/3/13
  */
-public class ImageManagerPlugin implements IPlugin {
+public class ImagePlugin implements IPlugin {
 
 
     @Override
     public void activate(Object var) {
-        ISparksApplication.instance().getPluginManager().ifPresent((pm)->{
-            pm.setLinkButton("image","图片管理","<span uk-icon='image'></span>");
-        });
+//        ISparksApplication.instance().getPluginManager().ifPresent((pm)->{
+//            pm.setLinkButton("image","图片管理","<span uk-icon='image'></span>");
+//        });
 
         IOCUtils.getBeanByClass(ILinkService.class).ifPresent(linkService -> {
             registerApi(linkService);

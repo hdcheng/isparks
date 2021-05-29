@@ -11,12 +11,9 @@ import app.isparks.core.web.support.ResultUtils;
 import app.isparks.service.impl.LinkServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 
 /**
- *
  * @author： chenghd
  * @date： 2021/3/28
  */
@@ -30,7 +27,7 @@ public class LinkApi {
         this.linkService = linkService;
     }
 
-    @ApiOperation("更新链接")
+    @ApiOperation("create new link")
     @RequestMapping(value = "save",method = {RequestMethod.POST})
     public Result saveLink(@RequestBody LinkParam param){
 
@@ -41,7 +38,7 @@ public class LinkApi {
         return ResultUtils.build(dto);
     }
 
-    @ApiOperation("更新链接")
+    @ApiOperation("update link info")
     @RequestMapping(value = "update",method = {RequestMethod.POST})
     public Result updateLink(@RequestBody LinkParam param){
 
@@ -51,7 +48,7 @@ public class LinkApi {
     }
 
 
-    @ApiOperation("保存站外链接")
+    @ApiOperation("page links")
     @RequestMapping(value = "page/by/type",method = {RequestMethod.GET})
     public Result pageOffSiteLink(@RequestParam("type") int typeCode,@RequestParam(value = "page",required = false)Integer page,@RequestParam(value = "size",required = false)Integer size){
 
@@ -65,7 +62,7 @@ public class LinkApi {
         return ResultUtils.build(pageData);
     }
 
-    @ApiOperation("根据id删除")
+    @ApiOperation("delete by id")
     @RequestMapping(value = "delete",method = {RequestMethod.GET})
     public Result deleteById(@RequestParam("id")String id){
         return ResultUtils.build(linkService.delete(id));

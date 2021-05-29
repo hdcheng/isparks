@@ -1,18 +1,25 @@
 package app.isparks.addons.blog.service;
 
-import app.isparks.addons.blog.dao.PostAttachMapper;
+import app.isparks.addons.blog.mapper.PostAttachMapper;
 import app.isparks.addons.blog.entity.PostAttach;
+import app.isparks.core.config.ISparksConstant;
+import app.isparks.core.config.ISparksProperties;
+import app.isparks.core.file.util.FileUtils;
 import app.isparks.core.pojo.dto.PostDTO;
+import app.isparks.core.pojo.entity.Option;
 import app.isparks.core.pojo.enums.DataStatus;
+import app.isparks.core.service.IOptionService;
 import app.isparks.core.service.IPostService;
 import app.isparks.core.util.IdUtils;
 import com.github.pagehelper.PageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author： chenghd
@@ -21,6 +28,13 @@ import java.util.Optional;
 @Service
 public class BlogServiceImpl implements IBlogService{
 
+    private Logger log = LoggerFactory.getLogger(BlogServiceImpl.class);
+
+    private final static String ABOUT_MD_FILE_NAME = "about.md";
+
+    @Autowired
+    private IOptionService optionService;
+
     private PostAttachMapper postAttachMapper;
 
     private IPostService postService;
@@ -28,6 +42,27 @@ public class BlogServiceImpl implements IBlogService{
     public BlogServiceImpl(PostAttachMapper postAttachMapper,IPostService postService){
         this.postAttachMapper = postAttachMapper;
         this.postService = postService;
+    }
+
+    @Override
+    public String aboutPageMDContent() {
+
+        File file = new File(ISparksProperties.MARKDOWN_FILE_PATH,ABOUT_MD_FILE_NAME);
+
+        String md = FileUtils.readText(file.getPath());
+
+        return md;
+    }
+
+    @Override
+    public void updateAboutPageMDContent(String mdContent) {
+        if(mdContent == null || mdContent.isEmpty()){
+            return;
+        }
+        File file = new File(ISparksProperties.MARKDOWN_FILE_PATH,ABOUT_MD_FILE_NAME);
+
+        FileUtils.writeText(file.getPath(),mdContent,false);
+
     }
 
     @Override

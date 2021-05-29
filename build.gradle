@@ -58,7 +58,7 @@ ext {
     slf4jVersion = '1.7.30'
     logbackVersion = '1.2.3'
     logbackExpSpringVersion = '0.1.5'
-    pf4jVersion = '3.4.1'
+    pf4jVersion = '3.5.0'
     commonsioVersion = '2.8.0'
     gsonVersion = '2.8.6'
     aspectjVersion = '1.9.6'

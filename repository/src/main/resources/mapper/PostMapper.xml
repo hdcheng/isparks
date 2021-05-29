@@ -27,7 +27,6 @@
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-    <!-- 新增 -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -48,7 +47,6 @@
         )
     </insert>
 
-    <!-- 删除 -->
     <delete id="deleteById">
         DELETE FROM
         <include refid="table"/>
@@ -86,8 +84,6 @@
         </where>
     </delete>
 
-
-    <!-- 更新 -->
     <update id="update">
         UPDATE
         <include refid="table"/>
@@ -102,12 +98,10 @@
         WHERE id = #{id}
     </update>
 
-    <!-- 查找所有数据 -->
     <select id="selectAll" resultMap="baseMapper" resultType="list">
         <include refid="selectAll"/>
     </select>
 
-    <!-- 根据条件查询 -->
     <select id="selectByCond" resultMap="baseMapper" resultType="list">
         <include refid="selectAll"/>
         <where>
@@ -139,13 +133,11 @@
         <include refid="sort"/>
     </select>
 
-    <!-- 根据ID查询数据 -->
     <select id="selectById" resultMap="baseMapper">
         <include refid="selectAll"/>
         WHERE id = #{id}
     </select>
 
-    <!-- 统计 -->
     <select id="countByCond" resultType="int">
         SELECT count(1) FROM
         <include refid="table"/>

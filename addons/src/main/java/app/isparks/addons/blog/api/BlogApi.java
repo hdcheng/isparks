@@ -18,24 +18,21 @@ import app.isparks.core.service.IPostService;
 import app.isparks.core.util.UrlUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Api("博客接口")
 @RestController("web_page_Api")
 @RequestMapping("api/blog")
 public class BlogApi implements ApplicationEventPublisherAware {
@@ -112,17 +109,11 @@ public class BlogApi implements ApplicationEventPublisherAware {
     }
 
     @RequestMapping(value = "about",method = {RequestMethod.GET,RequestMethod.POST})
-    public Result about(@RequestParam("page")int page,@RequestParam("size")int size){
+    public Result about(){
 
-        AboutPageVO vo = new AboutPageVO();
-        vo.setTitle("Eastry的个人网站");
-        vo.setSubtitle(new Date().toString());
-        vo.setContact("https://www.baidu.com");
-        vo.setMdContent("这是主要内容");
-        vo.setHtmlContent("这是次要内容");
-
-        return ResultUtils.success().setData(vo);
+        return ResultUtils.success().setData(blogService.aboutPageMDContent());
     }
+
 
     @RequestMapping(value = "gallery",method = {RequestMethod.GET,RequestMethod.POST})
     public Result gallery(@RequestParam("page")int page,@RequestParam("size")int size){

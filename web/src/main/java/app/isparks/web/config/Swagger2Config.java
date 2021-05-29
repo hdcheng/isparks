@@ -20,13 +20,15 @@ public class Swagger2Config {
 
     @Bean
     public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
                 //controller包路径
-                .apis(RequestHandlerSelectors.basePackage("app.isparks.web.controller.api"))
+                .apis(RequestHandlerSelectors.basePackage("app.isparks"))
                 .paths(PathSelectors.any())
                 .build();
+
+        return docket;
     }
 
     private ApiInfo apiInfo() {

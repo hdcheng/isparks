@@ -1,8 +1,9 @@
-package app.isparks.addons.blog.api;
+package app.isparks.addons.blog.controller;
 
 
+import app.isparks.addons.blog.api.BlogApi;
+import app.isparks.addons.blog.api.BlogConstant;
 import app.isparks.core.framework.enhance.WebPage;
-import app.isparks.core.service.IPostService;
 import app.isparks.core.util.StringUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
@@ -39,7 +40,7 @@ public class BlogController {
     public String archive(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model){
 
         int p = page == null ? 1 : page;
-        int s = size == null ? 10:size;
+        int s = size == null ? 10: size;
 
         model.addAttribute(BlogConstant.PAGE_DATA_KEY, blogApi.archive(p,s).getData());
 
@@ -60,9 +61,10 @@ public class BlogController {
     @RequestMapping(value = "about",method = {RequestMethod.GET})
     public String about(Model model){
 
-        model.addAttribute(BlogConstant.PAGE_DATA_KEY,blogApi.about(1,10).getData());
+        model.addAttribute(BlogConstant.PAGE_DATA_KEY,blogApi.about().getData());
 
         return WebPage.ABOUT.file();
+
     }
 
     @RequestMapping(value = "gallery",method = {RequestMethod.GET})

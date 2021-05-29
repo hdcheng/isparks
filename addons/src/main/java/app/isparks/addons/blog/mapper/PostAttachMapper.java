@@ -1,4 +1,4 @@
-package app.isparks.addons.blog.dao;
+package app.isparks.addons.blog.mapper;
 
 import app.isparks.addons.blog.entity.PostAttach;
 import app.isparks.core.repository.BaseMapper;
@@ -11,6 +11,7 @@ import java.util.List;
  * @author： chenghd
  * @date： 2021/3/21
  */
+@Mapper
 public interface PostAttachMapper extends BaseMapper<PostAttach> {
 
     /**

@@ -1,5 +1,6 @@
 package app.isparks.web;
 
+import app.isparks.addons.blog.BlogBoot;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.framework.ISparksApplication;
 import app.isparks.plugin.PluginBoot;
@@ -21,12 +22,13 @@ import java.util.Arrays;
  * @date 2020/9/21
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@ComponentScan(
-        basePackages = "app.isparks",
-        excludeFilters = { @ComponentScan.Filter(type = FilterType.CUSTOM , classes = TypeExcludeFilter.class),
-        @ComponentScan.Filter(type = FilterType.CUSTOM , classes = AutoConfigurationExcludeFilter.class),
-        @ComponentScan.Filter(type = FilterType.REGEX , pattern = {"app.isparks.addons.*"})
-})
+@ComponentScan(basePackages = "app.isparks")
+//@ComponentScan(
+//        basePackages = "app.isparks",
+//        excludeFilters = { @ComponentScan.Filter(type = FilterType.CUSTOM , classes = TypeExcludeFilter.class),
+//        @ComponentScan.Filter(type = FilterType.CUSTOM , classes = AutoConfigurationExcludeFilter.class),
+//        @ComponentScan.Filter(type = FilterType.REGEX , pattern = {"app.isparks.addons.*"})
+//})
 @EnableAsync(proxyTargetClass = true)
 public class Application {
 
@@ -35,14 +37,17 @@ public class Application {
     public static void main(String[] args) {
 
         // 打印系统参数
-        Arrays.asList(args).forEach((arg) -> {
-            System.out.println(arg);
-        });
+        Arrays.asList(args).forEach((arg) -> System.out.println(arg) );
 
-        ISparksApplication.instance().register("plugin",new PluginBoot(args));
+        ISparksApplication application = ISparksApplication.instance();
 
-        ISparksApplication.instance().register("service",new ServiceBoot(args));
+        //application.register("plugin",new PluginBoot(args));
 
+        application.register("service",new ServiceBoot(args));
+
+        application.register("blog",new BlogBoot());
+
+        // start spring boot
         applicationContext = SpringApplication.run(Application.class, args);
 
         ISparksApplication.run(applicationContext,args);

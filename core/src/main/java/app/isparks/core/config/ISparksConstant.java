@@ -40,6 +40,9 @@ public final class ISparksConstant {
     // 插件文件目录名
     public final static String PLUGINS_DIR_NAME = "plugins";
 
+    // markdown文件目录名
+    public final static String MARKDOWN_DIR_NAME = "markdowns";
+
     //authorization
     public final static String AUTHORIZATION = "authorization";
 

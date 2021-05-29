@@ -1,4 +1,86 @@
 <section th:fragment="fra" style="height: 100%;width: 100%;">
-博客管理
-
+<style>
+.uk-grid {
+    margin-left: 0 !important;
+}
+</style>
+<div id="main">
+    <ul class="uk-subnav uk-subnav-pill uk-flex-center" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
+        <li><a href="#">首页</a></li>
+        <li><a href="#">归档</a></li>
+        <li @click="loadAbout"><a href="#">关于</a></li>
+    </ul>
+    <hr class="uk-divider-icon">
+    <ul class="uk-switcher uk-margin">
+        <li>首页内容</li>
+        <li>归档内容</li>
+        <li>
+            <div class="uk-child-width-1-2@l uk-child-width-1-1@m" uk-grid>
+                <div id="aboutContentText" contenteditable="true" @input="changeAboutText($event)" style="border:.5px solid #cacacab3;padding: 1rem;min-height:600px;">
+                </div>
+                <div  v-html="about.markdownParse"  style="border:.5px solid #cacacab3;padding: 1rem;">
+                </div>
+            </div>
+            <div class="uk-margin">
+                <button class="uk-button uk-button-secondary" @click="updateAboutText">更新关于页面</button>
+            </div>
+        </li>
+    </ul>
+</div>
+<script>
+function pageLoaded(config){
+loadJS("/static/plugins/marked/marked.min.js",function(){
+    const app = new Vue({
+        el: '#main',
+        data:{
+            about:{
+                markdownParse:"",
+                markdownText:""
+            }
+        },
+        methods:{
+            initPageData(){
+                
+            },
+            loadAbout(){
+                axios.get("/api/blog/about").then(res => {
+                    if(res.status == 200 ){
+                        console.log(res.data.data);
+                        document.getElementById("aboutContentText").innerText = res.data.data;
+                        this.about.markdownText = res.data.data;
+                        this.about.markdownParse = marked(res.data.data);
+                    }
+                });
+            },
+            changeAboutText(e){
+                let aboutText = e.currentTarget.innerText;
+                this.about.markdownText = aboutText;
+                this.about.markdownParse = marked(aboutText);
+            },
+            updateAboutText(){
+                let md = this.about.markdownText;
+                if(md == ""){
+                    return;
+                }
+                axios({
+                    url: "/api/admin/blog/about/update",
+                    method: 'post',
+                    data: md,
+                    headers: {
+                        'Content-Type': 'text/html; charset=utf-8'
+                    },
+                }).then(res => {
+                    if(res.status == 200){
+                        this.loadAbout();
+                    }
+                });
+            }
+        },
+        created(){
+            this.initPageData();
+        }
+    });
+});
+}
+</script>
 </section>

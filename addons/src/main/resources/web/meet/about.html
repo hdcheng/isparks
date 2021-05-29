@@ -10,19 +10,19 @@
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
 <div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;min-height: calc(90vh);" >
     <article class="uk-article">
+<!--        <h1 class="uk-article-title" th:text="${PageData.title}">Heading</h1>-->
+<!--        <p class="uk-article-meta" th:text="${PageData.subtitle}">subtitle</a></p>-->
+<!--        <div class="uk-text-lead" th:utext="${PageData.htmlContent}"> </div>-->
 
-        <h1 class="uk-article-title" th:text="${PageData.title}">Heading</h1>
-        <p class="uk-article-meta" th:text="${PageData.subtitle}">subtitle</a></p>
-        <div class="uk-text-lead" th:utext="${PageData.htmlContent}"> </div>
-        <div id="mdContent"></div>
     </article>
+    <div id="mdContent"></div>
 </div>
 <footer th:replace = "partials/footer :: fra"></footer>
 </body>
 <script th:inline="javascript">
     const data = [[${PageData}]];
     function pageLoaded(config){
-        document.getElementById("mdContent").innerHTML = marked(data.mdContent||"")
+        document.getElementById("mdContent").innerHTML = marked(data||"")
     }
 </script>
 <script th:replace="partials/script :: fra"></script>

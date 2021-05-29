@@ -11,6 +11,11 @@
         <include refid="table"/>
     </sql>
 
+    <sql id="selectCommentIds">
+        SELECT comment_id FROM
+        <include refid="table"/>
+    </sql>
+
     <resultMap id="resultMap" type="app.isparks.core.pojo.entity.relation.PostCommentRL">
         <id property="id" column="id"/>
         <result property="postId" column="post_id"/>
@@ -58,7 +63,6 @@
             <if test="modifyTime != null">
                 AND modify_time = #{modifyTime}
             </if>
-
             <if test="postId != null and postId != ''">
                 AND post_id = #{postId}
             </if>
@@ -87,6 +91,30 @@
         ORDER BY modify_time DESC
     </select>
 
+    <select id="selectCommentByPost" resultMap="app.isparks.dao.mybatis.mapper.CommentMapper.resultMap" resultType="list">
+        SELECT c.id,c.create_time,c.modify_time,c.status,c.content,c.name,c.email,c.address,c.ip
+        FROM <include refid="app.isparks.dao.mybatis.mapper.CommentMapper.table"/> c
+        LEFT JOIN <include refid="table"/> rl ON c.id = rl.comment_id
+        <where>
+            rl.post_id = #{postId}
+            <if test="cond.status != null">
+                AND c.status = #{cond.status}
+            </if>
+            <if test="cond.name != null and cond.name != ''">
+                AND c.name = #{cond.name}
+            </if>
+            <if test="cond.email != null and cond.email != ''">
+                AND c.email = #{cond.email}
+            </if>
+            <if test="cond.address != null and cond.address != ''">
+                AND c.address = #{cond.address}
+            </if>
+            <if test="cond.ip != null and cond.ip != ''">
+                AND c.ip = #{cond.ip}
+            </if>
+        </where>
+    </select>
+
     <select id="selectByPost" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         WHERE post_id = #{postId}
@@ -94,8 +122,7 @@
 
     <select id="countByPost" resultType="int">
         SELECT count(1)
-        FROM
-        <include refid="table"/>
+        FROM <include refid="table"/>
         WHERE post_id = #{postId}
     </select>
 

@@ -9,12 +9,12 @@
     <sql id="selectAll">
         SELECT id,name,description,parent_id,create_time,modify_time
         FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table" />
     </sql>
 
     <sql id="count">
         SELECT count(1)
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
     </sql>
 
     <!-- mapper -->
@@ -29,7 +29,7 @@
     <!-- 新增 -->
     <insert id="insert">
         INSERT INTO
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
         (
         <if test="name != null and name != ''">name,</if>
         <if test="description != null and description != ''">description,</if>
@@ -46,19 +46,19 @@
     <!-- 删除  -->
     <delete id="deleteByName">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
         WHERE name = #{name}
         ORDER BY modify_time DESC
     </delete>
     <delete id="deleteById">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
         WHERE id = #{id}
     </delete>
 
     <delete id="deleteByCond">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
         <where>
             <if test="id != null and id != ''">
                 AND id = #{id}
@@ -84,7 +84,7 @@
     <!-- 更新 -->
     <update id="updateById">
         UPDATE
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.table"/>
         <set>
             <if test="name != null and name != ''">name = #{name} ,</if>
             <if test="description != null and description != ''">description = #{description} ,</if>
@@ -98,21 +98,21 @@
 
     <!-- 查找 -->
     <select id="selectAll" resultMap="BaseMapper">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.selectAll"/>
     </select>
     <select id="selectById" resultMap="BaseMapper">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.selectAll"/>
         WHERE id = #{id}
     </select>
     <select id="selectByName" resultMap="BaseMapper">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.selectAll"/>
         WHERE name = #{name}
         ORDER BY modify_time DESC
     </select>
 
     <!-- 根据条件查找 -->
     <select id="selectByCond" resultMap="BaseMapper" resultType="list">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.selectAll"/>
         <where>
             <if test="id != null and id != ''">
                 AND id = #{id}
@@ -137,7 +137,7 @@
     </select>
 
     <select id="countByCond" resultType="long">
-        <include refid="count"/>
+        <include refid="app.isparks.dao.mybatis.mapper.CategoryMapper.count"/>
         <where>
             <if test="id != null and id != ''">
                 AND id = #{id}

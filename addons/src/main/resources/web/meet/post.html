@@ -76,6 +76,7 @@ function pageLoaded(config){
                 email:"",
                 content:"",
                 address:"",
+                ip:"",
                 postId:""
             },
             comments:[]
@@ -86,7 +87,7 @@ function pageLoaded(config){
                 axios.get("http://httpbin.org/get").then(res => {
                     console.log(res);
                     if(res.status == 200){
-                        this.comment.address = res.data.origin;
+                        this.comment.ip = res.data.origin;
                     }
                 });
 
@@ -116,8 +117,6 @@ function pageLoaded(config){
             }
         },
         created(){
-            
-
             this.initPage();
         }
     });

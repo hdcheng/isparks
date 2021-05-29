@@ -1,10 +1,7 @@
 package app.isparks.plugin;
 
 import app.isparks.core.framework.IBoot;
-import app.isparks.core.framework.ISparksApplication;
 import app.isparks.core.plugin.IPlugin;
-import app.isparks.core.plugin.PluginManager;
-import app.isparks.core.util.IOCUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -31,12 +28,25 @@ public class PluginBoot implements IBoot {
 
     @Override
     public void boot(Object... args) {
-        IOCUtils.getBeanByClass(PluginManager.class).ifPresent(pm -> {
-            ISparksApplication.instance().register(new DefaultPluginManager());
-        });
 
-        loadPlugin();
-        activePlugin();
+        DefaultPluginManager pluginManager= DefaultPluginManager.instance();
+//        ApplicationContext context1 = IOCUtils.getApplicationContext();
+//        PluginManager p = IOCUtils.getBeanByClass(SpringPluginManager.class).get();
+//        System.out.println(context1);
+//        List<ITestExtensionPoint> ps = p.getExtensions(ITestExtensionPoint.class);
+//        List<PluginWrapper> pws = p.getPlugins();
+//        p.startPlugins();
+//        System.out.println(pws.size());
+
+
+
+//        IOCUtils.getBeanByClass(PluginManager.class).ifPresent(pm -> {
+//            ISparksApplication.instance().register(new DefaultPluginManager());
+//        });
+
+        //loadPlugin();
+        //activePlugin();
+
     }
 
     /**

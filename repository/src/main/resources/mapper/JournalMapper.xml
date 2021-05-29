@@ -17,7 +17,6 @@
         <result column="content" property="content"/>
     </resultMap>
 
-    <!-- 新增数据 -->
     <insert id="insert">
         INSERT INTO<include refid="table"/>(
         <if test="content != null and content != ''">content,</if>
@@ -29,10 +28,9 @@
 
     </insert>
 
-    <!-- 根据 id 删除 -->
     <delete id="deleteById">
-        DELETE FROM
-        <include refid="table"/>
+        DELETE
+        FROM <include refid="table"/>
         WHERE id = #{id}
     </delete>
 
@@ -59,13 +57,11 @@
     </delete>
 
 
-    <!-- 查找所有数据 -->
     <select id="selectAll" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         ORDER BY create_time DESC
     </select>
 
-    <!-- 统计日志数量 -->
     <select id="countByCond" resultType="int">
         SELECT count(1) FROM
         <include refid="table"/>
@@ -88,7 +84,6 @@
         </where>
     </select>
 
-    <!-- 根据条件查找 -->
     <select id="selectByCond" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         <where>
@@ -110,7 +105,6 @@
         </where>
     </select>
 
-    <!-- 根据条件更新 -->
     <update id="updateById">
         UPDATE
         <include refid="table"/>

@@ -28,6 +28,8 @@ public abstract class AbstractCurd<E extends BaseEntity> extends PageableCurd<E,
      * 分页查询所有数据。
      */
     public PageData<E> pageAll(PageInfo pageInfo) {
+
+
         return pageByCond(pageInfo, newEntity());
     }
 

@@ -8,7 +8,7 @@
 
     <sql id="selectAll">
         SELECT id,post_id,category_id,create_time,modify_time FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
     </sql>
 
     <resultMap id="resultMap" type="app.isparks.core.pojo.entity.relation.PostCategoryRL">
@@ -20,10 +20,9 @@
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-    <!-- 新增数据 -->
     <insert id="insert">
         INSERT INTO
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         (
         <if test="postId != ''">post_id,</if>
         <if test="categoryId != ''">category_id,</if>
@@ -38,23 +37,21 @@
     </insert>
 
 
-    <!-- 根据 post id 删除 -->
     <delete id="deleteByPost">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         WHERE post_id = #{postId}
     </delete>
 
-    <!-- 根据 tag id 删除 -->
     <delete id="deleteByCategory">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         WHEN category_id = #{categoryId}
     </delete>
 
     <delete id="deleteByCond">
         DELETE FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         <where>
             <if test="id != null and id != ''">
                 AND id = #{id}
@@ -78,20 +75,18 @@
         </where>
     </delete>
 
-    <!-- 根据 post id 查找 -->
     <select id="selectByPost" resultMap="resultMap">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.selectAll"/>
         WHERE post_id = #{postId}
     </select>
 
-    <!-- 根据 category id 查找 -->
     <select id="selectByCategory" resultMap="resultMap">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.selectAll"/>
         WHERE category_id = #{categoryId}
     </select>
 
     <select id="selectByCond" resultMap="resultMap">
-        <include refid="selectAll"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.selectAll"/>
         <where>
             <if test="postId != null and postId != ''">
                 AND post_id = #{postId}
@@ -106,7 +101,7 @@
     <select id="countByCond" resultType="long">
         SELECT count(1)
         FROM
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         <where>
             <if test="postId != null and postId != ''">
                 AND post_id = #{postId}
@@ -119,7 +114,7 @@
 
     <update id="updateById" >
         UPDATE
-        <include refid="table"/>
+        <include refid="app.isparks.dao.mybatis.mapper.PostCategoryRLMapper.table"/>
         <set>
             <if test="categoryId != null and categoryId != ''">category_id = #{categoryId} ,</if>
             <if test="postId != null and postId != ''">post_id = #{postId} ,</if>

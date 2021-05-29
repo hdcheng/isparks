@@ -5,6 +5,7 @@ import app.isparks.core.pojo.enums.DataType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import org.slf4j.Logger;
+import java.util.Optional;
 import org.slf4j.LoggerFactory;
 import app.isparks.core.pojo.dto.CommentDTO;
 import app.isparks.core.pojo.entity.Comment;
@@ -21,10 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import app.isparks.dao.repository.AbstractPostCommentRLCurd;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl extends AbstractService<Comment> implements ICommentService {
@@ -90,8 +87,7 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
     public PageData<CommentDTO> pageByPost(String postId, int page, int size) {
         notEmpty(postId,"post id must not be empty");
 
-        PageData<CommentDTO> pageData = null;
-        List<CommentDTO> dtos = new LinkedList<>();
+        PageData<CommentDTO> pageData ;
 
         PostCommentRL rl = new PostCommentRL();
         rl.setPostId(postId);
@@ -126,20 +122,11 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
     @Override
     public PageData<CommentDTO> pageValidByPost(String postId, int page, int size) {
         notEmpty(postId,"post id must not be empty");
-        PageData<CommentDTO> pageData = null;
+        PageData<CommentDTO> pageData ;
 
-        PostCommentRL rl = new PostCommentRL();
-        rl.setPostId(postId);
-        PageData<PostCommentRL> rlPageData = pcRLCurd.pageByCond(new PageInfo(page,size),rl);
-
-        pageData = rlPageData.convertData((pageRL)->{
-            Optional<Comment> comment = abstractGetById(pageRL.getCommentId());
-            if(comment.isPresent() && comment.get().getStatus() == DataStatus.VALID.getCode()){
-                return commentConverter.map(comment.get());
-            }else{
-                return null;
-            }
-        });
+        Comment comment = (Comment)new Comment().withStatus(DataStatus.VALID);
+        PageData<Comment> commentPageData = pcRLCurd.pageCommentByPost(new PageInfo(page,size),comment,postId);
+        pageData = commentPageData.convertData(c -> commentConverter.map(c));
 
         return pageData == null ? new PageData<>() : pageData;
     }

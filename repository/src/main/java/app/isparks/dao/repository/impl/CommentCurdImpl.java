@@ -1,5 +1,7 @@
 package app.isparks.dao.repository.impl;
 
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.pojo.page.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import app.isparks.core.pojo.entity.Comment;
@@ -41,6 +43,8 @@ public class CommentCurdImpl extends AbstractCommentCurd {
 
         return mapper.selectByCond(comment);
     }
+
+
 
     @Override
     public Comment updateById(Comment comment) {

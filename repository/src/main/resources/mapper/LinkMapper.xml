@@ -29,7 +29,6 @@
         <result column="type" property="type"/>
     </resultMap>
 
-    <!-- 新增数据 -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -50,7 +49,6 @@
         )
     </insert>
 
-    <!-- 根据id删除 -->
     <delete id="delete">
         DELETE FROM
         <include refid="table"/>
@@ -88,7 +86,6 @@
         </where>
     </delete>
 
-    <!-- 根据条件更新 -->
     <update id="updateById">
         UPDATE
         <include refid="table"/>
@@ -104,7 +101,6 @@
         id = #{id}
     </update>
 
-    <!-- 根据条件查找 -->
     <select id="selectByCond" resultType="list" resultMap="resultMap">
         <include refid="selectAll"/>
         <where>
@@ -135,7 +131,6 @@
         </where>
     </select>
 
-    <!-- 根据条件统计 -->
     <select id="countByCond" resultType="long">
         <include refid="count"/>
         <where>
@@ -166,7 +161,6 @@
         </where>
     </select>
 
-    <!-- 根据url查找数据 -->
     <select id="selectByUrl" resultType="app.isparks.core.pojo.entity.Link" resultMap="resultMap">
         <include refid="selectAll"/>
         WHERE url = #{url}

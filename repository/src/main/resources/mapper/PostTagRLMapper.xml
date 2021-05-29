@@ -20,7 +20,6 @@
         <result property="modifyTime" column="modify_time"/>
     </resultMap>
 
-    <!-- 新增数据 -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -37,14 +36,12 @@
         )
     </insert>
 
-    <!-- 根据 post id 删除 -->
     <delete id="deleteByPost">
         DELETE FROM
         <include refid="table"/>
         where post_id = #{postId}
     </delete>
 
-    <!-- 根据 tag id 删除 -->
     <delete id="deleteByTag">
         DELETE FROM
         <include refid="table"/>
@@ -76,25 +73,21 @@
         </where>
     </delete>
 
-    <!-- 根据 post id 查找 -->
     <select id="selectByPost" resultMap="resultMap">
         <include refid="selectAll"/>
         WHERE post_id = #{postId}
     </select>
 
-    <!-- 根据 tag id 查找 -->
     <select id="selectByTag" resultMap="resultMap">
         <include refid="selectAll"/>
         WHERE tag_id = #{tagId}
     </select>
 
-    <!-- 根据 post 和 tag id 查找 -->
     <select id="selectByPostAndTag" resultMap="resultMap">
         <include refid="selectAll"/>
         WHERE tag_id = #{tagId} AND post_id = #{postId}
     </select>
 
-    <!-- 根据条件查询你 -->
     <select id="selectByCond" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         <where>

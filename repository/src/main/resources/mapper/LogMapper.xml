@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.isparks.dao.mybatis.mapper.LogMapper">
 
-    <!-- table -->
     <sql id="table">
         log
     </sql>
@@ -14,7 +13,6 @@
     </sql>
 
 
-    <!-- result map -->
     <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Log">
         <id property="id" column="id"/>
         <result property="type" column="type"/>
@@ -30,7 +28,6 @@
         <include refid="table"/>
     </sql>
 
-    <!-- insert -->
     <insert id="insert">
         INSERT INTO
         <include refid="table"/>
@@ -52,12 +49,10 @@
     </insert>
 
 
-    <!-- 查询所有数据 -->
     <select id="selectAll" resultMap="resultMap">
         <include refid="selectAll"/>
     </select>
 
-    <!-- 根据条件查询 -->
     <select id="selectByCond" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         <where>
@@ -86,7 +81,6 @@
         ORDER BY create_time DESC
     </select>
 
-    <!-- 根据 id 删除 -->
     <delete id="deleteByCond">
         DELETE FROM
         <include refid="table"/>
@@ -115,7 +109,6 @@
         </where>
     </delete>
 
-    <!-- 更新 -->
     <update id="updateByCond" >
         UPDATE
         <include refid="table"/>
@@ -131,7 +124,6 @@
         id = #{id}
     </update>
 
-    <!-- 统计 -->
     <select id="countByCond" resultType="long">
         <include refid="count"/>
         <where>

@@ -9,6 +9,7 @@ import app.isparks.core.service.inter.AbstractThemeService;
 import app.isparks.core.util.ResourcesUtils;
 import app.isparks.core.web.property.WebConstant;
 import app.isparks.core.web.property.WebProperties;
+import app.isparks.service.impl.OptionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -30,14 +31,17 @@ public class ThemeServiceImpl extends AbstractThemeService {
 
     private final static String WEB_TEMPLATE_CLASSPATH = WebConstant.WEB_TEMPLATE_CLASSPATH+ISparksConstant.URL_SEPARATOR;
 
+    private IOptionService optionService;
+
     @Autowired
     private TemplateEngine templateEngine;
 
     @Autowired
-    private IOptionService optionService;
-
-    @Autowired
     private ISysService sysService;
+
+    public ThemeServiceImpl(OptionServiceImpl optionService){
+        this.optionService = optionService;
+    }
 
     @Override
     protected String resolveCustomizeTheme(String filePath) {

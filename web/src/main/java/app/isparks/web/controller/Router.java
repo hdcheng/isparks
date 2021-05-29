@@ -3,10 +3,11 @@ package app.isparks.web.controller;
 import app.isparks.core.service.ILinkService;
 import app.isparks.core.service.IOptionService;
 import app.isparks.core.web.property.WebProperties;
-import app.isparks.web.pojo.vo.Button;
-import app.isparks.web.pojo.vo.Menu;
+import app.isparks.plugin.vo.Button;
+import app.isparks.plugin.vo.Menu;
+import app.isparks.service.impl.LinkServiceImpl;
+import app.isparks.service.impl.OptionServiceImpl;
 import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -36,7 +37,8 @@ public class Router {
     // 插件目录
     private final static List<Button> DEFAULT_BUTTONS = new ArrayList<>();
 
-    @Autowired
+    private IOptionService optionService;
+
     private ILinkService linkService;
 
     static {
@@ -54,10 +56,20 @@ public class Router {
         postManage.add(new Menu("写文章","/admin/post/edit"));
         DEFAULT_MENUS.add(new Menu("内容管理","#",postManage));
 
+        // 默认插件：插件管理
+        Button pluginManager = new Button();
+        pluginManager.setLink("/admin/plugin/pluginmanager");
+        pluginManager.setName("插件管理");
+        pluginManager.setSvg("<svg t=\"1621950986359\" class=\"icon\" viewBox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" p-id=\"2119\" width=\"200\" height=\"200\"><path d=\"M810.666667 597.333333h-85.333334v-64a21.333333 21.333333 0 0 0-21.333333-21.333333h-85.333333a21.333333 21.333333 0 0 0-21.333334 21.333333V597.333333h-170.666666v-64a21.333333 21.333333 0 0 0-21.333334-21.333333h-85.333333a21.333333 21.333333 0 0 0-21.333333 21.333333V597.333333H213.333333a42.666667 42.666667 0 0 0-42.666666 42.666667v256a42.666667 42.666667 0 0 0 42.666666 42.666667h597.333334a42.666667 42.666667 0 0 0 42.666666-42.666667v-256a42.666667 42.666667 0 0 0-42.666666-42.666667z m-42.666667 256H256v-170.666666h512z m42.666667-768H213.333333a42.666667 42.666667 0 0 0-42.666666 42.666667v256a42.666667 42.666667 0 0 0 42.666666 42.666667h597.333334a42.666667 42.666667 0 0 0 42.666666-42.666667V128a42.666667 42.666667 0 0 0-42.666666-42.666667z m-42.666667 256H256V170.666667h512z\" p-id=\"2120\" fill=\"#e6e6e6\"></path></svg>");
+        DEFAULT_BUTTONS.add(pluginManager);
+
     }
 
-    @Autowired
-    private IOptionService optionService;
+
+    public Router(OptionServiceImpl optionService, LinkServiceImpl linkService){
+        this.optionService = optionService;
+        this.linkService = linkService;
+    }
 
     public String navigator(String pageFileName){
 
@@ -65,12 +77,22 @@ public class Router {
             pageFileName.substring(0,pageFileName.length()-1);
         }
 
+        // 插件前端文件路径
         if(pageFileName.startsWith("plugin/")){
             pageFileName = pageFileName.replace("plugin/","");
             return buildPluginsPath(pageFileName);
         }
 
         return PAGE_PATH + pageFileName;
+    }
+
+    /**
+     * 插件模板路径
+     * @param fileName
+     * @return
+     */
+    private String buildPluginsPath(String fileName){
+        return PLUGIN_PATH + fileName;
     }
 
     public void setPageModel(Model model, String pageFileName, String content){
@@ -112,15 +134,6 @@ public class Router {
         // logo text
         model.addAttribute("logoText",optionService.getByPropertyOrDefault(WebProperties.WEBSITE_LOGO_TEXT,String.class));
 
-    }
-
-    /**
-     * 插件模板路径
-     * @param fileName
-     * @return
-     */
-    private String buildPluginsPath(String fileName){
-        return PLUGIN_PATH + fileName;
     }
 
 }
