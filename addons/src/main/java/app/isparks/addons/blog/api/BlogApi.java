@@ -5,6 +5,7 @@ import app.isparks.addons.blog.pojo.vo.*;
 import app.isparks.addons.blog.service.BlogServiceImpl;
 import app.isparks.addons.blog.service.IBlogService;
 import app.isparks.core.file.type.MediaType;
+import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.pojo.dto.FileDTO;
 import app.isparks.core.pojo.dto.LinkDTO;
 import app.isparks.core.pojo.dto.PostArchiveDTO;
@@ -18,6 +19,7 @@ import app.isparks.core.service.IPostService;
 import app.isparks.core.util.UrlUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
+import app.isparks.plugin.enhance.web.LinkPageEnhancer;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,12 @@ public class BlogApi implements ApplicationEventPublisherAware {
     private IFileService fileService;
 
     private ApplicationEventPublisher publisher;
+
+    private final static LinkPageEnhancer linkPageEnhancer;
+
+    static {
+        linkPageEnhancer = (LinkPageEnhancer)LinkPageEnhancer.singleton();
+    }
 
     public BlogApi(BlogServiceImpl blogService,IPostService postService,ILinkService linkService,IFileService fileService){
             this.blogService = blogService;
@@ -104,7 +112,7 @@ public class BlogApi implements ApplicationEventPublisherAware {
 
         PageData<LinkDTO> pageData = linkService.pageByType(page,size, LinkType.OFFSITE_LINK);
         LinkPageVO vo = new LinkPageVO(pageData);
-
+        
         return ResultUtils.success().setData(vo);
     }
 

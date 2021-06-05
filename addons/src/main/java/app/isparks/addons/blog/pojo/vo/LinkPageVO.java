@@ -2,9 +2,11 @@ package app.isparks.addons.blog.pojo.vo;
 
 import app.isparks.core.pojo.dto.LinkDTO;
 import app.isparks.core.pojo.page.PageData;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class LinkPageVO extends PageData<LinkDTO> {
 
     public LinkPageVO(){

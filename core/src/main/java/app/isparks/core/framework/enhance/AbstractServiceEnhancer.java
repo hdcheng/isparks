@@ -10,7 +10,7 @@ import java.util.List;
  * @author： chenghd
  * @date： 2021/3/25
  */
-public class AbstractServiceEnhancer<DTO extends BaseDTO> implements IEnhancer<DTO>{
+public abstract class AbstractServiceEnhancer<DTO extends BaseDTO> implements IEnhancer<DTO>{
 
     private AbstractServiceEnhancer nextEnhancer;
 
