@@ -44,16 +44,22 @@ public abstract class AbstractPluginManager implements PluginManager {
 
     @Override
     public synchronized void refresh() {
+
         plugins().clear();
+
         pluginManager.loadPlugins();
+
         pluginManager.getPlugins().forEach(pluginWrapper -> {
             PluginInfo info = change(pluginWrapper);
             if(info != null){
                 plugins.put(pluginWrapper.getPluginId(),info);
             }
         });
+
         startPlugins();
+
         log.info("plugins count {}",plugins.size());
+
     }
 
     private PluginInfo change(PluginWrapper wrapper){
@@ -165,12 +171,19 @@ public abstract class AbstractPluginManager implements PluginManager {
             return PluginStatus.DISABLED;
         }
         PluginState state = pluginManager.stopPlugin(pluginId);
-        return statusConverter(state);
+        PluginStatus status = statusConverter(state);
+
+        plugins.get(pluginId).setStatus(status);
+
+        return status;
     }
 
     @Override
     public synchronized boolean deletePlugin(String id) {
         if(plugins.containsKey(id)){
+
+            plugins.remove(id);
+
             return pluginManager.deletePlugin(id);
         }
         return false;

@@ -141,7 +141,6 @@ public final class DefaultPluginManager extends AbstractPluginManager {
                 urls = paths;
             }
 
-
             return RequestMappingInfo
                     //.paths(paths)
                     .paths(urls)

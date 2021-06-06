@@ -112,7 +112,7 @@ public class BlogApi implements ApplicationEventPublisherAware {
 
         PageData<LinkDTO> pageData = linkService.pageByType(page,size, LinkType.OFFSITE_LINK);
         LinkPageVO vo = new LinkPageVO(pageData);
-        
+
         return ResultUtils.success().setData(vo);
     }
 
