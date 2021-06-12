@@ -7,10 +7,10 @@
 <link href="../static/plugins/highlight/styles/default.css" th:href="@{/static/plugins/highlight/styles/default.css}" rel="stylesheet"/>
 <style th:replace = "partials/head :: style"></style>
 </head>
-<body>
+<body is-loading>
 <div style="position: relative;">
-    <div class="uk-height-medium uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="../static/images/cover.jpg" uk-img style="display: flex;flex-direction: column;">
-        <h1 th:text="${PageData.title}">Background Image</h1>
+    <div class="uk-height-medium uk-flex uk-flex-center uk-flex-middle uk-background-cover uk-light" data-src="../static/images/img3.jpg" uk-img style="display: flex;flex-direction: column;">
+        <h1 th:text="${PageData.title}" style="font-weight: 900;">Background Image</h1>
         <small th:text = "${#dates.format(new java.util.Date(PageData.createTime), 'yyyy-MM-dd HH:mm')}">2021-10-10</small>
     </div>
     <a href="/index" class="uk-button uk-button-secondary" style="position: absolute;top: 2rem;left: 2rem;">首页</a>
@@ -27,7 +27,7 @@
             <input class="uk-input" type="text" placeholder="昵称" v-model="comment.name">
         </div>
         <div class="uk-margin">
-            <input class="uk-input" type="text" placeholder="邮箱" v-model="comment.email">
+            <input class="uk-input" type="text" placeholder="邮箱（可不填）" v-model="comment.email">
         </div>
         <div class="uk-margin">
             <textarea class="uk-textarea" rows="3" placeholder="内容"  v-model="comment.content"></textarea>
@@ -40,20 +40,23 @@
     <hr >
     
     <div class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
-        <article class="uk-comment uk-visible-toggle" tabindex="-1" v-for="c in comments">
-            <header class="uk-comment-header uk-position-relative">
+        <article class="uk-comment uk-visible-toggle" tabindex="-1" v-for="c in comments" style="margin-bottom: 1rem;">
+            <header class="uk-comment-header uk-position-relative" >
                 <div class="uk-grid-medium uk-flex-middle" uk-grid style="margin-left: -30px;">
                     <div class="uk-width-auto">
-                        <img class="uk-comment-avatar" src="../static/images/logo.png" width="80" height="80" alt="">
+                        <div style="border: 0.5px solid #6f6f6f63;overflow: hidden;border-radius: 5px;">
+                            <img class="uk-comment-avatar" src="../static/images/logo.png" width="80" height="80" alt="">
+                        </div>
                     </div>
                     <div class="uk-width-expand">
                         <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#" >{{c.name}}</a></h4>
+                        <small>{{c.email}}</small>
                         <p class="uk-comment-meta uk-margin-remove-top"><a class="uk-link-reset" href="#" >{{formatDate(c.createTime)}}</a></p>
                     </div>
                 </div>
-                <div class="uk-position-top-right uk-position-small uk-hidden-hover"><a class="uk-link-muted" >回复</a></div>
+                <div class="uk-position-top-right uk-position-small uk-hidden-hover" @click="reply(c.name)"><a class="uk-link-muted" >回复</a></div>
             </header>
-            <div class="uk-comment-body">
+            <div class="uk-comment-body" style="padding: 1rem;border: 0.5px solid #6f6f6f63;overflow: hidden;border-radius: 5px;">
                 <p>{{c.content}}</p>
             </div>
         </article>
@@ -66,7 +69,6 @@
 <script th:inline="javascript">
 function pageLoaded(config){
     const pageData = [[${PageData}]];
-    console.log(pageData);
     document.getElementById("content").innerHTML = marked(pageData.originContent||"")
     const app = new Vue({
         el: '#comment',
@@ -109,6 +111,10 @@ function pageLoaded(config){
                         this.comment.content ="";
                     }
                 });    
+           },
+           reply(name){
+                let content = this.comment.content;
+                this.comment.content = ("@"+name + ": " + content);
            },
            formatDate(ms){
                 const date = new Date(ms);

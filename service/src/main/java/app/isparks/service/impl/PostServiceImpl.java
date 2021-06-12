@@ -146,6 +146,22 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
     }
 
     @Override
+    public PageData<PostDTO> pageByCategory(int page, int size, DataStatus dataStatus, String categoryId) {
+
+        if(StringUtils.isEmpty(categoryId)){
+            return new PageData<>();
+        }
+
+        Post cond = new Post();
+        cond.withStatus(dataStatus);
+        PageData<Post> post = pcRLCurd.pagePostByCategory(new PageInfo(page <= 0 ? 1 : page,size <= 0 ? size : 10),cond,categoryId);
+
+        PageData<PostDTO> dto = post.convertData((p) -> converter(p));
+
+        return dto;
+    }
+
+    @Override
     public Optional<PostDTO> getById(String id) {
         notEmpty(id,"post id must not be null.");
 

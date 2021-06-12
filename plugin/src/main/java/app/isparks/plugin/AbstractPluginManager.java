@@ -1,8 +1,8 @@
 package app.isparks.plugin;
 
 import app.isparks.core.config.ISparksProperties;
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
-import app.isparks.core.framework.enhance.WebPage;
+import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
+import app.isparks.plugin.enhance.web.WebPage;
 import app.isparks.core.plugin.PluginInfo;
 import app.isparks.core.plugin.PluginListener;
 import app.isparks.core.plugin.PluginManager;
@@ -13,7 +13,6 @@ import app.isparks.core.repository.BaseMapper;
 import app.isparks.core.service.ILinkService;
 import app.isparks.core.util.IOCUtils;
 import app.isparks.core.util.StringUtils;
-import app.isparks.plugin.vo.Button;
 import org.pf4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 public abstract class AbstractPluginManager implements PluginManager {
 

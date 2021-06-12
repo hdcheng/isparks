@@ -2,8 +2,8 @@ package app.isparks.plugin;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.exception.SystemException;
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
-import app.isparks.core.framework.enhance.WebPage;
+import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
+import app.isparks.plugin.enhance.web.WebPage;
 import app.isparks.core.plugin.PluginListener;
 import app.isparks.core.repository.BaseMapper;
 import app.isparks.core.util.IOCUtils;
@@ -183,7 +183,7 @@ public final class DefaultPluginManager extends AbstractPluginManager {
     @Override
     public synchronized void registerWebPageEnhancer(AbstractViewModelEnhancer nextEnhancer, WebPage webPage) {
 
-        AbstractViewModelEnhancer enhancer =enhancers.get(webPage.toString());
+        AbstractViewModelEnhancer enhancer = enhancers.get(webPage.toString());
 
         if(enhancer == null){
             switch (webPage){

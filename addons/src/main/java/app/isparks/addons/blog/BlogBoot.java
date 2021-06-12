@@ -6,8 +6,8 @@ import app.isparks.addons.blog.pojo.vo.IndexPageVO;
 import app.isparks.addons.blog.service.IBlogService;
 import app.isparks.core.exception.PluginException;
 import app.isparks.core.framework.IBoot;
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
-import app.isparks.core.framework.enhance.WebPage;
+import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
+import app.isparks.plugin.enhance.web.WebPage;
 import app.isparks.core.pojo.base.BaseProperty;
 import app.isparks.core.pojo.dto.PostDTO;
 import app.isparks.core.pojo.enums.DataStatus;
@@ -35,40 +35,44 @@ public class BlogBoot implements IBoot {
 
         AbstractPluginManager pluginManager = DefaultPluginManager.instance();
 
+        IPostService postService = IOCUtils.getBeanByClass(IPostService.class).orElseThrow(()-> new PluginException("Get bean exception"));
+
         pluginManager.registerWebPageEnhancer(new AbstractViewModelEnhancer<BaseProperty>() {
+
             @Override
             public void enhance(Model model) {
-                IOCUtils.getBeanByClass(IPostService.class).ifPresent(postService -> {
-                    PageData<PostDTO> dtoData = postService.page(1,5, DataStatus.VALID);
+                PageData<PostDTO> dtoData = postService.page(1,5, DataStatus.VALID);
 
-                    PageData<IndexPostDTO> voData = dtoData.convertData((dto)->{
-                        IndexPostDTO vo = new IndexPostDTO();
-                        vo.setId(dto.getId());
-                        vo.setCreateTime(dto.getCreateTime());
-                        vo.setModifyTime(dto.getModifyTime());
-                        vo.setProperties(dto.getProperties());
-                        vo.setTitle(dto.getTitle());
-                        vo.setSummary(dto.getSummary());
+                PageData<IndexPostDTO> voData = dtoData.convertData((dto)->{
+                    IndexPostDTO vo = new IndexPostDTO();
+                    vo.setId(dto.getId());
+                    vo.setCreateTime(dto.getCreateTime());
+                    vo.setModifyTime(dto.getModifyTime());
+                    vo.setProperties(dto.getProperties());
+                    vo.setTitle(dto.getTitle());
+                    vo.setSummary(dto.getSummary());
 
-                        // visit
-                        Optional<PostAttach> postAttach = blogService.getByPostId(dto.getId());
-                        long visits = 0L;
-                        if(postAttach.isPresent()){
-                            visits = postAttach.get().getVisits();
-                        }
-                        vo.getProperties().putIfAbsent("visits",visits);
+                    // visit
+                    Optional<PostAttach> postAttach = blogService.getByPostId(dto.getId());
+                    long visits = 0L;
+                    if(postAttach.isPresent()){
+                        visits = postAttach.get().getVisits();
+                    }
+                    vo.getProperties().putIfAbsent("visits",visits);
 
-                        return vo;
-                    });
-
-                    IndexPageVO indexVo = new IndexPageVO();
-                    indexVo.setFooter("copy right ");
-                    indexVo.setPageData(voData);
-
-                    indexVo.setProperty("hots",blogService.listMostVisits(3,null));
-                    model.addAttribute(WebConstant.PAGE_DATA_KEY,indexVo);
-
+                    return vo;
                 });
+
+                IndexPageVO indexVo = new IndexPageVO();
+                indexVo.setFooter("copy right ");
+                indexVo.setPageData(voData);
+
+                indexVo.setProperty("hots",blogService.listMostVisits(3,null));
+
+                blogService.getConfigByKey("title").ifPresent(title -> indexVo.setProperty("title",title));
+                blogService.getConfigByKey("description").ifPresent(title -> indexVo.setProperty("description",title));
+
+                model.addAttribute(WebConstant.PAGE_DATA_KEY,indexVo);
             }
         }, WebPage.INDEX);
 

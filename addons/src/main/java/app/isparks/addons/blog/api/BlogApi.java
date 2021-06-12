@@ -5,7 +5,6 @@ import app.isparks.addons.blog.pojo.vo.*;
 import app.isparks.addons.blog.service.BlogServiceImpl;
 import app.isparks.addons.blog.service.IBlogService;
 import app.isparks.core.file.type.MediaType;
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.pojo.dto.FileDTO;
 import app.isparks.core.pojo.dto.LinkDTO;
 import app.isparks.core.pojo.dto.PostArchiveDTO;
@@ -13,6 +12,7 @@ import app.isparks.core.pojo.dto.PostDTO;
 import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.enums.LinkType;
 import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.service.ICategoryService;
 import app.isparks.core.service.IFileService;
 import app.isparks.core.service.ILinkService;
 import app.isparks.core.service.IPostService;
@@ -49,6 +49,8 @@ public class BlogApi implements ApplicationEventPublisherAware {
 
     private IFileService fileService;
 
+    private ICategoryService categoryService;
+
     private ApplicationEventPublisher publisher;
 
     private final static LinkPageEnhancer linkPageEnhancer;
@@ -57,11 +59,12 @@ public class BlogApi implements ApplicationEventPublisherAware {
         linkPageEnhancer = (LinkPageEnhancer)LinkPageEnhancer.singleton();
     }
 
-    public BlogApi(BlogServiceImpl blogService,IPostService postService,ILinkService linkService,IFileService fileService){
+    public BlogApi(BlogServiceImpl blogService,IPostService postService,ILinkService linkService,IFileService fileService,ICategoryService categoryService){
             this.blogService = blogService;
             this.postService = postService;
             this.linkService = linkService;
             this.fileService = fileService;
+            this.categoryService = categoryService;
     }
 
     /**
@@ -137,10 +140,16 @@ public class BlogApi implements ApplicationEventPublisherAware {
         return ResultUtils.success().setData(vo);
     }
 
-    @RequestMapping(value = "category",method = {RequestMethod.GET,RequestMethod.POST})
-    public Result category(@RequestParam("page")int page,@RequestParam("size")int size){
+    @RequestMapping(value = "categories",method = {RequestMethod.GET,RequestMethod.POST})
+    public Result<PageData> category(@RequestParam("page")int page,@RequestParam("size")int size){
 
-        return ResultUtils.fail();
+
+        return ResultUtils.build(categoryService.page(page,size));
+    }
+
+    @GetMapping("page/post/by/category")
+    public Result<PageData> pagePostByCategory(@RequestParam("page")int page,@RequestParam("size")int size,@RequestParam(value = "id",required = false) String categoryId){
+        return ResultUtils.build(categoryId == null ? postService.page(page,size,DataStatus.VALID) : postService.pageByCategory(page,size,DataStatus.VALID,categoryId));
     }
 
     @RequestMapping(value = "tag",method = {RequestMethod.GET,RequestMethod.POST})

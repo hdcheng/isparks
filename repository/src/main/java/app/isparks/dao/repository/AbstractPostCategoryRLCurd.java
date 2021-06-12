@@ -2,7 +2,10 @@ package app.isparks.dao.repository;
 
 
 
+import app.isparks.core.pojo.entity.Post;
 import app.isparks.core.pojo.entity.relation.PostCategoryRL;
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.template.AbstractCurd;
 
 import java.util.List;
@@ -38,6 +41,11 @@ public abstract class AbstractPostCategoryRLCurd extends AbstractCurd<PostCatego
      *
      */
     public abstract List<PostCategoryRL> findByCategory(String categoryId);
+
+    /**
+     * 根据分类查找数据
+     */
+    public abstract PageData<Post> pagePostByCategory(PageInfo pageInfo,Post post,String categoryId);
 
     /**
      * 根据 post id 查找分类

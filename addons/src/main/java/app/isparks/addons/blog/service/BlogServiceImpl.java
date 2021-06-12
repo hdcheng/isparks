@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author： chenghd
@@ -32,16 +33,20 @@ public class BlogServiceImpl implements IBlogService{
 
     private final static String ABOUT_MD_FILE_NAME = "about.md";
 
-    @Autowired
+    private Map<String,String> config_map = new ConcurrentHashMap<>();
+
+    private final String blog_config_key_prefix = "blog-config-";
+
     private IOptionService optionService;
 
     private PostAttachMapper postAttachMapper;
 
     private IPostService postService;
 
-    public BlogServiceImpl(PostAttachMapper postAttachMapper,IPostService postService){
+    public BlogServiceImpl(PostAttachMapper postAttachMapper,IPostService postService,IOptionService optionService){
         this.postAttachMapper = postAttachMapper;
         this.postService = postService;
+        this.optionService = optionService;
     }
 
     @Override
@@ -151,5 +156,52 @@ public class BlogServiceImpl implements IBlogService{
             PageHelper.clearPage(); // 清除分页数据
         }
         return dtos;
+    }
+
+    @Override
+    public Optional<String> getConfigByKey(String key) {
+        if(StringUtils.isEmpty(key)){
+            return Optional.empty();
+        }
+        String blog_config_key = blog_config_key_prefix + key;
+        String value = config_map.get(blog_config_key);
+        if(value == null){
+            Optional<Option> option = optionService.getOptionByKey(blog_config_key);
+            if(option.isPresent()){
+                config_map.put(blog_config_key,option.get().getValue());
+                return Optional.of(option.get().getValue());
+            }else{
+                return Optional.empty();
+            }
+        }else{
+            return Optional.of(value);
+        }
+    }
+
+    @Override
+    public Map<String,String> listConfigByKeys(String[] keys) {
+        if(keys == null || keys.length == 0){
+            return new HashMap<>();
+        }
+        Map<String,String> configs = new HashMap<>(keys.length);
+        for(String key : keys){
+            getConfigByKey(key).ifPresent(config -> configs.put(key,config));
+        }
+        return configs;
+    }
+
+    @Override
+    public void updateOrSaveConfig(String key, String value) {
+        if(StringUtils.isEmpty(key) || value == null){
+            return;
+        }
+        String blog_config_key = blog_config_key_prefix + key;
+
+        Map<String,Object> config = new HashMap<>();
+
+        config.put(blog_config_key,value);
+
+        optionService.saveOrUpdate(config);
+        config_map.put(blog_config_key,value);
     }
 }

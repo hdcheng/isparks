@@ -25,7 +25,6 @@ public abstract class AbstractThemeService extends BaseService implements ITheme
 
     public AbstractThemeService(){
         INTERNAL_THEMES_MAP.put("meet","web/meet");
-        INTERNAL_THEMES_MAP.put("breeze","web/breeze");
     }
 
     @Override

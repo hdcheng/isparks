@@ -53,6 +53,15 @@ public interface IPostService {
     PageData<PostDTO> page(int page,int size,DataStatus dataStatus);
 
     /**
+     * page by category
+     * @param page
+     * @param size
+     * @param categoryId
+     * @param dataStatus
+     */
+    PageData<PostDTO> pageByCategory(int page,int size,DataStatus dataStatus,String categoryId);
+
+    /**
      * 根据 id 查找
      *
      * @param id

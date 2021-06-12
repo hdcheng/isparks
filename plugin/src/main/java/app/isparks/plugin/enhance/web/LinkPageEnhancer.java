@@ -1,6 +1,6 @@
 package app.isparks.plugin.enhance.web;
 
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
+import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.pojo.base.BaseVO;
 
 /**

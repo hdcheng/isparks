@@ -6,12 +6,12 @@
 <link th:replace="partials/head :: link"/>
 <style th:replace = "partials/head :: style"></style>
 </head>
-<body>
+<body is-loading>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
 <div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;min-height: calc(90vh);" >
     <div class="uk-child-width-1-4@m" uk-grid uk-lightbox="animation: scale">
         <div th:each="image : ${PageData.data}" style="display: flex;justify-content: center;align-items: center;">
-            <a class="uk-inline" href="#" th:data-caption="${image.origin}" th:href="${image.location}">
+            <a class="uk-inline" href="#" th:data-caption="${image.origin}" th:href="${image.location}" style="border: .5px solid #61616138;border-radius: 10px;padding: .5rem;">
                 <img src="/static/images/banner.jpg" th:src="${image.location}" alt="图片">
             </a>
         </div>

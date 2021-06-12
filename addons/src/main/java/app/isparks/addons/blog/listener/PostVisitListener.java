@@ -2,12 +2,16 @@ package app.isparks.addons.blog.listener;
 
 import app.isparks.addons.blog.event.PostVisitEvent;
 import app.isparks.addons.blog.service.IBlogService;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 /**
  * @author： chenghd
  * @date： 2021/3/25
  */
-public class PostVisitListener extends AbstractPostVisitListener {
+@Component
+public class PostVisitListener  {
 
     private IBlogService blogService;
 
@@ -15,7 +19,8 @@ public class PostVisitListener extends AbstractPostVisitListener {
         this.blogService = blogService;
     }
 
-    @Override
+    @EventListener
+    @Async
     protected void onEvent(PostVisitEvent visitEvent) {
         String postId = visitEvent.getPostId();
         long visits = visitEvent.getVisits();

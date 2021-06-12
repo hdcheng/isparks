@@ -4,6 +4,7 @@ import app.isparks.addons.blog.entity.PostAttach;
 import app.isparks.core.pojo.dto.PostDTO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -50,5 +51,20 @@ public interface IBlogService {
      * 获取从指定时间开始浏览最多的几个值
      */
     List<PostDTO> listMostVisits(int number, Long time);
+
+    /**
+     * 获取配置
+     */
+    Optional<String> getConfigByKey(String key);
+
+    /**
+     * 获取配置
+     */
+    Map<String,String> listConfigByKeys(String[] keys);
+
+    /**
+     * 保存或者更新配置
+     */
+    void updateOrSaveConfig(String key,String value);
 
 }

@@ -1,4 +1,4 @@
-package app.isparks.core.framework.enhance;
+package app.isparks.plugin.enhance.web;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.web.property.WebConstant;

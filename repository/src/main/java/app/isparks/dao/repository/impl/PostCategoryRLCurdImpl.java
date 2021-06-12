@@ -1,15 +1,22 @@
 package app.isparks.dao.repository.impl;
 
+import app.isparks.core.pojo.entity.Comment;
+import app.isparks.core.pojo.entity.Post;
 import app.isparks.core.pojo.entity.relation.PostCategoryRL;
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.mybatis.mapper.PostCategoryRLMapper;
 import app.isparks.dao.repository.AbstractCategoryCurd;
 import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
 import app.isparks.dao.repository.AbstractPostCurd;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +113,34 @@ public class PostCategoryRLCurdImpl extends AbstractPostCategoryRLCurd {
         List<PostCategoryRL> rls = mapper.selectByPost(postId);
         PostCategoryRL rl =  rls.stream().findFirst().orElse(null);
         return rl == null ? null : rl.getCategoryId();
+    }
+
+    @Override
+    public PageData<Post> pagePostByCategory(PageInfo pageInfo, Post post, String categoryId) {
+        PageData<Post> result = new PageData();
+
+        Page page = PageHelper.startPage(pageInfo.getPage(), pageInfo.getSize(), false);
+
+        List<Post> pageData;
+
+        try {
+            pageData = mapper.selectPostByCategory(post,categoryId);
+        }finally {
+            PageHelper.clearPage(); // 清除分页数据
+        }
+
+        if(pageData != null){
+            result.setData(pageData);//分页数据
+        }else {
+            result.setData(new ArrayList<>());
+        }
+
+        result.setPage(pageInfo.getPage());     //当前页码
+        result.setSize(pageInfo.getSize());     //每页大小
+        result.setTotalPage(page.getPages());   //共多少页
+        result.setTotalData(page.getTotal());   //共有多少数据
+
+        return result;
     }
 
     @Override

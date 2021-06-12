@@ -7,13 +7,27 @@
 <div id="main">
     <ul class="uk-subnav uk-subnav-pill uk-flex-center" uk-switcher="animation: uk-animation-slide-left-medium, uk-animation-slide-right-medium">
         <li><a href="#">首页</a></li>
-        <li><a href="#">归档</a></li>
         <li @click="loadAbout"><a href="#">关于</a></li>
     </ul>
     <hr class="uk-divider-icon">
     <ul class="uk-switcher uk-margin">
-        <li>首页内容</li>
-        <li>归档内容</li>
+        <li>
+            <div>
+                <div class="uk-grid-small" uk-grid>
+                    <div class="uk-width-1-1">
+                        <label class="uk-form-label" for="index-title">首页标题</label>
+                        <input id="index-title" class="uk-input" type="text" v-model="index.title">
+                    </div>
+                    <div class="uk-width-1-1">
+                        <label class="uk-form-label" for="index-description">首页描述</label>
+                        <input id="index-description" class="uk-input" type="text" v-model="index.description">
+                    </div>
+                    <div class="uk-width-1-1">
+                        <button class="uk-button uk-button-default" @click="updateIndexConfig">更新</button>
+                    </div>
+                </div>
+            </div>
+        </li>
         <li>
             <div class="uk-child-width-1-2@l uk-child-width-1-1@m" uk-grid>
                 <div id="aboutContentText" contenteditable="true" @input="changeAboutText($event)" style="border:.5px solid #cacacab3;padding: 1rem;min-height:600px;">
@@ -36,11 +50,36 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
             about:{
                 markdownParse:"",
                 markdownText:""
+            },
+            index:{
+                title:"遇见",
+                description:"描述"
             }
         },
         methods:{
             initPageData(){
-                
+                this.loadIndex();
+            },
+            loadIndex(){
+                let keyStr = "title;description";
+                axios.get("/api/admin/blog/configs/by/string?keyStr="+keyStr).then(res => {
+                    if(res.status == 200){
+                        let configs = res.data.data;
+                        console.log(res.data.data);
+                        console.log(configs);
+                        for(let k in configs){
+                            console.log(k);
+                            switch(k){
+                                case "title":
+                                    this.index.title = configs.title;
+                                    break;
+                                case "description":
+                                    this.index.description = configs.description;
+                                    break;
+                            }
+                        }
+                    }
+                });
             },
             loadAbout(){
                 axios.get("/api/blog/about").then(res => {
@@ -72,6 +111,19 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                 }).then(res => {
                     if(res.status == 200){
                         this.loadAbout();
+                    }
+                });
+            },
+            updateIndexConfig(){
+                console.log("123");
+                axios.get("/api/admin/blog/index/update",{
+                    params:{
+                        title:this.index.title,
+                        description:this.index.description
+                    }
+                }).then(res => {
+                    if(res.status == 200){
+                        this.loadIndex();
                     }
                 });
             }

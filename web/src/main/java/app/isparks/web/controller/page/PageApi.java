@@ -1,7 +1,7 @@
 package app.isparks.web.controller.page;
 
 
-import app.isparks.core.framework.enhance.AbstractViewModelEnhancer;
+import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.pojo.base.BaseVO;
 import app.isparks.core.pojo.param.CommentParam;
 import app.isparks.core.web.support.Result;

@@ -93,19 +93,19 @@
                 <p>网站运行了：</p>
                 <div id="countDown" class="uk-grid-small uk-child-width-auto uk-margin" uk-grid  style="display: flex;justify-content: center;">
                     <div>
-                        <div class="uk-countdown-number uk-countdown-days">{{dateCount.difDays <= 9 ? '0' + dateCount.difDays : dateCount.difDays}}</div>
+                        <div class="uk-countdown-number uk-countdown-days">{{renderText(dateCount.difDays)}}</div>
                         <div class="uk-countdown-label uk-margin-small uk-text-center uk-visible@s">天</div>
                     </div>
                     <div>
-                        <div class="uk-countdown-number uk-countdown-hours">{{dateCount.difHours <= 9 ? '0' + dateCount.difHours : dateCount.difHours}}</div>
+                        <div class="uk-countdown-number uk-countdown-hours">{{renderText(dateCount.difHours)}}</div>
                         <div class="uk-countdown-label uk-margin-small uk-text-center uk-visible@s">时</div>
                     </div>
                     <div>
-                        <div class="uk-countdown-number uk-countdown-minutes">{{dateCount.difMinutes <= 9 ? '0' + dateCount.difMinutes : dateCount.difMinutes}}</div>
+                        <div class="uk-countdown-number uk-countdown-minutes">{{renderText(dateCount.difMinutes)}}</div>
                         <div class="uk-countdown-label uk-margin-small uk-text-center uk-visible@s">分</div>
                     </div>
                     <div>
-                        <div class="uk-countdown-number uk-countdown-seconds">{{dateCount.difSeconds <= 9 ? '0' + dateCount.difSeconds : dateCount.difSeconds}}</div>
+                        <div class="uk-countdown-number uk-countdown-seconds">{{renderText(dateCount.difSeconds)}}</div>
                         <div class="uk-countdown-label uk-margin-small uk-text-center uk-visible@s">秒</div>
                     </div>
                 </div>
@@ -114,36 +114,37 @@
     </div>
 
     <div class="uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="width: 100%;">
-        
-        <div style="box-shadow: 0 0 28px rgb(0 0 0 / 10%);border-radius: 5px;overflow:hidden;">
-            <table class="uk-table uk-table-responsive uk-table-divider" style="margin-bottom: 0;">
-                <thead>
-                    <tr>
-                        <th>序号</th>
-                        <th style="text-align: start;">操作</th>
-                        <th style="text-align: start;">类型</th>
-                        <th style="text-align: start;">时间</th>
-                        <th  style="text-align: start;">接口名</th>
-                        <th  style="text-align: start;">ip</th>
-                        <th  style="text-align: start;">用户</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for = "(log,index) in logData.logs">
-                        <td>{{(logData.page - 1) * logData.size + index + 1}}</td>
-                        <td>{{log.content}}</td>
-                        <td>{{log.type}}</td>
-                        <td>{{log.date}}</td>
-                        <td>/admin/post/update</td>
-                        <td>{{log.ip}}</td>
-                        <td>admin</td>
-                    </tr>
-                </tbody>
-            </table>
-            <ul class="uk-pagination uk-flex-center" uk-margin  style="margin-top: 0;">
-                <li><a href="#" @click="logPre"><span uk-pagination-previous></span></a></li>
-                <li><a href="#" @click="logNext"><span uk-pagination-next></span></a></li>
-            </ul>
+        <div>
+            <div style="box-shadow: 0 0 28px rgb(0 0 0 / 10%);border-radius: 5px;overflow:hidden;">
+                <table class="uk-table uk-table-responsive uk-table-divider" style="margin-bottom: 0;">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th style="text-align: start;">操作</th>
+                            <th style="text-align: start;">类型</th>
+                            <th style="text-align: start;">时间</th>
+                            <th  style="text-align: start;">接口名</th>
+                            <th  style="text-align: start;">ip</th>
+                            <th  style="text-align: start;">用户</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for = "(log,index) in logData.logs">
+                            <td>{{(logData.page - 1) * logData.size + index + 1}}</td>
+                            <td>{{log.content}}</td>
+                            <td>{{log.type}}</td>
+                            <td>{{log.date}}</td>
+                            <td>/admin/post/update</td>
+                            <td>{{log.ip}}</td>
+                            <td>admin</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="uk-pagination uk-flex-center" uk-margin  style="margin-top: 0;">
+                    <li><a href="#" @click="logPre"><span uk-pagination-previous></span></a></li>
+                    <li><a href="#" @click="logNext"><span uk-pagination-next></span></a></li>
+                </ul>
+            </div>
         </div>
     </div>    
 
@@ -256,6 +257,9 @@
                         this.logData.page += 1 ;
                         this.loadLogData();
                     }
+                },
+                renderText(number){
+                    return number <= 9 ? '0' + number : ''+number;
                 }
             },
             created(){
@@ -263,7 +267,7 @@
             }
         });
     }
-    </script>
+</script>
 </section>
 <!-- section end -->
 

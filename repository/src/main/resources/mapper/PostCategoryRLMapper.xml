@@ -98,6 +98,39 @@
         ORDER BY modify_time DESC
     </select>
 
+    <select id="selectPostByCategory" resultType="list" resultMap="app.isparks.dao.mybatis.mapper.PostMapper.resultMap">
+        SELECT p.id,p.title,p.url,p.origin_content,p.summary,p.status,p.create_time,p.modify_time
+        FROM <include refid="app.isparks.dao.mybatis.mapper.PostMapper.table"/> p
+        LEFT JOIN <include refid="table"/> rl ON p.id = rl.post_id
+        <where>
+            rl.category_id = #{categoryId}
+            <if test="cond.id != null and cond.id != ''">
+                AND p.id = #{cond.id}
+            </if>
+            <if test="cond.status != null">
+                AND p.status = #{cond.status}
+            </if>
+            <if test="cond.createTime != null">
+                AND p.create_time = #{cond.createTime}
+            </if>
+            <if test="cond.modifyTime != null">
+                AND p.modify_time = #{cond.modifyTime}
+            </if>
+            <if test="cond.title != null and cond.title != ''">
+                AND p.title = #{cond.title}
+            </if>
+            <if test="cond.url != null and cond.url != ''">
+                AND p.url = #{cond.url}
+            </if>
+            <if test="cond.originContent != null and cond.originContent != ''">
+                AND p.originContent = #{cond.originContent}
+            </if>
+            <if test="cond.summary != null and cond.summary != ''">
+                AND p.summary = #{cond.summary}
+            </if>
+        </where>
+    </select>
+
     <select id="countByCond" resultType="long">
         SELECT count(1)
         FROM

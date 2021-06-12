@@ -1,8 +1,10 @@
 package app.isparks.dao.mybatis.mapper;
 
 
+import app.isparks.core.pojo.entity.Post;
 import app.isparks.core.pojo.entity.relation.PostCategoryRL;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -35,6 +37,11 @@ public interface PostCategoryRLMapper {
     List<PostCategoryRL> selectByCategory(String categoryId);
 
     List<PostCategoryRL> selectByCond(PostCategoryRL rl);
+
+    /**
+     * 根据分类查找分页查找 post
+     */
+    List<Post> selectPostByCategory(@Param("cond") Post post,@Param("categoryId") String categoryId);
 
     int updateById(PostCategoryRL rl);
 

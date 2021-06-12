@@ -16,7 +16,7 @@
         ORDER BY create_time desc
     </sql>
 
-    <resultMap id="baseMapper" type="app.isparks.core.pojo.entity.Post">
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Post">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="url" column="url"/>
@@ -98,11 +98,11 @@
         WHERE id = #{id}
     </update>
 
-    <select id="selectAll" resultMap="baseMapper" resultType="list">
+    <select id="selectAll" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
     </select>
 
-    <select id="selectByCond" resultMap="baseMapper" resultType="list">
+    <select id="selectByCond" resultMap="resultMap" resultType="list">
         <include refid="selectAll"/>
         <where>
             <if test="id != null and id != ''">
@@ -133,7 +133,7 @@
         <include refid="sort"/>
     </select>
 
-    <select id="selectById" resultMap="baseMapper">
+    <select id="selectById" resultMap="resultMap">
         <include refid="selectAll"/>
         WHERE id = #{id}
     </select>

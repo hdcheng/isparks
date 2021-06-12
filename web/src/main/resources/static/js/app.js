@@ -37,7 +37,14 @@ function init(){
             window.location.href = "/error/404?reason=页面"+document.URL+"不存在";
         }
     }
+    
+    if(typeof(sidbarLoaded) == 'function'){
+        sidbarLoaded();
+    }
 
+    document.querySelectorAll("[is-loading]").forEach((item,i,obj)=>{
+        item.removeAttribute("is-loading");
+    })
 }
 
 /**

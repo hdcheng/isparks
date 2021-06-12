@@ -3,7 +3,7 @@ package app.isparks.addons.blog.controller;
 
 import app.isparks.addons.blog.api.BlogApi;
 import app.isparks.addons.blog.api.BlogConstant;
-import app.isparks.core.framework.enhance.WebPage;
+import app.isparks.plugin.enhance.web.WebPage;
 import app.isparks.core.util.StringUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
@@ -79,9 +79,15 @@ public class BlogController {
     }
 
     @RequestMapping(value = "category",method = {RequestMethod.GET,RequestMethod.POST})
-    public Result category(@RequestParam("page")int page, @RequestParam("size")int size){
+    public String category(@RequestParam(value = "page",required = false)Integer page ,
+                           @RequestParam(value = "size",required = false)Integer size , Model model){
 
-        return ResultUtils.fail();
+        int p = page == null ? 1 : page;
+        int s = size == null ? 10 : size;
+
+        model.addAttribute(BlogConstant.PAGE_DATA_KEY, blogApi.category(p,s).getData());
+
+        return WebPage.CATEGORY.file();
     }
 
     @RequestMapping(value = "tag",method = {RequestMethod.GET,RequestMethod.POST})

@@ -1,5 +1,6 @@
-package app.isparks.core.framework.enhance;
+package app.isparks.plugin.enhance;
 
+import app.isparks.core.framework.enhance.IEnhancer;
 import app.isparks.core.pojo.base.BaseProperty;
 import org.springframework.ui.Model;
 
@@ -14,14 +15,13 @@ public abstract class AbstractViewModelEnhancer<VO extends BaseProperty> impleme
 
     private AbstractViewModelEnhancer nextEnhancer;
 
-    private static AbstractViewModelEnhancer enhancer;
-
     @Override
     public final <E extends IEnhancer> void setNextEnhancer(E enhancer){
         if(enhancer instanceof AbstractViewModelEnhancer){
             this.nextEnhancer = (AbstractViewModelEnhancer)enhancer;
         }
     }
+
 
     @Override
     public final void execute(final VO vo) {
