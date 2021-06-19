@@ -1,7 +1,7 @@
 'use strict'
 window.onload = function(){
 
-    const jsLine = ["/static/js/utils.js","/static/js/md5.min.js","/static/js/vue.2.x.js","/static/js/axios.min.js"];
+    const jsLine = ["/static/js/utils.js","/static/js/md5.min.js","/static/js/vue.min.js","/static/js/axios.min.js"];
     
     loadJSLine(jsLine,function(){
         axios.interceptors.request.use(

@@ -196,7 +196,7 @@ function pageLoaded(config){
                     axios.post("/api/admin/post/create",data).then(res => {
                         console.log(res);
                         this.clearNewPost();
-                        window.open("/admin/page/post/review/"+res.data.data.id);
+                        //window.open("/admin/page/post/review/"+res.data.data.id);
                     }).catch(err => {
                         console.log(err);
                     });
