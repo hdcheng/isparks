@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import app.isparks.dao.repository.AbstractPostCommentRLCurd;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 public class CommentServiceImpl extends AbstractService<Comment> implements ICommentService {
 
@@ -49,7 +48,6 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
         notNull(param,"comment must not be null");
 
         if(postService.existId(param.getPostId())){
-
             Comment comment = commentConverter.map(param);
             // 未审核
             comment.setStatus(DataStatus.INVALID);
@@ -61,11 +59,9 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
             CommentDTO dto = commentConverter.map(comment);
 
             return Optional.of(dto);
-
         }else {
             log.error("帖子不存在");
         }
-
         return Optional.empty();
     }
 

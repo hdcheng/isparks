@@ -4,6 +4,7 @@ import app.isparks.core.pojo.entity.Comment;
 import app.isparks.core.pojo.entity.relation.PostCommentRL;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
+import app.isparks.core.util.HtmlUtils;
 import app.isparks.dao.mybatis.mapper.PostCommentRLMapper;
 import app.isparks.dao.repository.AbstractPostCommentRLCurd;
 import com.github.pagehelper.Page;
@@ -65,6 +66,8 @@ public class PostCommentRLCurdImpl extends AbstractPostCommentRLCurd {
         }else {
             result.setData(new ArrayList<>());
         }
+
+        pageData.forEach(c -> c.setContent(HtmlUtils.htmlUnescape(c.getContent())));
 
         result.setPage(pageInfo.getPage());     //当前页码
         result.setSize(pageInfo.getSize());     //每页大小

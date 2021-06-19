@@ -22,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,25 +107,19 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
 
     @Override
     public Optional<FileDTO> removeById(String id) {
-
         Optional<FFile> file = abstractRemove(id);
-
         if(!file.isPresent()){
             return Optional.empty();
         }
-
         return Optional.of(converter(file.get()));
     }
 
     @Override
     public Optional<FileDTO> restoreById(String id) {
-
         Optional<FFile> file = abstractRestore(id);
-
         if(!file.isPresent()){
             return Optional.empty();
         }
-
         return Optional.of(converter(file.get()));
     }
 
@@ -149,47 +142,35 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
 
     @Override
     public PageData<FileDTO> pageValidFile(int page, int size) {
-
         PageData<FFile> file = abstractPageValidStatus(page,size);
-
         return file.convertData((f) -> converter(f));
     }
 
     @Override
     public PageData<FileDTO> pageValidByFileType(int page, int size, FileType type) {
         notNull(type,"file type must not be null.");
-
         FFile cond = new FFile();
         cond.setFileType(type.getSuffix());
-
         PageData<FFile> file = abstractPageValidStatusBy(new PageInfo(page,size),cond);
-
         return file.convertData((f) -> converter(f));
     }
 
     @Override
     public PageData<FileDTO> pageValidByMediaType(int page, int size, MediaType type) {
         notNull(type,"media must not be null.");
-
         FFile cond = new FFile();
         cond.setMediaType(type.getType());
-
         PageData<FFile> file = abstractPageValidStatusBy(new PageInfo(page,size),cond);
-
         return file.convertData((f) -> converter(f));
     }
 
     @Override
     public List<FileDTO> listAllRemoved() {
-
         List<FFile> files = abstractListRemovedStatus();
-
         List<FileDTO> dtos = new ArrayList<>(files.size());
-
         files.stream().forEach((f) -> {
             dtos.add(converter(f));
         });
-
         return dtos;
     }
 
@@ -205,9 +186,7 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
      * @return
      */
     private FileDTO converter(FFile file){
-
         FileDTO dto = CONVERTER.map(file);
-
         return dto;
     }
 

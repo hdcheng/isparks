@@ -15,6 +15,7 @@ public enum FileType {
     ZIP("zip",MediaType.PACK),
     HTML("html",MediaType.TEXT),
     TEXT("txt",MediaType.TEXT),
+    PDF("pdf",MediaType.TEXT),
     UNKNOWN("unknown",MediaType.UNKNOWN);
 
     FileType(String suffix,MediaType type){

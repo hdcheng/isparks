@@ -57,7 +57,7 @@
                 <div class="uk-position-top-right uk-position-small uk-hidden-hover" @click="reply(c.name)"><a class="uk-link-muted" >回复</a></div>
             </header>
             <div class="uk-comment-body" style="padding: 1rem;border: 0.5px solid #6f6f6f63;overflow: hidden;border-radius: 5px;">
-                <p>{{c.content}}</p>
+                <p v-html="c.content"></p>
             </div>
         </article>
     </div>
