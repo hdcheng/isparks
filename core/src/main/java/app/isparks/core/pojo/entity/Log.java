@@ -1,13 +1,11 @@
 package app.isparks.core.pojo.entity;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
 
 /**
  * @author chenghd
  * @date 2020/7/24
  */
-@Data
 public class Log extends BaseEntity {
 
     /**
@@ -50,4 +48,36 @@ public class Log extends BaseEntity {
         return this;
     }
 
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

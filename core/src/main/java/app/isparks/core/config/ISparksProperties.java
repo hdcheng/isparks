@@ -43,9 +43,14 @@ public class ISparksProperties {
     public static String RESOURCES_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.RESOURCES_DIR_NAME;
 
     /**
+     * 私密文件路径
+     */
+    public static String PRIVATE_RESOURCES_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.PRIVATE_RESOURCES_DIR_NAME;
+
+    /**
      * 插件文件路径
      */
-    public static String PLUGINS_FILE_PATH = RESOURCES_FILE_PATH + ISparksConstant.PATH_SEPARATOR + ISparksConstant.PLUGINS_DIR_NAME;
+    public static String PLUGINS_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.PLUGINS_DIR_NAME;
 
     /**
      * markdown 文件路径

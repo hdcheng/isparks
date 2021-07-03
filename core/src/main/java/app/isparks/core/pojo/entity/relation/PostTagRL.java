@@ -1,7 +1,6 @@
 package app.isparks.core.pojo.entity.relation;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
 
 /**
  * 文章 标签 关联对象
@@ -9,7 +8,6 @@ import lombok.Data;
  * @author chenghd
  * @date 2020/8/11
  */
-@Data
 public class PostTagRL extends BaseEntity {
 
     /**
@@ -32,4 +30,20 @@ public class PostTagRL extends BaseEntity {
         return this;
     }
 
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
 }

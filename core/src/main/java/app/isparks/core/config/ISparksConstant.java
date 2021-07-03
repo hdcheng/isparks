@@ -31,8 +31,11 @@ public final class ISparksConstant {
     // 静态文件目录名
     public final static String RESOURCES_DIR_NAME = "resources";
 
+    // 私密文件目录名
+    public final static String PRIVATE_RESOURCES_DIR_NAME = "pResources";
+
     // 主题文件目录名
-    public final static String THEME_DIR_NAME = "theme";
+    public final static String THEME_DIR_NAME = "themes";
 
     // 模板文件目录名
     public final static String TEMPLATES_DIR_NAME = "templates";

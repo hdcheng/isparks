@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <title>登录页面</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+    <link href="./static/images/favicon.ico" th:href="@{/static/images/favicon.ico}" rel="icon" >
+    <link href="./static/css/uikit.min.css" th:href="@{/static/css/uikit.min.css}" rel="stylesheet"/>
+</head>
+<script>
+const key = "isparks";
+if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
+    const url = "/api/sys/installed";
+    const request = new XMLHttpRequest();
+    request.open('GET', url, false); // 同步
+    request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 
+    request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+            res = JSON.parse(request.responseText);
+            console.log(res);
+            if(res.data){
+                localStorage.setItem(key,true);
+            }else{
+                localStorage.setItem(key,false);
+                window.location.href = "/admin/install";
+            }
+        }
+    };
+    request.send();
+}
+</script>
+<style>
+    *{box-sizing: border-box;}
+</style>
+<body class="bg-dark">
+<div id="main" style="width: 100%;height: 100%;padding: 0;display: flex;height: calc(100vh);overflow: hidden;" v-cloak >
+    <div style="margin: auto;box-shadow: 0 0 10px rgba(191 191 191);padding: 1rem;" >
+        <div class="uk-margin">
+            <div class="uk-inline">
+                <span class="uk-form-icon" uk-icon="icon: user"></span>
+                <input class="uk-input" type="text" v-model = "loginParams.loginName">
+            </div>
+        </div>
+    
+        <div class="uk-margin">
+            <div class="uk-inline">
+                <span class="uk-form-icon uk-form-icon-flip" uk-icon="icon: lock"></span>
+                <input class="uk-input" type="password" v-model = "loginParams.password">
+            </div>
+        </div>
+
+        <div class="uk-margin">
+            <div class="uk-inline">
+                <span class="uk-form-icon" uk-icon="icon: more"></span>
+                <input class="uk-input" type="text" placeholder="点击获取验证码"  v-model = "loginParams.authCode">
+                <a class="uk-form-icon uk-form-icon-flip uk-icon" style="left: auto;right: 0;" @click="showCodeModalShow">
+                    <svg t="1612518806877" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7394" width="20" height="20"><path d="M812.194 234.4c0-23.457-19.06-42.562-42.578-42.562L235.527 191.838c-23.491 0-42.551 19.104-42.551 42.562l0 534.058c0 23.583 19.06 42.623 42.551 42.623l534.088 0c23.519 0 42.578-19.04 42.578-42.623L812.193 234.4zM862.37 780.563c0 44.573-36.136 80.715-80.695 80.715L223.494 861.278c-44.56 0-80.695-36.142-80.695-80.715L142.799 222.416c0-44.627 36.135-80.71 80.695-80.71l558.181 0c44.56 0 80.695 36.083 80.695 80.71L862.37 780.563zM643.224 351.515l-44.197 0L599.027 172.823l44.197 0L643.224 351.515zM366.534 177.7l0 261.896 241.129 0 0 117.938 233.669 0 0 45.059L606.373 602.593l0 112.063-44.308 0L562.065 483.649 420.052 483.649l0 203.156L156.035 686.805l0-43.598 220.276 0L376.311 483.649 321.71 483.649 321.71 179.072 366.534 177.7z" p-id="7395" fill="#bfbfbf"></path></svg>
+                </a>
+            </div>
+        </div>
+        
+        <div class="uk-margin" style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
+            <label><input class="uk-checkbox" type="checkbox">&nbsp;&nbsp;记住密码</label>
+            <button class="uk-button uk-button-link">忘记密码？</button>
+        </div>
+
+        <div class="uk-margin" style="display: flex;flex-direction: row;justify-content:flex-end;" >
+            <button class="uk-button uk-button-default" @click="login">登录</button>
+        </div>
+        
+        <hr >
+        <div class="uk-margin" style="display: flex;flex-direction: row-reverse;">
+            <a class="uk-link-muted" href="#" uk-icon="icon: github" style="margin: .3rem;"></a>
+            <a class="uk-link-muted" href="#" uk-icon="icon: instagram" style="margin: .3rem;"></a>
+        </div>
+
+    </div>
+
+    <!-- 验证码模块开始 -->
+    <div id="code-modal" class="uk-flex-top" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+    
+            <div class="uk-margin">
+                <!-- <img src="./static/images/favicon.ico"/> -->
+            </div>
+            
+        </div>
+    </div>
+    <!-- 验证码模块结束 -->
+</div>
+
+<script src="./static/js/uikit.min.js" th:src="@{/static/js/uikit.min.js}" type="text/javascript"></script>
+<script src="./static/js/uikit-icons.min.js" th:src="@{/static/js/uikit-icons.min.js}" type="text/javascript"></script>
+<script src="./static/js/app.js" th:src="@{/static/js/app.js}"></script>
+<script>
+function pageLoaded(config){
+    const app = new Vue({
+        el: '#main',
+        data: {
+            loginParams:{
+                loginName : "",
+                password : "",
+                authCode : "" //验证码
+            }
+        },
+        methods:{
+            login(){
+                axios.post("/api/admin/authenticate",this.loginParams).then(res => {
+                    console.log(res);
+                    if(res.data.code == 8101){
+                        Utils.popup.success("登录成功");
+                        Utils.auth.setToken(res.data.data);
+                        window.location.href = "/admin";
+                    }
+                }).catch(err => {
+                    Utils.popup.error(err.msg);
+                });
+            },
+            showCodeModalShow(){
+                UIkit.modal(document.getElementById("code-modal")).show();
+            }
+        },
+        created(){
+            Utils.auth.removeToken();
+        }
+    });
+}
+</script>
+</div>
+</body>
+</html>

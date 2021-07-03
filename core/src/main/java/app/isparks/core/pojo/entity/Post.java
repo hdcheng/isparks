@@ -1,13 +1,11 @@
 package app.isparks.core.pojo.entity;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
 
 /**
  * @author chenghd
  * @date 2020/7/24
  */
-@Data
 public class Post extends BaseEntity {
 
 
@@ -55,4 +53,35 @@ public class Post extends BaseEntity {
     }
 
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getOriginContent() {
+        return originContent;
+    }
+
+    public void setOriginContent(String originContent) {
+        this.originContent = originContent;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
 }

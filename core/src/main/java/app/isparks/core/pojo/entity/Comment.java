@@ -9,7 +9,6 @@ import lombok.Data;
  * @author chenghd
  * @date 2020/8/18
  */
-@Data
 public class Comment extends BaseEntity {
 
     /**
@@ -37,4 +36,44 @@ public class Comment extends BaseEntity {
      */
     private String ip;
 
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 }

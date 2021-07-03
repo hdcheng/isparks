@@ -2,10 +2,12 @@ package app.isparks.core.file.util;
 
 import app.isparks.core.exception.FileOperationException;
 import app.isparks.core.file.type.FileType;
+import app.isparks.core.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -21,6 +23,18 @@ public class FileUtils {
     private static Logger log = LoggerFactory.getLogger(FileUtils.class);
 
     private final static String DEFAULT_ENCODING = "utf-8";
+
+    public static void copy(String origin,String des) throws FileOperationException{
+        try {
+            File file = new File(origin);
+            if(file.isFile()){
+                InputStream is = new FileInputStream(file);
+                copy(is,des);
+            }
+        }catch (Exception e){
+            throw new FileOperationException("copy file exception");
+        }
+    }
 
     /**
      * 将文件复制到指定目录

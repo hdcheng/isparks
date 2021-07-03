@@ -1,7 +1,7 @@
 package app.isparks.core.pojo.entity;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
+
 
 /**
  * 附件实体类
@@ -9,7 +9,6 @@ import lombok.Data;
  * @author chenghd
  * @date 2020/8/18
  */
-@Data
 public class Attachment extends BaseEntity {
 
     /**
@@ -22,4 +21,20 @@ public class Attachment extends BaseEntity {
      */
     private String fileId;
 
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
 }

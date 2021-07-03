@@ -1,7 +1,7 @@
 package app.isparks.service.impl;
 
 import app.isparks.core.pojo.enums.DataStatus;
-import app.isparks.core.pojo.enums.DataType;
+import app.isparks.core.pojo.enums.EntityType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import org.slf4j.Logger;
@@ -107,7 +107,7 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
 
         PageData<CommentDTO> res = abstractPageAll(page,size).convertData(comment -> {
             CommentDTO dto = commentConverter.map(comment);
-            dto.withProperty("rl", DataType.POST);
+            dto.withProperty("rl", EntityType.POST);
             dto.withProperty("status",comment.getStatus());
             return dto;
         });

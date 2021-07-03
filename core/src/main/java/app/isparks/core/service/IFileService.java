@@ -80,6 +80,17 @@ public interface IFileService {
      */
     FileHandler getFileHandler();
 
+
+    /**
+     * 更新文件为私密文件
+     */
+    void privateById(String id) throws FileOperationException;
+
+    /**
+     * 公开文件
+     */
+    void publicById(String id) throws FileOperationException;
+
     /**
      * 统计数量
      */

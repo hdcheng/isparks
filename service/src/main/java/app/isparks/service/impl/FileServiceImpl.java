@@ -1,5 +1,7 @@
 package app.isparks.service.impl;
 
+import app.isparks.core.config.ISparksConstant;
+import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.exception.FileOperationException;
 import app.isparks.core.file.UploadResult;
 import app.isparks.core.file.handler.FileHandler;
@@ -9,10 +11,12 @@ import app.isparks.core.file.header.FileHeader;
 import app.isparks.core.file.type.FileType;
 import app.isparks.core.file.type.MediaType;
 import app.isparks.core.file.util.FileTypeUtils;
+import app.isparks.core.file.util.FileUtils;
 import app.isparks.core.pojo.converter.ConverterFactory;
 import app.isparks.core.pojo.converter.FileConverter;
 import app.isparks.core.pojo.dto.FileDTO;
 import app.isparks.core.pojo.entity.FFile;
+import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.service.IFileService;
@@ -177,6 +181,53 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
     @Override
     public long countAll() {
         return abstractCount();
+    }
+
+    @Override
+    @Transactional(rollbackFor = FileOperationException.class)
+    public void privateById(String id) throws FileOperationException{
+        Optional<FFile> fileOptional = abstractDelete(id);
+        if(fileOptional.isPresent()){
+            FFile fFile = fileOptional.get();
+
+            if(fFile.getStatus() == DataStatus.PRIVATE.getCode()){
+                return;
+            }
+
+            String location = fFile.getLocation();
+            String privateLocation = location.replace(ISparksProperties.RESOURCES_FILE_PATH,ISparksProperties.PRIVATE_RESOURCES_FILE_PATH);
+            fFile.setLocation(privateLocation);
+            fFile.setStatus(DataStatus.PRIVATE);
+
+            abstractUpdate(fFile);
+
+            FileUtils.copy(location,privateLocation);
+        }
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = FileOperationException.class)
+    public void publicById(String id) throws FileOperationException{
+        Optional<FFile> fileOptional = abstractDelete(id);
+        if(fileOptional.isPresent()){
+            FFile fFile = fileOptional.get();
+
+            if(fFile.getStatus() != DataStatus.PRIVATE.getCode()){
+                return;
+            }
+
+            String privateLocation = fFile.getLocation();
+            String publicLocation = privateLocation.replace(ISparksProperties.PRIVATE_RESOURCES_FILE_PATH,ISparksProperties.RESOURCES_FILE_PATH);
+
+            fFile.setLocation(publicLocation);
+
+            fFile.setStatus(DataStatus.VALID);
+
+            abstractUpdate(fFile);
+
+            FileUtils.copy(publicLocation,privateLocation);
+        }
     }
 
     /**

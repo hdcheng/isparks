@@ -1,0 +1,6 @@
+spring:
+  h2: # h2内嵌数据库
+    console:
+      enabled: true
+
+

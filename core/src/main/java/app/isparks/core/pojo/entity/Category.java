@@ -1,7 +1,6 @@
 package app.isparks.core.pojo.entity;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
 
 /**
  * Category
@@ -9,7 +8,6 @@ import lombok.Data;
  * @author chenghd
  * @date 2020/7/22
  */
-@Data
 public class Category extends BaseEntity {
 
     /**
@@ -31,10 +29,7 @@ public class Category extends BaseEntity {
         this.name = name;
         return this;
     }
-    // getter and setter
 
-
-    // with
     public Category withParentId(String parentId) {
         this.parentId = parentId;
         return this;
@@ -43,5 +38,30 @@ public class Category extends BaseEntity {
     public Category withDescription(String description) {
         this.description = description;
         return this;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

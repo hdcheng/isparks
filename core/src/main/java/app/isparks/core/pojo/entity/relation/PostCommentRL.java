@@ -1,11 +1,7 @@
 package app.isparks.core.pojo.entity.relation;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 public class PostCommentRL extends BaseEntity {
 
     public PostCommentRL(){}
@@ -25,4 +21,20 @@ public class PostCommentRL extends BaseEntity {
      */
     private String commentId;
 
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
+    }
 }

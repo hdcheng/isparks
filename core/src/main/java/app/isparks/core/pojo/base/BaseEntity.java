@@ -2,6 +2,8 @@ package app.isparks.core.pojo.base;
 
 import app.isparks.core.pojo.enums.DataStatus;
 
+import java.io.Serializable;
+
 /**
  * Base Entity
  * 所有实体类的基础类
@@ -9,7 +11,9 @@ import app.isparks.core.pojo.enums.DataStatus;
  * @author chenghd
  * @date 2020/7/22
  */
-public class BaseEntity {
+public class BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 主键ID
@@ -69,4 +73,5 @@ public class BaseEntity {
     public BaseEntity withModifyTime(Long modifyTime) { setModifyTime(modifyTime);return this; }
     public BaseEntity withStatus(Integer status) { setStatus(status);return this; }
     public BaseEntity withStatus(DataStatus status) { return withStatus(status.getCode()); }
+
 }
