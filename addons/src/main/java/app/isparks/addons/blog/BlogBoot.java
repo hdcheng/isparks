@@ -87,8 +87,8 @@ public class BlogBoot implements IBoot {
      */
     private void initDB(ISysService sysService){
         boolean b = sysService.existTable("post_visit");
-        if(b){ return; }
-        String createTable = "CREATE TABLE post_visit (" +
+        if(!b){
+            String createTable = "CREATE TABLE post_visit (" +
                 "  id VARCHAR PRIMARY KEY," +
                 "  status int4," +
                 "  create_time BIGINT," +
@@ -97,8 +97,10 @@ public class BlogBoot implements IBoot {
                 "  visits bigint," + // 浏览数量
                 "  likes bigint" + // 点赞数量
                 ");";
-        // 如果访问数据库不存在，则创建整个数据库
-        sysService.executeSQL(createTable);
+            // 如果访问数据库不存在，则创建整个数据库
+            sysService.executeSQL(createTable);
+        }
+
     }
 
 }

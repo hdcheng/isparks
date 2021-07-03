@@ -1,6 +1,7 @@
 package app.isparks.repository;
 
 import app.isparks.core.pojo.entity.User;
+import app.isparks.core.util.HttpUtils;
 import app.isparks.service.config.ServiceConfig;
 import app.isparks.service.impl.UserServiceImpl;
 import org.junit.Before;
@@ -23,6 +24,12 @@ public class UserServiceTest {
         applicationContext = new AnnotationConfigApplicationContext(ServiceConfig.class);
     }
 
+
+    @Test
+    public void test2(){
+
+
+    }
 
     @Test
     public void test1(){

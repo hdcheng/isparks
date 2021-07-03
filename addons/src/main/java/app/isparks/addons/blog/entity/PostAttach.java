@@ -1,7 +1,8 @@
 package app.isparks.addons.blog.entity;
 
 import app.isparks.core.pojo.base.BaseEntity;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * blog post 信息
@@ -9,7 +10,8 @@ import lombok.Data;
  * @author： chenghd
  * @date： 2021/3/20
  */
-@Data
+@Setter
+@Getter
 public class PostAttach extends BaseEntity {
 
     private Long visits;

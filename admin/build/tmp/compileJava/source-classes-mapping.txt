@@ -18,8 +18,8 @@ app/isparks/web/controller/api/PostApi.java
  app.isparks.web.controller.api.PostApi
 app/isparks/web/service/ThemeServiceImpl.java
  app.isparks.web.service.ThemeServiceImpl
-app/isparks/web/Application.java
- app.isparks.web.Application
+app/isparks/web/exception/ExceptionController.java
+ app.isparks.web.exception.ExceptionController
 app/isparks/web/controller/api/FileApi.java
  app.isparks.web.controller.api.FileApi
 app/isparks/web/config/WebConfig.java
@@ -44,8 +44,8 @@ app/isparks/web/exception/HandlerControllerExceptionAdvice.java
  app.isparks.web.exception.HandlerControllerExceptionAdvice
 app/isparks/web/pojo/param/WebSettingParam.java
  app.isparks.web.pojo.param.WebSettingParam
-app/isparks/web/controller/page/PageController.java
- app.isparks.web.controller.page.PageController
+app/isparks/web/Application.java
+ app.isparks.web.Application
 app/isparks/web/controller/api/PageApi.java
  app.isparks.web.controller.api.PageApi
 app/isparks/web/pojo/param/DatabaseSettingParam.java
@@ -67,5 +67,5 @@ app/isparks/web/controller/api/UserApi.java
  app.isparks.web.controller.api.UserApi
 app/isparks/web/controller/api/AdminApi.java
  app.isparks.web.controller.api.AdminApi
-app/isparks/web/exception/ExceptionController.java
- app.isparks.web.exception.ExceptionController
+app/isparks/web/controller/page/PageController.java
+ app.isparks.web.controller.page.PageController

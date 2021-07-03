@@ -1,5 +1,7 @@
 package app.isparks.web.controller.page;
 
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
 import app.isparks.core.pojo.base.BaseVO;
 import app.isparks.core.service.IPostService;
@@ -59,6 +61,7 @@ public class PageController {
 
     @ApiOperation("网站首页")
     @RequestMapping(value = {"","index"},method = {RequestMethod.GET})
+    @Log(description = "访问首页", types = {LogType.VISIT})
     public String index(Model model){
 
         Result<BaseVO> result = pageApi.index();

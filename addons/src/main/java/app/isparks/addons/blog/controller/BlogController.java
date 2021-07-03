@@ -3,6 +3,8 @@ package app.isparks.addons.blog.controller;
 
 import app.isparks.addons.blog.api.BlogApi;
 import app.isparks.addons.blog.api.BlogConstant;
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.plugin.enhance.web.WebPage;
 import app.isparks.core.util.StringUtils;
 import app.isparks.core.web.support.Result;
@@ -25,6 +27,7 @@ public class BlogController {
     private BlogApi blogApi;
 
     @RequestMapping(value = "post/{id}",method = {RequestMethod.GET})
+    @Log(description = "访问博客-浏览文章", types = {LogType.VISIT})
     public String post(@PathVariable("id")String id, Model model, HttpServletRequest request, HttpServletResponse response){
 
         if(StringUtils.isEmpty(id)){
@@ -37,6 +40,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "archive",method = {RequestMethod.GET})
+    @Log(description = "访问博客页面-归档", types = {LogType.VISIT})
     public String archive(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model){
 
         int p = page == null ? 1 : page;
@@ -48,6 +52,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "link",method = {RequestMethod.GET})
+    @Log(description = "访问博客页面-友链", types = {LogType.VISIT})
     public String link(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model,HttpServletRequest request, HttpServletResponse response){
 
         int p = page == null ? 1 : page;
@@ -59,6 +64,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "about",method = {RequestMethod.GET})
+    @Log(description = "访问博客页面-关于", types = {LogType.VISIT})
     public String about(Model model){
 
         model.addAttribute(BlogConstant.PAGE_DATA_KEY,blogApi.about().getData());
@@ -68,6 +74,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "gallery",method = {RequestMethod.GET})
+    @Log(description = "访问博客页面-图库", types = {LogType.VISIT})
     public String gallery(@RequestParam(value = "page",required = false)Integer page , @RequestParam(value = "size",required = false)Integer size , Model model,HttpServletRequest request, HttpServletResponse response){
 
         int p = page == null ? 1 : page;
@@ -79,6 +86,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "category",method = {RequestMethod.GET,RequestMethod.POST})
+    @Log(description = "访问博客页面-分类", types = {LogType.VISIT})
     public String category(@RequestParam(value = "page",required = false)Integer page ,
                            @RequestParam(value = "size",required = false)Integer size , Model model){
 
@@ -91,6 +99,7 @@ public class BlogController {
     }
 
     @RequestMapping(value = "tag",method = {RequestMethod.GET,RequestMethod.POST})
+    @Log(description = "访问博客页面-标签", types = {LogType.VISIT})
     public Result tag(@RequestParam("page")int page,@RequestParam("size")int size){
 
         return ResultUtils.fail();
