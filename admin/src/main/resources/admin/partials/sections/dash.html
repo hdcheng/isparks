@@ -119,7 +119,7 @@
                         <tr v-for = "(log,index) in logData.logs">
                             <td>{{(logData.page - 1) * logData.size + index + 1}}</td>
                             <td>{{log.content}}</td>
-                            <td>{{log.type}}</td>
+                            <td>{{log.types}}</td>
                             <td>{{log.date}}</td>
                             <td>/admin/post/update</td>
                             <td>{{log.ip}} <a uk-icon="icon:info" @click="showIpInfo(log.ip)"></a></td>

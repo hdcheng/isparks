@@ -28,6 +28,11 @@ public interface LogMapper {
     List<Log> selectByCond(Log log);
 
     /**
+     * 根据类型查询
+     */
+    List<Log> selectByType(String type);
+
+    /**
      * 根据id 删除数据
      */
     int deleteByCond(Log log);

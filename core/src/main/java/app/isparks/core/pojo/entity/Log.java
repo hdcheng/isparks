@@ -11,7 +11,7 @@ public class Log extends BaseEntity {
     /**
      * log type/operation type see com.dbwos.fence.pojo.enums.LogType
      */
-    private String type;
+    private String types;
 
     /**
      * content/description
@@ -29,7 +29,7 @@ public class Log extends BaseEntity {
     private String date;
 
     public Log withType(String type) {
-        this.type = type;
+        this.types = type;
         return this;
     }
 
@@ -49,12 +49,12 @@ public class Log extends BaseEntity {
     }
 
 
-    public String getType() {
-        return type;
+    public String getTypes() {
+        return types;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTypes(String types) {
+        this.types = types;
     }
 
     public String getContent() {

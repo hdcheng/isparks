@@ -28,7 +28,7 @@ hs_err_pid*
 /plugin/build/*
 /repository/build/*
 /service/build/*
-/web/build/*
+/admin/build/*
 /build/*
 /addons/build/*
 /TODO.md

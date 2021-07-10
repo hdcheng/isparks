@@ -1,19 +1,23 @@
 package app.isparks.core.pojo.dto;
 
 import app.isparks.core.pojo.base.BaseDTO;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author chenghd
  * @date 2020/8/16
  */
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode
 public class LogDTO extends BaseDTO {
 
     /**
-     * type
+     * types
      */
-    private String type;
+    private String types;
 
     /**
      * content

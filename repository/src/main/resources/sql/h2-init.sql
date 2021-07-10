@@ -102,7 +102,7 @@ CREATE TABLE log (
   status int4,
   create_time BIGINT,
   modify_time BIGINT,
-  type VARCHAR,
+  types VARCHAR,
   content VARCHAR,
   ip VARCHAR,
   date VARCHAR

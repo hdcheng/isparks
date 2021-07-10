@@ -31,7 +31,7 @@ public class LogApi {
     @ApiOperation(value = "日志")
     @RequestMapping(value = "find", method = {RequestMethod.GET})
     public Result<PageData<LogDTO>> all(@RequestParam("page") int page, @RequestParam("size") int size) {
-        PageData<LogDTO> result = logService.find(page, size);
+        PageData<LogDTO> result = logService.page(page, size);
         return ResultUtils.success("查询成功", result);
     }
 

@@ -4,6 +4,7 @@ package app.isparks.core.service;
 
 import app.isparks.core.pojo.dto.LogDTO;
 import app.isparks.core.pojo.entity.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 
 import java.util.List;
@@ -24,7 +25,12 @@ public interface ILogService {
     /**
      * 分页查询
      */
-    PageData<LogDTO> find(int page, int size);
+    PageData<LogDTO> page(int page, int size);
+
+    /**
+     * Page log dto by types
+     */
+    PageData<LogDTO> pageByTypes(int page, int size, LogType ... types);
 
     /**
      * 查找指定数量的日志

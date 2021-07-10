@@ -2,7 +2,6 @@ package app.isparks.service.async.event;
 
 import app.isparks.core.pojo.entity.Log;
 import app.isparks.core.pojo.enums.LogType;
-import app.isparks.core.util.IdUtils;
 import app.isparks.core.util.IpUtils;
 import app.isparks.core.util.StringUtils;
 import org.springframework.context.ApplicationEvent;
@@ -10,9 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.StringJoiner;
 
 /**
  * @author： chenghd
@@ -68,13 +65,15 @@ public class LogEvent extends ApplicationEvent {
             log.setContent(this.content);
         }
 
-        if(StringUtils.isEmpty(log.getType())){
-            StringJoiner joiner = new StringJoiner(",","[","]");
-            Arrays.stream(types).forEach(type -> {
-                joiner.add(type.getDescription());
-            });
-            log.setType(joiner.toString());
-        }
+        log.setTypes(LogType.types(types));
+
+//        if(StringUtils.isEmpty(log.getType())){
+//            StringJoiner joiner = new StringJoiner(",","[","]");
+//            Arrays.stream(types).forEach(type -> {
+//                joiner.add(type.getType());
+//            });
+//            log.setType(joiner.toString());
+//        }
 
         if(StringUtils.isEmpty(log.getDate())){
             log.setDate(new Date(this.time).toString());

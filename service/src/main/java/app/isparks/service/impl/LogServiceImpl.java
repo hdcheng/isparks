@@ -4,9 +4,11 @@ import app.isparks.core.pojo.converter.ConverterFactory;
 import app.isparks.core.pojo.converter.LogConverter;
 import app.isparks.core.pojo.dto.LogDTO;
 import app.isparks.core.pojo.entity.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.service.ILogService;
+import app.isparks.dao.repository.AbstractLogCurd;
 import app.isparks.dao.repository.impl.LogCurdImpl;
 import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ public class LogServiceImpl extends AbstractService<Log> implements ILogService 
 
     LogConverter CONVERTER = ConverterFactory.get(LogConverter.class);
 
-    private LogCurdImpl logCurd;
+    private AbstractLogCurd logCurd;
 
     public LogServiceImpl(LogCurdImpl logCurd) {
         super(logCurd);
@@ -44,12 +46,27 @@ public class LogServiceImpl extends AbstractService<Log> implements ILogService 
 
 
     @Override
-    public PageData<LogDTO> find(int page, int size) {
+    public PageData<LogDTO> page(int page, int size) {
         PageInfo pageInfo = new PageInfo(page, size);
 
         PageData<Log> pageData = logCurd.pageAll(pageInfo);
         List<Log> logs = pageData.getData();
 
+        PageData<LogDTO> result = new PageData<>().withPageInfo(pageData).withData(toDTOs(logs));
+
+        return result;
+    }
+
+    @Override
+    public PageData<LogDTO> pageByTypes(int page, int size,LogType ... types) {
+        if(types.length == 0){
+            return page(page,size);
+        }
+
+        PageInfo pageInfo = new PageInfo(page, size);
+
+        PageData<Log> pageData = logCurd.pageByType(pageInfo,LogType.types(types));
+        List<Log> logs = pageData.getData();
         PageData<LogDTO> result = new PageData<>().withPageInfo(pageData).withData(toDTOs(logs));
 
         return result;

@@ -40,7 +40,7 @@ public class CategoryServiceTest {
         LogType[] types = {LogType.UNKNOWN,LogType.FILE_UPLOAD,LogType.MODIFY};
         StringJoiner joiner = new StringJoiner(",","[","]");
         Arrays.stream(types).forEach(type -> {
-            joiner.add(type.getDescription());
+            joiner.add(type.getType());
         });
         System.out.println(joiner.toString());
     }

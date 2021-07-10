@@ -29,7 +29,6 @@ public abstract class AbstractCurd<E extends BaseEntity> extends PageableCurd<E,
      */
     public PageData<E> pageAll(PageInfo pageInfo) {
 
-
         return pageByCond(pageInfo, newEntity());
     }
 

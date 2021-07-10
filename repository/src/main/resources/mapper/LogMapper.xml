@@ -15,7 +15,7 @@
 
     <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Log">
         <id property="id" column="id"/>
-        <result property="type" column="type"/>
+        <result property="types" column="types"/>
         <result property="content" column="content"/>
         <result property="ip" column="ip"/>
         <result property="date" column="date"/>
@@ -23,7 +23,7 @@
     </resultMap>
 
     <sql id="selectAll">
-        SELECT id,type,content,ip,date,create_time
+        SELECT id,types,content,ip,date,create_time
         FROM
         <include refid="table"/>
     </sql>
@@ -32,7 +32,7 @@
         INSERT INTO
         <include refid="table"/>
         (
-        <if test="type != null and type != ''">type,</if>
+        <if test="types != null and types != ''">types,</if>
         <if test="content != null and content != ''">content,</if>
         <if test="ip != null and ip != ''">ip,</if>
         <if test="date != null and date != ''">date,</if>
@@ -40,7 +40,7 @@
         )
         VALUES
         (
-        <if test="type != null and type != ''">#{type},</if>
+        <if test="types != null and types != ''">#{types},</if>
         <if test="content != null and content != ''">#{content},</if>
         <if test="ip != null and ip != ''">#{ip},</if>
         <if test="date != null and date != ''">#{date},</if>
@@ -65,8 +65,8 @@
             <if test="modifyTime != null">
                 AND modify_time = #{modifyTime}
             </if>
-            <if test="type != null and type != ''">
-                AND type = #{type}
+            <if test="types != null and types != ''">
+                AND types = #{types}
             </if>
             <if test="content != null and content != ''">
                 AND content = #{content}
@@ -78,6 +78,12 @@
                 AND date = #{date}
             </if>
         </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByType" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        WHERE types = #{types}
         ORDER BY create_time DESC
     </select>
 
@@ -94,8 +100,8 @@
             <if test="modifyTime != null">
                 AND modify_time = #{modifyTime}
             </if>
-            <if test="type != null and type != ''">
-                AND type = #{type}
+            <if test="types != null and types != ''">
+                AND types = #{types}
             </if>
             <if test="content != null and content != ''">
                 AND content = #{content}
@@ -113,7 +119,7 @@
         UPDATE
         <include refid="table"/>
         <set>
-            <if test="type != null and type != ''">type = #{type} ,</if>
+            <if test="types != null and types != ''">types = #{types} ,</if>
             <if test="content != null and content != ''">content = #{content} ,</if>
             <if test="ip != null and ip != ''">ip = #{ip} ,</if>
             <if test="date != null and date != ''">date = #{date} ,</if>
@@ -136,8 +142,8 @@
             <if test="modifyTime != null">
                 AND modify_time = #{modifyTime}
             </if>
-            <if test="type != null and type != ''">
-                AND type = #{type}
+            <if test="types != null and types != ''">
+                AND types = #{types}
             </if>
             <if test="content != null and content != ''">
                 AND content = #{content}

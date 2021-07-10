@@ -2,7 +2,11 @@ package app.isparks.dao.repository;
 
 
 import app.isparks.core.pojo.entity.Log;
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.template.AbstractCurd;
+
+import java.util.List;
 
 /**
  * @author chenghd
@@ -14,5 +18,10 @@ public abstract class AbstractLogCurd extends AbstractCurd<Log> {
     public Log newEntity() {
         return new Log();
     }
+
+    /**
+     * 根据类型查找
+     */
+    public abstract PageData<Log> pageByType(PageInfo info, String type);
 
 }
