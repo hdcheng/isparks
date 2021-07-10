@@ -4,8 +4,7 @@
 <title th:text="${PageData.title}">title</title>
 <meta th:replace="partials/head :: meta"/>
 <link th:replace="partials/head :: link"/>
-<link href="../static/plugins/highlight/styles/default.css" th:href="@{/static/plugins/highlight/styles/default.css}" rel="stylesheet"/>
-<style th:replace = "partials/head :: style"></style>
+<link th:href="@{/static/plugins/highlight/styles/default.min.css}" rel="stylesheet"/>
 </head>
 <body is-loading>
 <div style="position: relative;">
@@ -126,9 +125,10 @@ function pageLoaded(config){
             this.initPage();
         }
     });
+    hljs.highlightAll();
 }
 </script>
 <script th:replace="partials/script :: fra"></script>
 <script src="../static/plugins/marked/marked.min.js" th:src="@{/static/plugins/marked/marked.min.js}" type="text/javascript"></script>
-<script src="../static/plugins/highlight/highlight.pack.js" th:src="@{/static/plugins/highlight/highlight.pack.js}" type="text/javascript"></script>
+<script src="/static/plugins/highlight/highlight.min.js" th:src="@{/static/plugins/highlight/highlight.min.js}" type="text/javascript"></script>
 </html>

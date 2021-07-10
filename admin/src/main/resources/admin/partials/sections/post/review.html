@@ -5,7 +5,8 @@
     <title th:text="${title}">预览</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
     <link href="../../static/images/favicon.ico" th:href="@{/static/images/favicon.ico}" rel="icon" >
-    <link rel="stylesheet" href="/static/plugins/highlight/styles/default.css">
+    <link rel="stylesheet" th:href="@{/static/plugins/highlight/styles/default.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/main.css}">
 </head>
 <style>
     body{
@@ -39,6 +40,7 @@
     img{
         max-width: 100%;
     }
+
 </style>
 <body style="background-image: url(/static/images/bg.png);">
 <div class="post-box">
@@ -69,7 +71,7 @@ window.onload = function(){
     hljs.highlightAll();
 }
 </script>
-<script src="/static/plugins/marked/marked.min.js"></script>
-<script src="/static/plugins/highlight/highlight.pack.js"></script>
+<script th:src="@{/static/plugins/marked/marked.min.js}"></script>
+<script th:src="@{/static/plugins/highlight/highlight.min.js}"></script>
 </body>
 </html>

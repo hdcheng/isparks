@@ -31,42 +31,6 @@ const Utils = {
 
         },
         response(){
-            // function HttpResponse(){
-            //     this.status = null;
-            //     this.result = null;
-            //     this.error = null;
-                
-            //     this.then = function(callback){
-            //         this.waitResult();
-                    
-
-            //         console.log(this.result);
-            //         console.log(this);
-
-
-            //         if(this.result != null){
-            //             callback(this.result);
-            //         }
-            //         return this;
-            //     };
-            //     this.catch = function(callback){
-            //         this.waitResult();
-
-            //         console.log(this.error);
-            //         if(this.error != null){
-            //             callback(this.error);
-            //         }
-            //     };
-            //     function waitResult(){
-            //         while(this.status == null){
-            //             setTimeout(function() {
-            //                 console.log(this.status);
-            //             },1000);
-            //         }
-            //     }
-            // }
-
-            // return new HttpResponse();
 
             return {
                 status : null,
