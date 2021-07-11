@@ -1,6 +1,7 @@
 package app.isparks.web.controller.api;
 
 import app.isparks.core.pojo.dto.LogDTO;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.service.ILogService;
 import app.isparks.core.web.support.Result;
@@ -46,4 +47,11 @@ public class LogApi {
     public Result page(@RequestParam("page")int page,@RequestParam("size")int size){
         return ResultUtils.build(logService.pageAll(page,size));
     }
+
+    @ApiOperation(value = "日志类型")
+    @RequestMapping(value = "types",method = {RequestMethod.GET})
+    public Result types(){
+        return ResultUtils.success().setData(logService.logTypes());
+    }
+
 }

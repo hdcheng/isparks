@@ -8,6 +8,7 @@ import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -27,6 +28,7 @@ public interface ILogService {
      */
     PageData<LogDTO> page(int page, int size);
 
+
     /**
      * Page log dto by types
      */
@@ -36,6 +38,11 @@ public interface ILogService {
      * 查找指定数量的日志
      */
     Optional<List<LogDTO>> findNumber(int num);
+
+    /**
+     * log types
+     */
+    Map<String,String> logTypes();
 
     /**
      * 统计日志数量

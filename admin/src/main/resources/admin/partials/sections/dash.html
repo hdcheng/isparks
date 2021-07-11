@@ -39,6 +39,49 @@
     .is-widget-icon *{
         margin: auto;
     }
+/* checkbox */
+.is-customize-checkbox{
+    padding: .5rem;
+}
+.is-customize-checkbox>input[type=checkbox]{
+    display: none;
+}
+
+.is-customize-checkbox>span {
+    /* background-color: #373740; */
+    background-color: #101924;
+    border: .5px solid #101924;
+    border-radius: 4px;
+    font-weight: 700;
+    color: #FFF;
+    font-size: .85em;
+    letter-spacing: 4px;
+    text-decoration: none;
+    font-family: sans-serif;
+    text-align: center;
+    width: 260px;
+    padding: 20px 0;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: background-color 150ms ease-in;
+}
+.is-customize-checkbox>span:hover {
+    color: #FFF;
+    background: #101924 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAaCAYAAACgoey0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAX9JREFUeNpi+P//PwMNsS4QbwBiLnQ5WlqqAsRP/0PARiBmoYfFkkB8+z8qWALEjLS0mB+IL/3HDibSymJQXB7/jx/UgNSCvU4lwAbEG4DYkwi1WUxUspQZiOcRaSkIWOAKMk0Sg3jaf+IBOIVjMyQWiH8DsR+RljaTYOkBWJ5GNwRk2R+ooh9A7ETA0jwSLL0ATfEYqRpkyVc0xR+A2AyHpdFA/I9IS0F5WhRbAWIEtQQbeAXE6lhC5jeRlj4GYgVsRaYK1HBCmmWgmuyxhAwu8BpaXjNgs/gYkYbcAGIXPCGDDkCOM8eVPkCEFhE+JhX8BGJnfAkTxgC57BOVLAXlihBC2RA9Vf+k0FJQKk8nJv+jCwQi5WNyQAWxpR02wRQS8icy6CKlmMUlUUGipfOQK3lKLAbhdhIKfWZS6258kiAfzCZg6V4gZiOn0UBIAcgn63BYehK50Ke2xQxQH+3FUoqJUtJMIlYhLxAfxVJu09xiWENuMxCrUaNhCBBgAOAVfjALa5TLAAAAAElFTkSuQmCC) no-repeat 7% center;
+    background-size: 15px 13px;
+}
+
+.is-customize-checkbox>input[type=checkbox]:checked + span {
+    background: #101924 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAaCAYAAACgoey0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAX9JREFUeNpi+P//PwMNsS4QbwBiLnQ5WlqqAsRP/0PARiBmoYfFkkB8+z8qWALEjLS0mB+IL/3HDibSymJQXB7/jx/UgNSCvU4lwAbEG4DYkwi1WUxUspQZiOcRaSkIWOAKMk0Sg3jaf+IBOIVjMyQWiH8DsR+RljaTYOkBWJ5GNwRk2R+ooh9A7ETA0jwSLL0ATfEYqRpkyVc0xR+A2AyHpdFA/I9IS0F5WhRbAWIEtQQbeAXE6lhC5jeRlj4GYgVsRaYK1HBCmmWgmuyxhAwu8BpaXjNgs/gYkYbcAGIXPCGDDkCOM8eVPkCEFhE+JhX8BGJnfAkTxgC57BOVLAXlihBC2RA9Vf+k0FJQKk8nJv+jCwQi5WNyQAWxpR02wRQS8icy6CKlmMUlUUGipfOQK3lKLAbhdhIKfWZS6258kiAfzCZg6V4gZiOn0UBIAcgn63BYehK50Ke2xQxQH+3FUoqJUtJMIlYhLxAfxVJu09xiWENuMxCrUaNhCBBgAOAVfjALa5TLAAAAAElFTkSuQmCC) no-repeat 7% center;
+    color: #FFF;
+    background-size: 15px 13px;
+}
+.is-customize-checkbox>input[type=checkbox]:checked:hover + span {
+    color: #FFF;
+    background: #101924 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAS5JREFUeNq8110OgjAMAGBGvIY3VESjt9jPg95PT+LccBIZ7dYOWJPGB+g+Ymg3hLW2QeLkcu/y2pSFdvl0eQevehjI3uXbfkMh96TShFq/xhG6J4faAtxEtSBOQTm4QWpnOBWl4CZT69fuYpiCpnBDrB1xLhrjgoFO8F1oGcFslUv4bV32zFoxmOHJta0XMn65dC0UaiddA8UGiN4axeC1cUkdmWviEls/NwL1FqjPNtNvoimPdC3yRCUTiTXbt0R/oSnw2iiK10BBvBY6w2uiE3xJr8oFtcrvxy/fVcyeVdGx98yotcOxN/znHeMUIhdMOG8c4reagssF43VEoT5O4ZJwvNUUFJtcEE5BMXyGpnanf5yDxjiI+hSJj7YunEBvhbuTCh9tD+jiR4ABAJ0SrJgNr1UAAAAAAElFTkSuQmCC) no-repeat 7% center;
+    background-size: 15px 15px;
+}
 </style>
 <div id="dash-page" v-cloak  uk-scrollspy="cls: uk-animation-slide-bottom; target:>div;delay: 300;">
     <div class="uk-placeholder" style="text-align: center;" >
@@ -103,6 +146,20 @@
     <div class="uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="width: 100%;">
         <div>
             <div style="box-shadow: 0 0 28px rgb(0 0 0 / 10%);border-radius: 5px;overflow:hidden;">
+                <div id="logTypeSelect" style="display: flex;flex-wrap: wrap;" hidden>
+                    <label class="is-customize-checkbox" v-for="(value,key) in logTypes">
+                        <input type="checkbox" name="logType" v-model="key" value="1" />
+                        <span>{{value}}</span>
+                    </label>
+                    <!-- <label class="is-customize-checkbox">
+                        <input type="checkbox" name="logType" value="2" />
+                        <span>新增数据</span>
+                    </label> -->
+                </div>
+                <div style="display: flex;justify-content: center;padding: .3rem;margin: .5rem;border-radius: 5px;box-shadow: 0 0 3px darkgrey;">
+                    <a href="#" uk-icon="icon: thumbnails" uk-toggle="target: #logTypeSelect; animation: uk-animation-fade; queued: true"></a>
+                </div>
+
                 <table class="uk-table uk-table-responsive uk-table-divider" style="margin-bottom: 0;">
                     <thead>
                         <tr>
@@ -167,6 +224,7 @@
                     totalPage : 0,
                     totalData : 0
                 },
+                logTypes:{},
                 dateCount :{
                     installTime : 0 ,
                     dateCountTimer : null,
@@ -186,6 +244,7 @@
                 initPage(){
                     this.loadPanelData();
                     this.loadLogData();
+                    this.loadLogTypes();
                 },
                 loadPanelData(){
                     axios.get("/api/admin/page/dash").then(res => {
@@ -213,6 +272,14 @@
                             this.logData.totalData = res.data.data.totalData;
                             this.logData.totalPage = res.data.data.totalPage;
                         }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                },
+                loadLogTypes(){
+                    axios.get("/api/admin/log/types").then(res => {
+                        console.log(res);
+                        this.logTypes = res.data.data;
                     }).catch(err => {
                         console.log(err);
                     });

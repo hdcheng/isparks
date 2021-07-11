@@ -16,8 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author chenghd
@@ -80,6 +79,15 @@ public class LogServiceImpl extends AbstractService<Log> implements ILogService 
         PageInfo pageInfo = new PageInfo(1, num);
         List<Log> logs = logCurd.pageAll(pageInfo).getData();
         return Optional.ofNullable(toDTOs(logs));
+    }
+
+    @Override
+    public Map<String,String> logTypes() {
+        Map<String,String> types = new HashMap<>();
+        for(LogType type : LogType.values()){
+            types.put(type.name(),type.getType());
+        }
+        return types;
     }
 
     @Override
