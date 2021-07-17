@@ -54,7 +54,6 @@ public class PostApi {
     @RequestMapping(value = "create/temp/link",method = {RequestMethod.GET})
     @Log(description = "创建临时链接", types = {LogType.QUERY})
     public Result generateTempLink(@RequestParam("id") String id,@RequestParam("minutes")int minutes){
-
         String cacheKey = postService.createTempLinkKey(id,minutes * 60000);
 
         if(StringUtils.isEmpty(cacheKey)){

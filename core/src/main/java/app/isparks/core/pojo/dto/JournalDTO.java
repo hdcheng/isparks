@@ -1,7 +1,7 @@
 package app.isparks.core.pojo.dto;
 
 import app.isparks.core.pojo.base.BaseDTO;
-import lombok.Data;
+import lombok.*;
 
 /**
  * 日志/随笔
@@ -9,7 +9,10 @@ import lombok.Data;
  * @author chenghd
  * @date 2020/8/16
  */
-@Data
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public class JournalDTO extends BaseDTO {
 
     /**

@@ -15,5 +15,4 @@ public abstract class AbstractJournalCurd extends AbstractCurd<Journal> {
         return new Journal();
     }
 
-
 }

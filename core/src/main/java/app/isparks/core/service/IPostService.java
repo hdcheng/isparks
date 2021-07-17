@@ -23,7 +23,7 @@ public interface IPostService {
      * @param dataStatus 数据状态
      * @return post
      */
-    Optional<PostDTO> create(PostParam param, DataStatus dataStatus);
+    Optional<PostDTO> create(PostParam param,DataStatus dataStatus);
 
     /**
      * 创建临时文件链接

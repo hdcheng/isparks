@@ -42,6 +42,7 @@
 /* checkbox */
 .is-customize-checkbox{
     padding: .5rem;
+    width:10%;
 }
 .is-customize-checkbox>input[type=checkbox]{
     display: none;
@@ -59,7 +60,7 @@
     text-decoration: none;
     font-family: sans-serif;
     text-align: center;
-    width: 260px;
+    width: 100%;
     padding: 20px 0;
     cursor: pointer;
     display: block;
@@ -107,15 +108,14 @@
         </div>
     </div>
 
-    <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="width: 100%;">
+    <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="border-radius: 5px;width: 100%;">
         <div >
             <div class="uk-card uk-card-default uk-card-body uk-width-1-1@m">
-                <h3 class="uk-card-title">链接</h3>
+                <p class="uk-card-title">随笔</p>
                 <div>
-                    <span uk-icon="heart"></span>
-                    <span uk-icon="paint-bucket"></span>
-                    <span uk-icon="camera"></span>
+                    <textarea class="uk-textarea" rows="5" v-model="journal.content" maxlength="230"></textarea>
                 </div>
+                <div><button class="uk-button uk-button-default" style="float: right;margin-top: .5rem;background: #334148;color:#fff;" @click="createJournal">发表随笔</button></div>
             </div>
         </div>
         <div>
@@ -151,15 +151,10 @@
                         <input type="checkbox" name="logType" v-model="key" value="1" />
                         <span>{{value}}</span>
                     </label>
-                    <!-- <label class="is-customize-checkbox">
-                        <input type="checkbox" name="logType" value="2" />
-                        <span>新增数据</span>
-                    </label> -->
                 </div>
                 <div style="display: flex;justify-content: center;padding: .3rem;margin: .5rem;border-radius: 5px;box-shadow: 0 0 3px darkgrey;">
                     <a href="#" uk-icon="icon: thumbnails" uk-toggle="target: #logTypeSelect; animation: uk-animation-fade; queued: true"></a>
                 </div>
-
                 <table class="uk-table uk-table-responsive uk-table-divider" style="margin-bottom: 0;">
                     <thead>
                         <tr>
@@ -208,8 +203,7 @@
         </div>
     </div>
 
-   
-    
+
 </div>
 <script>
     function pageLoaded(config){
@@ -238,6 +232,9 @@
                     info:"",
                     // 临时
                     api:"http://www.svlik.com/t/ipapi/ip.php"
+                },
+                journal:{
+                    content:''
                 }
             },
             methods:{
@@ -245,6 +242,21 @@
                     this.loadPanelData();
                     this.loadLogData();
                     this.loadLogTypes();
+                },
+                createJournal(){
+                    let content = this.journal.content;
+                    if(!content){
+                        console.log("随笔内容不能为空");
+                        return;
+                    }
+                    axios.post("/api/admin/journal/create",{
+                        content:content
+                    }).then(res => {
+                        if(res.data.code == 8101){
+                            this.initPage();
+                            this.journal.content = '';
+                        }
+                    }).catch(err => {console.log(err)});
                 },
                 loadPanelData(){
                     axios.get("/api/admin/page/dash").then(res => {
@@ -365,7 +377,6 @@
 
             }
         });
-
     }
 </script>
 </section>

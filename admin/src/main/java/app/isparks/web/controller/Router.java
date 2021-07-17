@@ -48,11 +48,12 @@ public class Router {
         DEFAULT_MENUS.add(new Menu("链接管理","/admin/link"));
         DEFAULT_MENUS.add(new Menu("评论管理","/admin/comment"));
 
-        // 文章管理
-        List<Menu> postManage = new ArrayList<>(3);
+        // 内容管理
+        List<Menu> postManage = new ArrayList<>(5);
+        postManage.add(new Menu("随笔管理","/admin/journal/manage"));
         postManage.add(new Menu("文章分类","/admin/post/category"));
         postManage.add(new Menu("文章标签","/admin/post/tag"));
-        postManage.add(new Menu("文章管理","/admin/post/manage"));
+        postManage.add(new Menu("文章管理","/admin/post/manage.html"));
         postManage.add(new Menu("写文章","/admin/post/edit"));
         DEFAULT_MENUS.add(new Menu("内容管理","#",postManage));
 

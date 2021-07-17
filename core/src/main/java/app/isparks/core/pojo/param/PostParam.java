@@ -3,7 +3,7 @@ package app.isparks.core.pojo.param;
 import app.isparks.core.pojo.base.BaseParam;
 import app.isparks.core.pojo.base.InputConverter;
 import app.isparks.core.pojo.entity.Post;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -12,7 +12,10 @@ import java.util.List;
  * @author chenghd
  * @date 2020/8/10
  */
-@Data
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
 public class PostParam extends BaseParam implements InputConverter<Post> {
 
     /**
