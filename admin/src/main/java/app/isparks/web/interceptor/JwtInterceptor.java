@@ -37,7 +37,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (true)return true;
+//        if (true)return true;
 
         String uri = request.getRequestURI();
         if (uri.endsWith("/api/admin/authenticate")) return true;

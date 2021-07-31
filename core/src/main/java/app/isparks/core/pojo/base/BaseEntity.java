@@ -3,6 +3,7 @@ package app.isparks.core.pojo.base;
 import app.isparks.core.pojo.enums.DataStatus;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Base Entity
@@ -74,4 +75,17 @@ public class BaseEntity implements Serializable {
     public BaseEntity withStatus(Integer status) { setStatus(status);return this; }
     public BaseEntity withStatus(DataStatus status) { return withStatus(status.getCode()); }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseEntity that = (BaseEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(createTime, that.createTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createTime);
+    }
 }

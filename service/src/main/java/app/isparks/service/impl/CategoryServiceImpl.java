@@ -15,7 +15,10 @@ import app.isparks.dao.repository.AbstractCategoryCurd;
 import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
 import app.isparks.dao.repository.impl.CategoryCurdImpl;
 import app.isparks.dao.repository.impl.PostCategoryRLCurdImpl;
-import app.isparks.core.service.support.BaseService;
+import app.isparks.service.base.AbstractService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,20 +30,30 @@ import java.util.Optional;
  * @date： 2021/2/26
  */
 @Service
-public class CategoryServiceImpl extends BaseService implements ICategoryService {
+public class CategoryServiceImpl extends AbstractService<Category> implements ICategoryService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private CategoryConverter CONVERTER = ConverterFactory.get(CategoryConverter.class);
+
+    // DTO TO DO
+    private final BeanCopier DO_COPIER = BeanCopier.create(CategoryDTO.class,Category.class,false);
+
+    // DO TO DTO
+    private final BeanCopier DTO_COPIER = BeanCopier.create(Category.class,CategoryDTO.class,false);
 
     private AbstractCategoryCurd categoryCurd;
 
     private AbstractPostCategoryRLCurd pcRLCurd;
 
     public CategoryServiceImpl(CategoryCurdImpl categoryCurd, PostCategoryRLCurdImpl pcRLCurd){
+        super(categoryCurd);
         this.categoryCurd = categoryCurd;
         this.pcRLCurd = pcRLCurd;
     }
 
     @Override
+    @Deprecated
     public Optional<CategoryDTO> create(CategoryParam param) {
         notNull(param,"param must not be null.");
 
@@ -56,6 +69,26 @@ public class CategoryServiceImpl extends BaseService implements ICategoryService
 
         return Optional.ofNullable(dto);
 
+    }
+
+    @Override
+    public Optional<CategoryDTO> create(CategoryDTO dto) {
+        notNull(dto,"category dto must not be null");
+
+        if(categoryCurd.findByName(dto.getName()) != null){
+            String msg = "Category name already exists";
+            log.warn(msg);
+            resultMessage(msg);
+            return Optional.empty();
+        }
+
+        Category category = new Category();
+
+        DO_COPIER.copy(dto,category,null);
+        abstractInsert(category);
+        DTO_COPIER.copy(category,dto,null);
+
+        return Optional.of(dto);
     }
 
     @Override

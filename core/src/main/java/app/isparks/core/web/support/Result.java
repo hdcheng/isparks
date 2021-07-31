@@ -37,12 +37,22 @@ public class Result<T> {
         return this;
     }
 
+    public Result withMsg(String msg){
+        setMsg(msg);
+        return this;
+    }
+
     public int getCode() {
         return code;
     }
 
     public Result setCode(int code) {
         this.code = code;
+        return this;
+    }
+
+    public Result withData(T d){
+        setData(d);
         return this;
     }
 

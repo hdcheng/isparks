@@ -4,6 +4,7 @@ package app.isparks.core.pojo.base;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author chenghd
@@ -74,4 +75,16 @@ public class BaseDTO extends BaseProperty implements Serializable {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseDTO baseDTO = (BaseDTO) o;
+        return id.equals(baseDTO.id) && createTime.equals(baseDTO.createTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createTime);
+    }
 }

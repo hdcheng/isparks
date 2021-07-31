@@ -15,8 +15,15 @@ import java.util.List;
 @Mapper
 public interface CategoryConverter {
 
+    @Deprecated
     Category map(CategoryParam source);
 
+    @Deprecated
+    CategoryDTO mapDTO(CategoryParam source);
+
+    Category map(CategoryDTO source);
+
+    @Deprecated
     Category map(CategoryUpdateParam source);
 
     CategoryDTO map(Category source);

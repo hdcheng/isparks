@@ -24,6 +24,11 @@ public interface ILogService {
     void create(Log log);
 
     /**
+     * 删除日志
+     */
+    boolean delete(String id);
+
+    /**
      * 分页查询
      */
     PageData<LogDTO> page(int page, int size);

@@ -12,7 +12,6 @@ import java.util.function.Function;
  */
 public abstract class BaseService  {
 
-
     /**
      * 判断Object是否为null
      */
@@ -68,5 +67,17 @@ public abstract class BaseService  {
             notEmpty(text, message);
         }
     }
+
+    /**
+     * Set result message use ThreadLocal .
+     * 使用 ThreadLocal 设置消息
+     */
+    protected static String  resultMessage(String msg){
+        // todo: 使用 ThreadLocal 设置异常消息等。
+
+        return msg;
+    }
+
+
 
 }

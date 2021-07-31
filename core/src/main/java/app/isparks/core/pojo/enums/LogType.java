@@ -71,10 +71,10 @@ public enum LogType implements IEnum<Integer>{
         return s.toString();
     }
 
-    public static List<LogType> types(String typesStr){
+    public static LogType[] types(String typesStr){
 
         if(typesStr == null || typesStr.isEmpty()){
-            return new ArrayList<>();
+            return new LogType[]{};
         }
 
         typesStr = typesStr.replaceAll("[\\[\\] ]{1}","");
@@ -89,7 +89,7 @@ public enum LogType implements IEnum<Integer>{
                 }
             }
         }
-        return result;
+        return (LogType[]) result.toArray();
     }
 
 }

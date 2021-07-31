@@ -43,6 +43,11 @@ public class LogServiceImpl extends AbstractService<Log> implements ILogService 
         abstractInsert(log);
     }
 
+    @Override
+    public boolean delete(String id) {
+        notEmpty(id,"log id must not be empty");
+        return abstractGetById(id).isPresent();
+    }
 
     @Override
     public PageData<LogDTO> page(int page, int size) {

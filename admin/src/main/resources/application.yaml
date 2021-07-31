@@ -14,7 +14,7 @@ server:
 # spring
 spring:
   application:
-    name: Sparks For Person
+    name: isparks!
   profiles:
     active: dev
   jackson:

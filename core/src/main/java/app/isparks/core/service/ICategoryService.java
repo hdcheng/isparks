@@ -1,6 +1,7 @@
 package app.isparks.core.service;
 
 import app.isparks.core.pojo.dto.CategoryDTO;
+import app.isparks.core.pojo.entity.Category;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.param.CategoryParam;
 
@@ -15,7 +16,6 @@ import java.util.Optional;
  */
 public interface ICategoryService {
 
-
     /**
      * 创建分类
      * 分类名不能重复
@@ -23,7 +23,14 @@ public interface ICategoryService {
      * @param param
      * @return 创建成功的分类对象
      */
+    @Deprecated
     Optional<CategoryDTO> create(CategoryParam param);
+
+    /**
+     * Create a category | 新建分类
+     */
+    Optional<CategoryDTO> create(CategoryDTO category);
+
 
     /**
      * 删除分类

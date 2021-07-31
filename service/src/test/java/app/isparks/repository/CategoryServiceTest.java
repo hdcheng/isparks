@@ -59,17 +59,5 @@ public class CategoryServiceTest {
         System.out.println(pageData.getData());
     }
 
-    @Test
-    public void test1(){
-
-        CategoryParam param = new CategoryParam();
-        param.setName("test");
-        param.setDescription("asdfasdf");
-
-        Optional result = categoryService.create(param);
-
-    }
-
-
 
 }
