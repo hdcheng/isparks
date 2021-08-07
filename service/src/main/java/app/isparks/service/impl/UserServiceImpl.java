@@ -10,6 +10,7 @@ import app.isparks.core.pojo.entity.User;
 import app.isparks.core.pojo.param.UpdateUserParam;
 import app.isparks.core.pojo.param.UserParam;
 import app.isparks.core.security.jwt.JwtHandler;
+import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.MD5Utils;
@@ -42,15 +43,14 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
 
     private AbstractUserCurd userCurd;
 
-    private AbstractCacheStore cacheStore;
-
     private static String DEFAULT_PASSWORD = "123456";
 
-    public UserServiceImpl(UserCurdImpl userCurd,AbstractCacheStore cacheStore) {
+    private ICacheService cacheService;
 
+    public UserServiceImpl(UserCurdImpl userCurd,CacheServiceImpl cacheService) {
         super(userCurd);
         this.userCurd = userCurd;
-        this.cacheStore = cacheStore;
+        this.cacheService = cacheService;
     }
 
     @Override
@@ -185,7 +185,8 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
                 LocalThreadUtils.addValue(THREAD_USER_KEY,user);
 
                 if(!StringUtils.isEmpty(user)){
-                    String tokenId = (String) cacheStore.get(user).orElse("");
+                    //String tokenId = (String) cacheStore.get(user).orElse("");
+                    String tokenId = cacheService.getString(user);
                     if(tokenId.equals(claims.get("jti"))){
                         return true;
                     }

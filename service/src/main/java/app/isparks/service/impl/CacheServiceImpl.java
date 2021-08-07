@@ -1,10 +1,12 @@
 package app.isparks.service.impl;
 
+import app.isparks.core.dao.cache.AbstractCacheStore;
 import app.isparks.core.service.ICacheService;
-import app.isparks.dao.cache.MemoryStringCacheStore;
+import app.isparks.dao.cache.CacheStoreBuilder;
 import app.isparks.core.service.support.BaseService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,29 +17,43 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CacheServiceImpl extends BaseService implements ICacheService {
 
+    private final AbstractCacheStore<String,Object> cacheStore;
 
-    private MemoryStringCacheStore stringCacheStore;
-
-    public CacheServiceImpl(MemoryStringCacheStore stringCacheStore){
-        this.stringCacheStore = stringCacheStore;
+    public CacheServiceImpl(){
+        cacheStore = CacheStoreBuilder.newBuilder().buildLocalCache();
     }
 
+    public AbstractCacheStore getCacheStore(){
+        return cacheStore;
+    }
 
     @Override
     public void saveString(String key, String value) {
-        stringCacheStore.put(key,value);
+        cacheStore.put(key,value);
+    }
+
+    public boolean invalidate(String key){
+        return cacheStore.invalidate(key).isPresent();
     }
 
     @Override
     public void saveStringWithExpires(String key, String value, long mills) {
         notNull(key,"key must not be null.");
         notNull(value,"value must not be null.");
-
-        stringCacheStore.put(key,value,mills, TimeUnit.MILLISECONDS);
+        cacheStore.put(key,value,mills, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public String getString(String key) {
-        return stringCacheStore.get(key).orElse("");
+        return String.valueOf(cacheStore.get(key).orElse(""));
+    }
+
+    @Override
+    public <V> Optional<V> getValue(String key, Class<V> vClass) {
+        Optional<Object> res = cacheStore.get(key);
+        if(res.isPresent() || vClass.isInstance(res.get())){
+            return Optional.ofNullable(vClass.cast(res.get()));
+        }
+        return Optional.empty();
     }
 }

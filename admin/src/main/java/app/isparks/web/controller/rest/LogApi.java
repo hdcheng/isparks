@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 @Api("日志管理接口")
+@RequestMapping("v1/admin")
 @RestController("RestLogApi")
 public class LogApi extends BasicApi {
 
@@ -21,16 +22,9 @@ public class LogApi extends BasicApi {
     @GetMapping("logs")
     @ApiOperation("Get logs | 分页获取日志数据")
     public Result get(@RequestParam(name = "page",defaultValue = "1") int page ,
-                      @RequestParam(name = "size",defaultValue = "10") int size){
-        return build(logService.page(page,size));
-    }
-
-    @GetMapping("logs/types")
-    @ApiOperation("Get logs by types | 根据日志类型分页获取日志数据")
-    public Result getByTypes(@RequestParam(name = "page",defaultValue = "1") int page ,
-                             @RequestParam(name = "size",defaultValue = "10") int size,
-                             @RequestParam(name = "types") String types){
-        return build(logService.pageByTypes(page,size,LogType.types(types)));
+                      @RequestParam(name = "size",defaultValue = "10") int size,
+                      @RequestParam(name = "types",defaultValue = "",required = false) String types){
+        return build(types.isEmpty() ? logService.page(page,size) : logService.pageByTypes(page,size,LogType.types(types)));
     }
 
     @GetMapping("log/types")

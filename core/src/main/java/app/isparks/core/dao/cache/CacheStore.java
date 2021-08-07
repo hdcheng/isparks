@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 缓存储存接口
+ * Cache store interface | 缓存接口
  *
  * @author chenghd
  * @date 2020/8/3
@@ -13,48 +13,43 @@ import java.util.concurrent.TimeUnit;
 public interface CacheStore<K, V> {
 
     /**
-     * 从缓存中获取值
+     * Get value from cache | 从缓存中获取值
      *
-     * @param k 键
-     * @return 可能为 Empty
+     * @return Value or Optional.empty
      */
     Optional<V> get(K k);
 
     /**
-     * 存放缓存值,如果已经存在，则覆盖
+     * Overwrite it if key already exists | 如果 key 已经存在则覆盖
      *
-     * @param k        键
-     * @param v        值
      * @param timeout  超时时长
-     * @param timeUnit 时间单位
+     * @param timeUnit 超时单位
      */
-    void put(K k, V v, long timeout, TimeUnit timeUnit);
+    void put(K k, V v , long timeout, TimeUnit timeUnit);
 
     /**
-     * 存放缓存值,如果已经存在，则覆盖。
-     *
-     * @param k        键
-     * @param v        值
+     * Overwrite it if key already exists | 如果 key 已经存在则覆盖
      */
     void put(K k,V v);
 
     /**
-     * 存放缓存值,如果已经存在，覆盖
+     * If the key does not exist, cache the value | 如果不存在则缓存键值对
      *
-     * @param k        键
-     * @param v        值
-     * @param timeout  超时时长
-     * @param timeUnit 时间单位
-     * @return 成功与否
+     * @param timeout 超时清除缓存的时长
+     * @param timeUnit 超时单位
      */
     boolean putIfAbsent(K k, V v, long timeout, TimeUnit timeUnit);
 
     /**
-     * 删除值
-     *
-     * @param k
-     * @return 被删除的值/可为Empty
+     * If the key does not exist, cache the value | 如果不存在则缓存键值对
      */
-    Optional<V> delete(K k);
+    boolean putIfAbsent(K k, V v);
+
+    /**
+     * Invalidate cache by key | 根据 key 值移除缓存
+     *
+     * @return The value which is deleted or Optional.empty | 返回被移除的缓存或者 Optional.empty
+     */
+    Optional<V> invalidate(K k);
 
 }

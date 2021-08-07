@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractStringCacheStore extends AbstractCacheStore<String,String>{
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(AbstractStringCacheStore.class);
 
     protected Optional<CacheWrapper<String>> jsonToCacheWrapper(String json) {
         Assert.hasText(json, "json value must not be null");
@@ -23,7 +23,7 @@ public abstract class AbstractStringCacheStore extends AbstractCacheStore<String
     }
 
     public <T> void cacheString(String key, T value) {
-        put(key, JsonUtils.toJson(value));
+        cacheString(key, value , DEFAULT_TIMEOUT , DEFAULT_TIMEOUT_TIMEUNIT);
     }
 
     public <T> void cacheString( String key,  T value, long timeout,  TimeUnit timeUnit) {
@@ -32,8 +32,6 @@ public abstract class AbstractStringCacheStore extends AbstractCacheStore<String
 
     public <T> Optional<T> getValue(String key, Class<T> type) {
         Assert.notNull(type, "Type must not be null");
-        return get(key).map(value -> {
-            return JsonUtils.toObject(value, type);
-        });
+        return get(key).map(value -> JsonUtils.toObject(value, type));
     }
 }

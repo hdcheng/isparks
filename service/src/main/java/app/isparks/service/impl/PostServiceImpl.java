@@ -125,7 +125,6 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
     @Override
     public String getTempLinkPostIdByKey(String cacheKey) {
         notEmpty(cacheKey,"cache key must not be empty.");
-
         return cacheService.getString(TEMP_LINK_KEY_PREFIX.concat(cacheKey));
     }
 
@@ -385,12 +384,6 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
 
         return abstractCount();
 
-    }
-
-    public static void main(String[] args) {
-        Calendar calendar= Calendar.getInstance();
-        calendar.set(Calendar.YEAR,2019);
-        System.out.println(calendar.getTime().getTime());
     }
 
 }

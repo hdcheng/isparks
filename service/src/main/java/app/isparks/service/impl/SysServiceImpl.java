@@ -47,7 +47,6 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
     private IUserService userService;
 
-
     private IDataSourceFactory dataSourceFactory;
 
     public SysServiceImpl(UserServiceImpl userService, HikariCPDataSourceFactory dataSourceFactory) {

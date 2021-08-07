@@ -8,10 +8,13 @@ import app.isparks.core.pojo.param.LoginParam;
 import app.isparks.core.security.jwt.JwtHandler;
 import app.isparks.core.security.jwt.exception.JWTException;
 import app.isparks.core.service.IAdminService;
+import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.ValidateUtils;
 import app.isparks.core.service.support.BaseService;
+import app.isparks.dao.cache.CacheStoreBuilder;
+import app.isparks.dao.cache.LocalCacheStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,11 +38,12 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
     private IUserService userService;
 
-    private AbstractCacheStore cacheStore;
+    private ICacheService cacheService;
 
-    public AdminServiceImpl(UserServiceImpl userService, AbstractCacheStore cacheStore) {
+    public AdminServiceImpl(UserServiceImpl userService,CacheServiceImpl cacheService) {
         this.userService = userService;
-        this.cacheStore = cacheStore;
+        this.cacheService = cacheService;
+        //this.cacheStore = CacheStoreBuilder.newBuilder().defaultTimeout(10,TimeUnit.MINUTES).buildLocalCache();
     }
 
     @Override
@@ -72,8 +76,8 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
             String tokenId = JwtHandler.build().tryGetId(token);
 
-            cacheStore.put(userDTO.getUserName(),tokenId);
-
+            //cacheStore.put(userDTO.getUserName(),tokenId);
+            cacheService.saveString(userDTO.getUserName(),tokenId);
         }
         return Optional.ofNullable(userDTO);
     }
@@ -82,7 +86,8 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
     @Override
     public boolean logout(String username) {
         notEmpty(username, "token must not be empty");
-        return cacheStore.delete(username).isPresent();
+        //return cacheStore.invalidate(username).isPresent();
+        return cacheService.invalidate(username);
     }
 
 }

@@ -1,11 +1,18 @@
 package app.isparks.core.service;
 
+import app.isparks.core.dao.cache.AbstractCacheStore;
+
+import java.util.Optional;
+
 /**
  *
  * @author： chenghd
  * @date： 2021/3/12
  */
 public interface ICacheService {
+
+
+    AbstractCacheStore getCacheStore();
 
     /**
      * 保存字符串键值对
@@ -14,6 +21,12 @@ public interface ICacheService {
      * @param value
      */
     void saveString(String key,String value);
+
+
+    /**
+     * invalidate cache | 使缓存失效
+     */
+    boolean invalidate(String key);
 
     /**
      * 设置指定时间的缓存值
@@ -31,5 +44,10 @@ public interface ICacheService {
      * @return ""或者值
      */
     String getString(String key);
+
+    /**
+     * 获取指定类型的数据
+     */
+    <V> Optional<V> getValue(String key,Class<V> vClass);
 
 }

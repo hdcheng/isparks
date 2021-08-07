@@ -12,6 +12,7 @@ dependencies {
     compile "com.h2database:h2:$h2DatabaseVersion"
     // postgresql
     runtimeOnly "org.postgresql:postgresql:$postgresqlJDBCVersion"
+
     // 依赖核心库
     implementation project(":core")
     implementation project(":plugin")

@@ -3,7 +3,6 @@ package app.isparks.web.controller.rest;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Optional;
  * base api
  * @author chenghd
  */
-@RequestMapping("rest/admin")
+
 public abstract class BasicApi {
 
     protected <T> Result<PageData<T>> build(PageData<T> pageData){
