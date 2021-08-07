@@ -4,9 +4,9 @@
 
 ## 简介
 
-**I Sparks** 是一个简单易用的建站系统，你可以用他创建你自己的个人博客、个人官网等。这个小项目旨在创建一个插件化、易于定制的建站系统，你的网站完全由你决定。
+**I Sparks** 是一个简单易用的建站系统，你可以用他创建你自己的个人博客、个人官网等。这个小项目旨在创建一个插件化、易于自定义的建站系统，你的网站完全由你决定。
 
-**sparks** `[spɑːks]` 这一词取自一部很喜欢的日剧 ([《火花》](https://movie.douban.com/subject/26635329/)) 中男主 [漫才](https://baike.baidu.com/item/%E6%BC%AB%E6%89%8D/3030676?fr=aladdin) 组合的名字。
+**sparks** `[spɑːks]` 这一词取自一部很喜欢的日剧 ([《火花》](https://movie.douban.com/subject/26635329/)) 中主角的 [漫才](https://baike.baidu.com/item/%E6%BC%AB%E6%89%8D/3030676?fr=aladdin) 组合名。
 
 ## 特性
 
@@ -16,18 +16,16 @@
 |插件化|你可以为你的网站开发插件。|
 |页面定制|虽然系统内置了一些主题，你仍可以为系统定制你喜欢的主题。|
 |数据库可配置|系统默认使用的 H2 数据库，你可以换到其他数据库。（目前只支持:h2、pgsql）|
+|内容管理|文章管理（markdown格式）、分类管理、标签管理、图片管理|
 
 ## 版本
 
-当前版本：0.5.0 bata
-
-*（有很多想法想去实现，但是由于个人精力和能力有限，所以进度非常缓慢。项目还在不断完善中...）*
+当前开发进度：0.5.1
 
 ## 技术栈
 
 ![Java 1.8 +](https://img.shields.io/badge/java-1.8%20%2B-blue) ![Spring](https://img.shields.io/badge/spring-5.2.9-yellowgreen) ![h2 database](https://img.shields.io/badge/h2%20database-1.4-orange) ![mybatis](https://img.shields.io/badge/mybatis-3.5-cirtical) ![Uikit](https://img.shields.io/badge/Uikit-3-green) ...
 
-*(开源精神是人类最伟大的精神之一，感谢所有开源软件以及其作者为开源世界做出的贡献)*
 
 ## 许可证
 
