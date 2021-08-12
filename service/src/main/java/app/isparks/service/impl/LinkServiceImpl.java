@@ -40,7 +40,8 @@ public class LinkServiceImpl extends AbstractService<Link> implements ILinkServi
 
     @Override
     public Optional<LinkDTO> save(LinkParam param, LinkType type) {
-        Assert.notNull(param,"link param must not be null.");
+        notNull(param,"link param must not be null.");
+
         if(type == null){
             type = IEnum.codeToEnum(LinkType.class,param.getType());
         }
@@ -60,7 +61,7 @@ public class LinkServiceImpl extends AbstractService<Link> implements ILinkServi
 
     @Override
     public Optional<LinkDTO> update(LinkParam param) {
-        Assert.notNull(param,"link param must not be null.");
+        notNull(param,"link param must not be null.");
         notEmpty(param.getId(),"link id must not be empty.");
 
         Link link = CONVERTER.map(param);

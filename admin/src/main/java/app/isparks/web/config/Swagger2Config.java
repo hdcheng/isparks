@@ -19,24 +19,48 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config {
 
     @Bean
-    public Docket createRestApi() {
+    public Docket rpcApi() {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
+                .apiInfo(rpcApiInfo())
                 .select()
                 //controller包路径
-                .apis(RequestHandlerSelectors.basePackage("app.isparks"))
+                .apis(RequestHandlerSelectors.basePackage("app.isparks.web.controller.api"))
                 .paths(PathSelectors.any())
                 .build();
+        docket.groupName("RPC");
+        docket.host("localhost");
+        return docket;
+    }
+
+
+    private ApiInfo rpcApiInfo() {
+        return new ApiInfoBuilder()
+                .title("ISparks RPC API Document")
+                .version("v1")
+                .description("ISparks 接口参考文档")
+                .build();
+    }
+
+    @Bean
+    public Docket restApi(){
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(restApiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("app.isparks.web.controller.rest"))
+                .paths(PathSelectors.any())
+                .build();
+        docket.groupName("REST");
+        docket.host("127.0.0.1");
 
         return docket;
     }
 
-    private ApiInfo apiInfo() {
+
+    private ApiInfo restApiInfo() {
         return new ApiInfoBuilder()
-                .title("Spring Boot中使用Swagger2构建RESTful APIs")
-                .version("V1.0")
-                .description("接口参考文档")
+                .title("ISparks Rest API Document")
+                .version("v1")
+                .description("ISparks 接口参考文档")
                 .build();
     }
-
 }

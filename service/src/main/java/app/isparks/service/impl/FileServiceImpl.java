@@ -1,6 +1,5 @@
 package app.isparks.service.impl;
 
-import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.exception.FileOperationException;
 import app.isparks.core.file.UploadResult;
@@ -152,7 +151,8 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
 
     @Override
     public PageData<FileDTO> pageValidByFileType(int page, int size, FileType type) {
-        notNull(type,"file type must not be null.");
+        notNull(type,"file type must not be null");
+
         FFile cond = new FFile();
         cond.setFileType(type.getSuffix());
         PageData<FFile> file = abstractPageValidStatusBy(new PageInfo(page,size),cond);
@@ -162,6 +162,7 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
     @Override
     public PageData<FileDTO> pageValidByMediaType(int page, int size, MediaType type) {
         notNull(type,"media must not be null.");
+
         FFile cond = new FFile();
         cond.setMediaType(type.getType());
         PageData<FFile> file = abstractPageValidStatusBy(new PageInfo(page,size),cond);

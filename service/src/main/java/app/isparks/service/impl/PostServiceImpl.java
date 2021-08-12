@@ -24,7 +24,6 @@ import app.isparks.dao.repository.AbstractPostCurd;
 import app.isparks.dao.repository.AbstractPostTagRLCurd;
 import app.isparks.dao.repository.impl.PostCurdImpl;
 import app.isparks.service.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,18 +46,27 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
 
     private AbstractPostTagRLCurd ptRLCurd;
 
-    @Autowired
     private ITagService tagService;
 
-    @Autowired
     private ICategoryService categoryService;
 
-    @Autowired
     private ICacheService cacheService;
 
-    public PostServiceImpl(PostCurdImpl postCurd,AbstractPostCategoryRLCurd pcRLCurd,AbstractPostTagRLCurd ptRLCurd){
+    public PostServiceImpl(PostCurdImpl postCurd,
+                           AbstractPostCategoryRLCurd pcRLCurd,
+                           AbstractPostTagRLCurd ptRLCurd,
+                           TagServiceImpl tagService,
+                           CacheServiceImpl cacheService){
         super(postCurd);
         this.postCurd = postCurd;
+
+        notNull(tagService,"tag service must not be null");
+        notNull(cacheService,"cache service must not be null");
+        notNull(pcRLCurd,"post category curd object must not be null");
+        notNull(ptRLCurd,"post tag curd object must not be null");
+
+        this.tagService = tagService;
+        this.cacheService = cacheService;
         this.pcRLCurd = pcRLCurd;
         this.ptRLCurd = ptRLCurd;
     }
@@ -125,6 +133,7 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
     @Override
     public String getTempLinkPostIdByKey(String cacheKey) {
         notEmpty(cacheKey,"cache key must not be empty.");
+
         return cacheService.getString(TEMP_LINK_KEY_PREFIX.concat(cacheKey));
     }
 

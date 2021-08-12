@@ -24,7 +24,6 @@ public class ThemeApi {
     public Result listThemes(){
         Map<String,String> themes = themeService.listThemes();
 
-
         return ResultUtils.success().setData(themes);
     }
 

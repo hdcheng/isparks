@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -39,7 +38,8 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
     @Override
     public void save(OptionParam param) {
-        Assert.notNull(param,"param can't be null.");
+        notNull(param,"param can't be null.");
+
         IEnum.codeToEnum(OptionType.class,param.getType());
 
         Option option = optionConverter.map(param);
@@ -84,7 +84,7 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
     @Override
     public <V> V getByPropertyOrDefault(PropertyEnum property, Class<V> valueType) {
-        Assert.notNull(property,"system property must not be empty.");
+        notNull(property,"system property must not be empty.");
 
         if (property.getValueType() != valueType){
             throw new InvalidValueException("Class<V> valueType 要与 property 的 value 类型一致。");
@@ -105,7 +105,8 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
     @Override
     public Optional<Option> getOptionByKey(String key) {
-        Assert.hasLength(key,"option key must not bet empty.");
+        notEmpty(key,"option key must not bet empty.");
+
         Option option = new Option();
         option.setKey(key);
         return abstractListBy(option).stream().findFirst();

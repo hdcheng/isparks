@@ -1,7 +1,5 @@
 package app.isparks.core.service;
 
-import app.isparks.core.dao.cache.AbstractCacheStore;
-
 import java.util.Optional;
 
 /**
@@ -10,9 +8,6 @@ import java.util.Optional;
  * @date： 2021/3/12
  */
 public interface ICacheService {
-
-
-    AbstractCacheStore getCacheStore();
 
     /**
      * 保存字符串键值对

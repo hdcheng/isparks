@@ -134,7 +134,7 @@ public class PostApi {
 
     @ApiOperation("根据 id 查找数据")
     @RequestMapping(value = "get/by/id",method = {RequestMethod.GET})
-    public Result pageTemp(@RequestParam("id") String id){
+    public Result getById(@RequestParam("id") String id){
 
         return ResultUtils.build(postService.getById(id));
 

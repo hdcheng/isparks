@@ -42,16 +42,20 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Autowired
     private IOptionService optionService;
 
     private IUserService userService;
 
     private IDataSourceFactory dataSourceFactory;
 
-    public SysServiceImpl(UserServiceImpl userService, HikariCPDataSourceFactory dataSourceFactory) {
+    public SysServiceImpl(UserServiceImpl userService,OptionServiceImpl optionService ,HikariCPDataSourceFactory dataSourceFactory) {
+        notNull(userService,"UserServiceImpl must not be null");
+        notNull(optionService,"OptionServiceImpl must not be null");
+        notNull(dataSourceFactory,"HikariCPDataSourceFactory must not be null");
+
         this.userService = userService;
         this.dataSourceFactory = dataSourceFactory;
+        this.optionService = optionService;
     }
 
 
@@ -84,7 +88,7 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
     @Override
     public boolean switchDB(String newDBType) {
-        Assert.notNull(newDBType,"数据库类型不能为 null");
+        notNull(newDBType,"new database type must not be null");
 
         Database newDB ,oldDB;
 

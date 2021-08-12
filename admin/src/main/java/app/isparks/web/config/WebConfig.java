@@ -1,12 +1,12 @@
 package app.isparks.web.config;
 
 import app.isparks.core.config.ISparksProperties;
-import app.isparks.core.dao.cache.AbstractCacheStore;
 import app.isparks.core.file.util.FileUtils;
-import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
+import app.isparks.service.impl.AbstractCacheService;
+import app.isparks.service.impl.CacheServiceImpl;
+import app.isparks.service.impl.UserServiceImpl;
 import app.isparks.web.interceptor.JwtInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -22,11 +22,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
-    @Autowired
-    private ICacheService cacheService;
+    private AbstractCacheService cacheService;
 
-    @Autowired
     private IUserService userService;
+
+    public WebConfig(UserServiceImpl userService, CacheServiceImpl cacheService){
+        this.userService = userService;
+        this.cacheService = cacheService;
+    }
 
     /**
      * 配置拦截器

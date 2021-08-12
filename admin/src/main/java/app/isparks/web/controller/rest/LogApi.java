@@ -8,9 +8,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
-@Api("日志管理接口")
+/**
+ * @author chenghd
+ */
+
+@Api("系统日志管理接口")
 @RequestMapping("v1/admin")
-@RestController("RestLogApi")
+@RestController("v1_LogApi")
 public class LogApi extends BasicApi {
 
     private ILogService logService;

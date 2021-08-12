@@ -30,11 +30,14 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     private final AbstractCurd<DOMAIN> abstractCurd;
 
     public AbstractService(AbstractCurd<DOMAIN> abstractCurd){
+        notNull(abstractCurd,"abstractCurd must not be null");
+
         this.abstractCurd = abstractCurd;
     }
 
     public Optional<DOMAIN> abstractInsert(DOMAIN domain){
-        Assert.notNull(domain,"domain must not be null.");
+        notNull(domain,"domain must not be null.");
+
         if (!beforeInsert(domain)){
             return Optional.empty();
         }
@@ -42,7 +45,8 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public List<DOMAIN> abstractInsertBatch(List<DOMAIN> domains){
-        Assert.notNull(domains,"domains must not be null.");
+        notNull(domains,"domains must not be null.");
+
         return returnList(abstractCurd.insertBatch(domains));
     }
 
@@ -51,7 +55,8 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public Optional<DOMAIN> abstractDelete(String id){
-        Assert.hasLength(id,"ID must not be null");
+        notEmpty(id,"ID must not be null");
+
         if(!beforeDelete(id)){
             return Optional.empty();
         }
@@ -94,11 +99,13 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public List<DOMAIN> abstractListBy(DOMAIN domain){
-        Assert.notNull(domain,"domain must not be empty.");
+        notNull(domain,"domain must not be empty.");
+
         return returnList(abstractCurd.selectByCond(domain));
     }
 
     public List<DOMAIN> abstractListByIds(List<String> ids){
+
         if (CollectionUtils.isEmpty(ids)){
             return new ArrayList<>();
         }
@@ -110,7 +117,8 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public PageData<DOMAIN> abstractPageValidStatus(PageInfo pageInfo) {
-        Assert.notNull(pageInfo,"page info must not be null");
+        notNull(pageInfo,"page info must not be null");
+
         DOMAIN domain = (DOMAIN)abstractCurd.newEntity().withStatus(DataStatus.VALID);
         return returnPageData(abstractCurd.pageByCond(pageInfo,domain));
     }
@@ -126,14 +134,16 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public PageData<DOMAIN> abstractPageValidStatusBy(PageInfo pageInfo, DOMAIN domain) {
-        Assert.notNull(domain,"domain must not be null");
-        Assert.notNull(pageInfo,"page info must not be null");
+        notNull(pageInfo,"page info must not be null");
+        notNull(domain,"domain must not be null");
+
         domain.withStatus(DataStatus.VALID);
         return returnPageData(abstractCurd.pageByCond(pageInfo,domain));
     }
 
     public Optional<DOMAIN> abstractGetById(String id){
-        Assert.hasLength(id,"domain id must not be empty");
+        notEmpty(id,"domain id must not be empty");
+
         DOMAIN domain = (DOMAIN)abstractCurd.newEntity().withId(id);
         return abstractCurd.selectByCond(domain).stream().findFirst();
     }
@@ -149,32 +159,37 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public List<DOMAIN> abstractListValidBy(DOMAIN domain) {
-        Assert.notNull(domain,"domain must not be null");
+        notNull(domain,"domain must not be null");
+
         domain.withStatus(DataStatus.REMOVE);
         return abstractCurd.selectByCond(domain);
     }
 
     public Optional<DOMAIN> abstractRemove(DOMAIN domain) {
-        Assert.notNull(domain,"domain must not be null");
-        Assert.hasLength(domain.getId(),"domain id must not be empty");
+        notNull(domain,"domain must not be null");
+        notEmpty(domain.getId(),"domain id must not be empty");
+
         domain.setStatus(DataStatus.REMOVE.getCode());
         return Optional.ofNullable(abstractCurd.updateById(domain));
     }
 
     public Optional<DOMAIN> abstractRemove(String id){
-        Assert.hasLength(id,"domain id must not be empty");
+        notEmpty(id,"domain id must not be empty");
+
         DOMAIN domain = (DOMAIN)abstractCurd.newEntity().withStatus(DataStatus.REMOVE).withId(id);
         return Optional.ofNullable(abstractCurd.updateById(domain));
     }
 
     public Optional<DOMAIN> abstractRestore(String id){
-        Assert.hasLength(id,"domain id must not be empty");
+        notEmpty(id,"domain id must not be empty");
+
         DOMAIN domain = (DOMAIN)abstractCurd.newEntity().withStatus(DataStatus.VALID).withId(id);
         return Optional.ofNullable(abstractCurd.updateById(domain));
     }
 
     public Optional<DOMAIN> abstractUpdate(DOMAIN domain){
-        Assert.notNull(domain,"domain must not be null");
+        notNull(domain,"domain must not be null");
+
         if(StringUtils.isEmpty(domain.getId())){
             return Optional.empty();
         }
@@ -182,7 +197,8 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
     }
 
     public List<DOMAIN> abstractUpdateBatch(List<DOMAIN> domains){
-        Assert.notNull(domains,"domain list must not be null.");
+        notNull(domains,"domain list must not be null.");
+
         return returnList(abstractCurd.updateBatchById(domains));
     }
 
@@ -207,8 +223,9 @@ public abstract class AbstractService<DOMAIN extends BaseEntity> extends BaseSer
      * @return 一个 DOMAIN 类型的 Optional
      */
     public Optional<DOMAIN> abstractResume(DOMAIN domain) {
-        Assert.notNull(domain,"domain must not be null");
-        Assert.hasLength(domain.getId(),"domain id must not be empty");
+        notNull(domain,"domain must not be null");
+        notEmpty(domain.getId(),"domain id must not be empty");
+
         domain.setStatus(DataStatus.VALID.getCode());
         domain.setModifyTime(System.currentTimeMillis());
         return Optional.ofNullable(abstractCurd.updateById(domain));

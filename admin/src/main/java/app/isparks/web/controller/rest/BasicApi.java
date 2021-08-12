@@ -1,12 +1,11 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.pojo.base.BaseDTO;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * base api
@@ -25,7 +24,7 @@ public abstract class BasicApi {
         return ResultUtils.build(opt);
     }
 
-    protected Result<Map> build(Map map){
+    protected Result<Map<?,?>> build(Map<?,?> map){
         before();
         if(map == null){
             return fail("result is null").withData(new HashMap<>());
@@ -33,8 +32,22 @@ public abstract class BasicApi {
         return map.isEmpty() ? success("data is empty").withData(map) : success().withData(map);
     }
 
+    protected Result<List<?>> build(List<?> list){
+        if(list == null){
+            return fail("result is null").withData(new ArrayList<>());
+        }
+        return success().withData(list);
+    }
+
     protected Result build(boolean res){
         return res ? fail():ResultUtils.success();
+    }
+
+    protected <DTO extends BaseDTO> Result<BaseDTO> build(DTO dto){
+        if(dto == null){
+            return fail("result is null");
+        }
+        return success().withData(dto);
     }
 
     protected Result success(String msg){

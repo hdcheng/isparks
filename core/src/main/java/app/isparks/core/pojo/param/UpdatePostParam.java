@@ -14,5 +14,4 @@ public class UpdatePostParam extends PostParam{
     @NotEmpty(message = "ID不能为空")
     private String id;
 
-
 }

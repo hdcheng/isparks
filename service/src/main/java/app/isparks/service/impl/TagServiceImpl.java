@@ -12,6 +12,7 @@ import app.isparks.core.util.thread.LocalThreadUtils;
 import app.isparks.dao.repository.AbstractPostTagRLCurd;
 import app.isparks.dao.repository.AbstractTagCurd;
 import app.isparks.core.service.support.BaseService;
+import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.*;
  * @date： 2021/2/26
  */
 @Service
-public class TagServiceImpl extends BaseService implements ITagService {
+public class TagServiceImpl extends AbstractService<Tag> implements ITagService {
 
     private Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
 
@@ -36,7 +37,11 @@ public class TagServiceImpl extends BaseService implements ITagService {
     private AbstractPostTagRLCurd ptRLCurd;
 
     public TagServiceImpl(AbstractTagCurd tagCurd,AbstractPostTagRLCurd ptRLCurd){
+        super(tagCurd);
         this.tagCurd = tagCurd;
+
+        notNull(ptRLCurd,"AbstractPostTagRLCurd must not be null");
+
         this.ptRLCurd = ptRLCurd;
     }
 
@@ -112,7 +117,6 @@ public class TagServiceImpl extends BaseService implements ITagService {
     @Override
     public Optional<TagDTO> deleteByName(String tagName) {
         notEmpty(tagName,"tag name must not be empty.");
-
 
         Tag tag = tagCurd.findByName(tagName);
 

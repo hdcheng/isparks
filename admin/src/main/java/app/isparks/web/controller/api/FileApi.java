@@ -63,12 +63,6 @@ public class FileApi {
         return ResultUtils.build(fileService.removeById(id));
     }
 
-    @ApiOperation("彻底删除文件")
-    @RequestMapping(value = "delete",method = {RequestMethod.GET})
-    @Log(description = "删除文件", types = {LogType.DELETE})
-    public Result deleteById(@RequestParam("id")String id){
-        return ResultUtils.build(fileService.deleteById(id));
-    }
 
     @ApiOperation("恢复文件")
     @RequestMapping(value = "restore",method = {RequestMethod.GET})

@@ -25,10 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentServiceImpl extends AbstractService<Comment> implements ICommentService {
 
-    @Autowired
-    private IPostService postService;
-
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private IPostService postService;
 
     private CommentConverter commentConverter = ConverterFactory.get(CommentConverter.class);
 
@@ -36,10 +35,15 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
 
     private AbstractCommentCurd commentCurd;
 
-    public CommentServiceImpl(AbstractCommentCurd commentCurd,AbstractPostCommentRLCurd pcRLCurd) {
+    public CommentServiceImpl(AbstractCommentCurd commentCurd,AbstractPostCommentRLCurd pcRLCurd,PostServiceImpl postService) {
         super(commentCurd);
         this.commentCurd = commentCurd;
+
+        notNull(pcRLCurd,"AbstractPostCommentRLCurd must not be null");
+        notNull(postService,"PostServiceImpl must not be null");
+
         this.pcRLCurd = pcRLCurd;
+        this.postService = postService;
     }
 
     @Override
@@ -118,6 +122,7 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
     @Override
     public PageData<CommentDTO> pageValidByPost(String postId, int page, int size) {
         notEmpty(postId,"post id must not be empty");
+
         PageData<CommentDTO> pageData ;
 
         Comment comment = (Comment)new Comment().withStatus(DataStatus.VALID);

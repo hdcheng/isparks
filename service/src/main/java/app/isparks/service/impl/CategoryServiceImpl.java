@@ -48,6 +48,8 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
     public CategoryServiceImpl(CategoryCurdImpl categoryCurd, PostCategoryRLCurdImpl pcRLCurd){
         super(categoryCurd);
+        notNull(pcRLCurd,"PostCategoryRLCurdImpl must not be null");
+
         this.categoryCurd = categoryCurd;
         this.pcRLCurd = pcRLCurd;
     }

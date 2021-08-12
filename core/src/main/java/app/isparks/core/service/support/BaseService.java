@@ -12,20 +12,6 @@ import java.util.function.Function;
  */
 public abstract class BaseService  {
 
-    /**
-     * 判断Object是否为null
-     */
-    public boolean isNull(Object o){
-        return o == null;
-    }
-
-    /**
-     * Object不为空
-     */
-    public boolean notNull(Object o){
-        return o != null;
-    }
-
     public <T,R> Optional<R> toDTO(Optional<T> target, Function<T,R> convertFunction){
         R r = target.isPresent() ? convertFunction.apply(target.get()) : null;
         return Optional.ofNullable(r);
@@ -41,38 +27,31 @@ public abstract class BaseService  {
     /**
      * 非空
      */
-    public static void notNull(Object[] array, String msg) {
+    public void notNull(Object[] array, String msg) {
         Assert.notEmpty(array, msg);
     }
 
     /**
      * 非空
      */
-    public static void notEmpty(Collection<?> collection, String msg) {
+    public void notEmpty(Collection<?> collection, String msg) {
         Assert.notEmpty(collection, msg);
     }
 
     /**
      * 字符串非空
      */
-    public static void notEmpty(String text, String message) {
+    public void notEmpty(String text, String message) {
         Assert.hasLength(text, message);
     }
 
-    /**
-     * 字符串非空
-     */
-    public static void notEmpty(String[] texts, String message) {
-        for (String text : texts) {
-            notEmpty(text, message);
-        }
-    }
+
 
     /**
      * Set result message use ThreadLocal .
      * 使用 ThreadLocal 设置消息
      */
-    protected static String  resultMessage(String msg){
+    protected String  resultMessage(String msg){
         // todo: 使用 ThreadLocal 设置异常消息等。
 
         return msg;

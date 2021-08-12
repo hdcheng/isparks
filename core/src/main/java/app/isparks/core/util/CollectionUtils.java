@@ -14,6 +14,8 @@ import java.util.function.Function;
  */
 public class CollectionUtils {
 
+    private CollectionUtils (){}
+
     /**
      * 判断集合是否为空
      * Null为空

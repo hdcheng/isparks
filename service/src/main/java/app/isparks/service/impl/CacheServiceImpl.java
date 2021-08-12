@@ -1,9 +1,7 @@
 package app.isparks.service.impl;
 
 import app.isparks.core.dao.cache.AbstractCacheStore;
-import app.isparks.core.service.ICacheService;
 import app.isparks.dao.cache.CacheStoreBuilder;
-import app.isparks.core.service.support.BaseService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,17 +13,14 @@ import java.util.concurrent.TimeUnit;
  * @date： 2021/3/12
  */
 @Service
-public class CacheServiceImpl extends BaseService implements ICacheService {
+public class CacheServiceImpl extends AbstractCacheService {
 
-    private final AbstractCacheStore<String,Object> cacheStore;
+    private AbstractCacheStore<String,Object> cacheStore;
 
     public CacheServiceImpl(){
         cacheStore = CacheStoreBuilder.newBuilder().buildLocalCache();
     }
 
-    public AbstractCacheStore getCacheStore(){
-        return cacheStore;
-    }
 
     @Override
     public void saveString(String key, String value) {
@@ -38,8 +33,9 @@ public class CacheServiceImpl extends BaseService implements ICacheService {
 
     @Override
     public void saveStringWithExpires(String key, String value, long mills) {
-        notNull(key,"key must not be null.");
-        notNull(value,"value must not be null.");
+        notEmpty(key,"key must not be null.");
+        notEmpty(value,"value must not be null.");
+
         cacheStore.put(key,value,mills, TimeUnit.MILLISECONDS);
     }
 
@@ -50,6 +46,8 @@ public class CacheServiceImpl extends BaseService implements ICacheService {
 
     @Override
     public <V> Optional<V> getValue(String key, Class<V> vClass) {
+        notNull(vClass , "class must not be null");
+
         Optional<Object> res = cacheStore.get(key);
         if(res.isPresent() || vClass.isInstance(res.get())){
             return Optional.ofNullable(vClass.cast(res.get()));

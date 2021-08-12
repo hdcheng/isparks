@@ -34,6 +34,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         this.userService = userService;
     }
 
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 

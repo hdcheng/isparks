@@ -1,6 +1,5 @@
 package app.isparks.service.impl;
 
-import app.isparks.core.dao.cache.AbstractCacheStore;
 import app.isparks.core.exception.NoFoundException;
 import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
@@ -13,8 +12,6 @@ import app.isparks.core.service.IUserService;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.ValidateUtils;
 import app.isparks.core.service.support.BaseService;
-import app.isparks.dao.cache.CacheStoreBuilder;
-import app.isparks.dao.cache.LocalCacheStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,14 +38,17 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
     private ICacheService cacheService;
 
     public AdminServiceImpl(UserServiceImpl userService,CacheServiceImpl cacheService) {
+        notNull(userService,"user service implement class can not be null");
+        notNull(userService,"cache service implement class can not be null");
+
         this.userService = userService;
         this.cacheService = cacheService;
-        //this.cacheStore = CacheStoreBuilder.newBuilder().defaultTimeout(10,TimeUnit.MINUTES).buildLocalCache();
     }
 
     @Override
     public Optional<UserDTO> authenticate(LoginParam loginParam) {
         notNull(loginParam, "login params must not be null");
+
         String loginName = loginParam.getLoginName();
         User user = ValidateUtils.isEmail(loginName) ?
                 userService.getByEmail(loginName).orElseThrow(() -> new NoFoundException("邮箱不存在")) :
@@ -85,8 +85,8 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
     @Override
     public boolean logout(String username) {
-        notEmpty(username, "token must not be empty");
-        //return cacheStore.invalidate(username).isPresent();
+        notEmpty(username, "username must not be empty");
+
         return cacheService.invalidate(username);
     }
 

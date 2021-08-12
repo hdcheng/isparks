@@ -1,6 +1,5 @@
 package app.isparks.service.impl;
 
-import app.isparks.core.dao.cache.AbstractCacheStore;
 import app.isparks.core.exception.AuthException;
 import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.pojo.converter.ConverterFactory;
@@ -50,6 +49,9 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
     public UserServiceImpl(UserCurdImpl userCurd,CacheServiceImpl cacheService) {
         super(userCurd);
         this.userCurd = userCurd;
+
+        notNull(cacheService,"CacheServiceImpl must not be null");
+
         this.cacheService = cacheService;
     }
 

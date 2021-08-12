@@ -9,7 +9,9 @@ import java.util.regex.Pattern;
  * @author chenghd
  * @date 2020/7/28
  */
-public abstract class ValidateUtils {
+public class ValidateUtils {
+
+    private ValidateUtils () {}
 
     /**
      * 检测邮箱格式
