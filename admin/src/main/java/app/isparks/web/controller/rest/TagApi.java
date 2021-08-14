@@ -1,5 +1,7 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.TagParam;
 import app.isparks.core.service.ITagService;
 import app.isparks.core.web.support.Result;
@@ -25,12 +27,14 @@ public class TagApi extends BasicApi{
 
     @PostMapping("tag")
     @ApiOperation("Create tag | 创建标签")
+    @Log(description = "创建标签",types = {LogType.INSERT})
     public Result create(@RequestBody TagParam param){
         return build(tagService.create(param));
     }
 
     @DeleteMapping("tag")
     @ApiOperation("Delete tag | 删除标签")
+    @Log(description = "删除标签",types = {LogType.DELETE})
     public Result deleteByName(@RequestParam(value = "name") String name){
         return build(tagService.deleteByName(name));
     }

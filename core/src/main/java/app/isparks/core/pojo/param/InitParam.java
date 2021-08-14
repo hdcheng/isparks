@@ -52,7 +52,6 @@ public class InitParam extends UserParam {
      */
     private String DBTablePrefix;
 
-    //网站配置
     /**
      * 站名，如：xx的个人博客
      */

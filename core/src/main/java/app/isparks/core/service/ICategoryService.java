@@ -1,12 +1,10 @@
 package app.isparks.core.service;
 
-import app.isparks.core.pojo.dto.CategoryDTO;
-import app.isparks.core.pojo.entity.Category;
-import app.isparks.core.pojo.page.PageData;
-import app.isparks.core.pojo.param.CategoryParam;
-
 import java.util.List;
 import java.util.Optional;
+import app.isparks.core.pojo.page.PageData;
+import app.isparks.core.pojo.dto.CategoryDTO;
+import app.isparks.core.pojo.param.CategoryParam;
 
 /**
  * 分类服务接口

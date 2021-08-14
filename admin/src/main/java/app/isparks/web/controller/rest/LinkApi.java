@@ -1,9 +1,11 @@
 package app.isparks.web.controller.rest;
 
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.dto.LinkDTO;
 import app.isparks.core.pojo.enums.IEnum;
 import app.isparks.core.pojo.enums.LinkType;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.param.LinkParam;
 import app.isparks.core.service.ILinkService;
@@ -33,6 +35,7 @@ public class LinkApi extends BasicApi{
 
     @PostMapping("link")
     @ApiOperation("Create new link | 创建链接")
+    @Log(description = "创建链接",types = {LogType.INSERT})
     public Result create(@RequestBody LinkParam param){
 
         LinkType type = IEnum.codeToEnum(LinkType.class,param.getType());
@@ -43,7 +46,8 @@ public class LinkApi extends BasicApi{
     }
 
     @DeleteMapping("link/{id}")
-    @ApiOperation("Delete link by id | 根据 ID 删除链接")
+    @ApiOperation("Delete link by id | 根据 id 删除链接")
+    @Log(description = "根据 id 删除链接",types = {LogType.DELETE})
     public Result deleteById(@PathVariable("id") String id){
         return build(linkService.delete(id));
     }
@@ -61,6 +65,7 @@ public class LinkApi extends BasicApi{
 
     @PutMapping("link")
     @ApiOperation("update link info | 更新链接")
+    @Log(description = "更新链接",types = {LogType.MODIFY})
     public Result updateLink(@RequestBody LinkParam param){
 
         Optional<LinkDTO> dto = linkService.update(param);

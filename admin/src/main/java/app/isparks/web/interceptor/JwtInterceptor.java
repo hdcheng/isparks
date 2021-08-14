@@ -2,8 +2,12 @@ package app.isparks.web.interceptor;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.dao.cache.AbstractCacheStore;
+import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.service.IUserService;
+import app.isparks.core.util.JsonUtils;
 import app.isparks.core.util.StringUtils;
+import app.isparks.core.web.support.Result;
+import app.isparks.core.web.support.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -25,15 +29,15 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
-    private AbstractCacheStore cacheStore;
 
     private IUserService userService;
 
-    public JwtInterceptor(AbstractCacheStore cacheStore,IUserService userService){
-        this.cacheStore = cacheStore;
+    private JwtInterceptor(){}
+
+    public JwtInterceptor(IUserService userService){
+
         this.userService = userService;
     }
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -41,7 +45,10 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 //        if (true)return true;
 
         String uri = request.getRequestURI();
-        if (uri.endsWith("/api/admin/authenticate")) return true;
+
+        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate")) {
+            return true;
+        }
 
         String jwtToken = getTokenFromRequest(request);
 
@@ -49,13 +56,21 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        if(!isAsync(request)){
+        if(!isAsyncRequest(request)){
             response.sendRedirect("/admin/login");
         }
+
+        Result result = ResultUtils.fail("Permission failed");
+
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json; charset=utf-8");
+
+        write(response, JsonUtils.toJson(result));
+
         return false;
     }
 
-    // todo：处理cookies禁止的情况
+
     private String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader(ISparksConstant.AUTHORIZATION);
 
@@ -92,11 +107,9 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    /**
-     * 是否为异步请求
-     */
-    private boolean isAsync(HttpServletRequest request){
-        return request.getRequestURI().startsWith("/api") || "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+
+    private boolean isAsyncRequest(HttpServletRequest request){
+        return !request.getRequestURI().startsWith("/admin");
     }
 
 }

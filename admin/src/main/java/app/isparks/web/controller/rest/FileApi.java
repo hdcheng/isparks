@@ -1,9 +1,11 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.file.type.FileType;
 import app.isparks.core.file.type.MediaType;
 import app.isparks.core.file.util.FileTypeUtils;
 import app.isparks.core.pojo.dto.FileDTO;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.service.IFileService;
 import app.isparks.core.util.UrlUtils;
@@ -35,6 +37,7 @@ public class FileApi extends BasicApi{
 
     @PostMapping("file/upload")
     @ApiOperation(" File upload | 上传文件")
+    @Log(description = "上传文件",types = {LogType.INSERT,LogType.FILE_UPLOAD})
     public Result upload(@RequestParam("file") MultipartFile file) throws IOException {
 
         Optional<FileDTO> result = fileService.upload(file.getOriginalFilename(),file.getInputStream());
@@ -48,6 +51,7 @@ public class FileApi extends BasicApi{
 
     @DeleteMapping("file/delete/{id}")
     @ApiOperation(value = " Delete the file by id | 彻底删除文件",notes = "只能删除状态是 REMOVE 的文件")
+    @Log(description = "彻底删除文件",types = {LogType.DELETE})
     public Result deleteById(@PathVariable("id")String id){
         return build(fileService.deleteById(id));
     }
@@ -101,6 +105,7 @@ public class FileApi extends BasicApi{
 
     @PatchMapping("file/remove/{id}")
     @ApiOperation(" Update the file status to remove | 更新文章状态为移除")
+    @Log(description = "更新文章状态为移除",types = {LogType.MODIFY})
     public Result removeById(@PathVariable("id")String id){
         return ResultUtils.build(fileService.removeById(id));
     }
@@ -108,6 +113,7 @@ public class FileApi extends BasicApi{
 
     @PatchMapping("file/restore/{id}")
     @ApiOperation(" Update the file status to valid | 恢复文件")
+    @Log(description = "恢复文件",types = {LogType.MODIFY})
     public Result restoreById(@PathVariable("id") String id){
         return ResultUtils.build(fileService.restoreById(id));
     }

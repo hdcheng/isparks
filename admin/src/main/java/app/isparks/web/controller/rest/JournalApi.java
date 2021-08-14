@@ -1,5 +1,7 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import io.swagger.annotations.Api;
 import app.isparks.core.web.support.Result;
 import io.swagger.annotations.ApiOperation;
@@ -26,12 +28,14 @@ public class JournalApi extends BasicApi{
 
     @PostMapping("journal")
     @ApiOperation("Create journal | 创建随笔")
+    @Log(description = "创建随笔",types = {LogType.INSERT})
     public Result create(@RequestBody JournalParam param){
         return build(journalService.create(param, DataStatus.VALID));
     }
 
     @DeleteMapping("journal/{id}")
     @ApiOperation(" Delete journal by id | 删除随笔")
+    @Log(description = "删除随笔",types = {LogType.DELETE})
     public Result delete(@PathVariable("id") String id){
         return build(journalService.deleteById(id));
     }

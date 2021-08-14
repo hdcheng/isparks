@@ -1,5 +1,7 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.CommentParam;
 import app.isparks.core.service.ICommentService;
 import app.isparks.core.web.support.Result;
@@ -25,12 +27,14 @@ public class CommentApi extends BasicApi{
 
     @PostMapping("comment")
     @ApiOperation("Create comment | 创建评论")
+    @Log(description = "创建评论",types = {LogType.INSERT})
     public Result create(@RequestBody CommentParam param){
         return build(commentService.create(param));
     }
 
     @DeleteMapping("comment/{id}")
     @ApiOperation("Delete comment by id | 根据 id 删除评论")
+    @Log(description = "根据 id 删除评论",types = {LogType.DELETE})
     public Result deleteById(@PathVariable("id") String id){
         return build(commentService.delete(id));
     }
@@ -59,11 +63,15 @@ public class CommentApi extends BasicApi{
     }
 
     @PatchMapping("comment/valid/{id}")
+    @ApiOperation("Update comment to valid status | 审核评论")
+    @Log(description = "审核评论",types = {LogType.MODIFY})
     public Result valid(@PathVariable("id") String commentId){
         return build(commentService.updateToValid(commentId));
     }
 
     @PatchMapping("comment/invalid/{id}")
+    @ApiOperation("Update comment to invalid status | 未审核评论")
+    @Log(description = "未审核评论",types = {LogType.MODIFY})
     public Result invalid(@PathVariable("id") String commentId){
         return build(commentService.updateToInvalid(commentId));
     }

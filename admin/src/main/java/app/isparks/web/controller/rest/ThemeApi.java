@@ -1,6 +1,8 @@
 package app.isparks.web.controller.rest;
 
 
+import app.isparks.core.anotation.Log;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
 import app.isparks.web.service.ThemeServiceImpl;
@@ -32,6 +34,8 @@ public class ThemeApi extends BasicApi{
     }
 
     @PutMapping("theme/{themeId}")
+    @ApiOperation("Update current theme | 更新主题")
+    @Log(description = "更新主题",types = {LogType.MODIFY})
     public Result update(@PathVariable(value = "themeId",required = false)String themeId){
         themeService.active(themeId);
         return success();

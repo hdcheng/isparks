@@ -1,6 +1,8 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.dto.UserDTO;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.UpdateUserParam;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.web.support.Result;
@@ -40,12 +42,14 @@ public class UserApi extends BasicApi{
 
     @PatchMapping("user/{id}")
     @ApiOperation("Update user info | 更新用户信息")
+    @Log(description = "更新用户信息",types = {LogType.MODIFY})
     public Result updateUserInfo(@PathVariable("id")String  id, @RequestBody UpdateUserParam param){
         return build(userService.updateUserInfo(param));
     }
 
     @PatchMapping("user/pwd")
     @ApiOperation("Update user password | 更新密码")
+    @Log(description = "更新密码",types = {LogType.MODIFY})
     public Result updatePassword(@RequestParam("userName")String userName,
                                  @RequestParam("oldPwd")String oldPwd,
                                  @RequestParam("newPwd")String newPwd){

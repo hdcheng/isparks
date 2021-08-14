@@ -70,6 +70,7 @@ public class SysApi extends BasicApi{
 
     @PatchMapping("web/settings")
     @ApiOperation("Update web settings | 更新网站配置")
+    @Log(description = "更新网站配置",types = {LogType.SYS,LogType.MODIFY})
     public Result update(@RequestBody WebSettingParam param){
 
         Map<String,Object> config = new HashMap<>();

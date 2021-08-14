@@ -28,7 +28,7 @@ public class Swagger2Config {
                 .paths(PathSelectors.any())
                 .build();
         docket.groupName("RPC");
-        docket.host("localhost");
+        docket.host("localhost:8174");
         return docket;
     }
 
@@ -50,7 +50,7 @@ public class Swagger2Config {
                 .paths(PathSelectors.any())
                 .build();
         docket.groupName("REST");
-        docket.host("127.0.0.1");
+        docket.host("127.0.0.1:8174");
 
         return docket;
     }

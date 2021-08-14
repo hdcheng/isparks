@@ -1,6 +1,8 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.enums.DataStatus;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.PostParam;
 import app.isparks.core.pojo.param.UpdatePostParam;
 import app.isparks.core.service.IPostService;
@@ -29,18 +31,21 @@ public class PostApi extends BasicApi{
 
     @PostMapping("post")
     @ApiOperation("Create post | 创建新文章")
+    @Log(description = "创建新文章",types = {LogType.INSERT})
     public Result create(@RequestBody PostParam param){
         return build(postService.create(param, DataStatus.VALID));
     }
 
     @PostMapping("post/temp")
     @ApiOperation("Create temporary post | 创建草稿")
+    @Log(description = "创建草稿",types = {LogType.INSERT})
     public Result createTemp(@RequestBody PostParam param){
         return build(postService.create(param,DataStatus.TEMP));
     }
 
     @DeleteMapping("post/{id}")
     @ApiOperation(" Delete post by id | 删除数据")
+    @Log(description = "删除数据",types = {LogType.DELETE})
     public Result delete(@PathVariable("id") String id){
         return build(postService.delete(id));
     }
@@ -81,6 +86,7 @@ public class PostApi extends BasicApi{
 
     @GetMapping("post/{id}/temp")
     @ApiOperation(" Get temporary post link | 获取文章的临时链接")
+    @Log(description = "获取文章的临时链接",types = {LogType.QUERY,LogType.INSERT})
     public Result generateTempLink(@PathVariable("id") String postId ,
                                    @RequestParam("minutes") int minutes){
 
@@ -97,18 +103,21 @@ public class PostApi extends BasicApi{
 
     @PatchMapping("post/{id}/remove")
     @ApiOperation("Update post status to remove | 将文章状态改为 remove")
+    @Log(description = "将文章状态改为 remove",types = {LogType.MODIFY})
     public Result remove(@PathVariable("id") String id){
         return build(postService.remove(id));
     }
 
     @PatchMapping("post/{id}/valid")
     @ApiOperation("Update post status to valid | 将文章状态改为 valid")
+    @Log(description = "将文章状态改为 valid",types = {LogType.MODIFY})
     public Result restore(@PathVariable("id") String id){
         return build(postService.restore(id));
     }
 
     @PutMapping("post/{id}")
     @ApiOperation("Update post | 更新文章内容")
+    @Log(description = "更新文章内容",types = {LogType.MODIFY})
     public Result update(@PathVariable("id") String id,@RequestBody UpdatePostParam param){
         param.setId(id);
         return build(postService.update(param));

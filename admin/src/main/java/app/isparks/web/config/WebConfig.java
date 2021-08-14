@@ -7,6 +7,7 @@ import app.isparks.service.impl.AbstractCacheService;
 import app.isparks.service.impl.CacheServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import app.isparks.web.interceptor.JwtInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -58,12 +59,13 @@ public class WebConfig extends WebMvcConfigurationSupport {
      */
     private void addJwtInterceptors(InterceptorRegistry registry) {
         //拦截的地址
-        String[] jwtPath = {"/api/admin/**", "/admin/**","/api/sys/**"};
+        String[] jwtPath = {"/*/admin/**", "/admin/**","/api/sys/**"};
         //不拦截的地址
         String[] jwtExcludePath = {"/api/admin/authenticate",
                 "/admin/login", "/admin/install","/api/admin/install",
                 "/api/sys/installed"};
-        registry.addInterceptor(new JwtInterceptor(cacheService.getCacheStore(),userService))
+
+        registry.addInterceptor(new JwtInterceptor(userService))
                 .addPathPatterns(jwtPath)
                 .excludePathPatterns(jwtExcludePath);
     }
@@ -87,7 +89,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
                     .addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
     }
-
 
 
 }

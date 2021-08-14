@@ -1,8 +1,10 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.converter.CategoryConverter;
 import app.isparks.core.pojo.converter.ConverterFactory;
 import app.isparks.core.pojo.dto.CategoryDTO;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.CategoryParam;
 import app.isparks.core.service.ICategoryService;
 import app.isparks.core.web.support.Result;
@@ -27,6 +29,7 @@ public class CategoryApi extends BasicApi{
 
     @PostMapping("category")
     @ApiOperation("Create category | 创建分类")
+    @Log(description = "创建分类",types = {LogType.INSERT})
     public Result create(@RequestBody CategoryParam param){
         CategoryConverter converter= ConverterFactory.get(CategoryConverter.class);
         CategoryDTO dto = converter.mapDTO(param);
@@ -35,6 +38,7 @@ public class CategoryApi extends BasicApi{
     
     @DeleteMapping("category")
     @ApiOperation("Delete category by name | 根据分类名删除分类")
+    @Log(description = "根据分类名删除分类",types = {LogType.DELETE})
     public Result deleteByName(@RequestParam("name") String name){
 
         return build(categoryService.delete(name));
@@ -55,11 +59,10 @@ public class CategoryApi extends BasicApi{
 
     @PatchMapping("category")
     @ApiOperation("Update category | 修改分类")
+    @Log(description = "修改分类",types = {LogType.MODIFY})
     public Result update(@RequestParam("id") String categoryId,@RequestParam(value = "name",required = false)String name, @RequestParam(value = "description",required = false) String des){
         CategoryParam param = new CategoryParam(name,des);
         return build(categoryService.update(categoryId,param));
     }
-
-
 
 }

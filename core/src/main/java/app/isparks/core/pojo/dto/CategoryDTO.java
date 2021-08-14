@@ -12,6 +12,7 @@ import lombok.*;
 @Setter
 @Getter
 @ToString
+@EqualsAndHashCode
 public class CategoryDTO extends BaseDTO {
 
     /**

@@ -20,6 +20,8 @@ public enum LogType implements IEnum<Integer>{
     UNKNOWN(5,"未知操作"),
     QUERY(6,"查找数据"),
     FILE_UPLOAD(7,"文件管理:上传"),
+    LOGIN(8,"登录"),
+    LOGOUT(9,"登出"),
     VISIT(100,"访问");
 
     static final String prefix = "[";

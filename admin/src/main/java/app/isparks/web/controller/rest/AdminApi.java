@@ -1,7 +1,9 @@
 package app.isparks.web.controller.rest;
 
+import app.isparks.core.anotation.Log;
 import app.isparks.core.exception.AuthException;
 import app.isparks.core.pojo.dto.UserDTO;
+import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.LoginParam;
 import app.isparks.core.service.IAdminService;
 import app.isparks.core.web.support.Result;
@@ -28,6 +30,7 @@ public class AdminApi extends BasicApi{
 
     @GetMapping("authenticate")
     @ApiOperation(value = "Authenticate | 权限人证")
+    @Log(description = "用户登录",types = {LogType.LOGIN})
     public Result login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "authCode",required = false) String authCode){
@@ -42,6 +45,7 @@ public class AdminApi extends BasicApi{
 
     @GetMapping("logout/{username}")
     @ApiOperation(value = "Logout | 注销登录状态")
+    @Log(description = "用户注销",types = {LogType.LOGOUT})
     public Result logout(@PathVariable("username") String username){
         return build(adminService.logout(username));
     }
