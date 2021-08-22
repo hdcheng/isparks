@@ -40,7 +40,7 @@ public abstract class BasicApi {
     }
 
     protected Result build(boolean res){
-        return res ? fail():ResultUtils.success();
+        return res ? success():fail();
     }
 
     protected <DTO extends BaseDTO> Result<BaseDTO> build(DTO dto){

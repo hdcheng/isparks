@@ -130,8 +130,7 @@
 </body>
 <script th:inline="javascript">
 let pd = [[${PageData}]];
-console.log(pd);
-
+let app = null;
 function visit(id){
     if(id != null && id != ""){
         axios.get("/api/blog/post/visit",{
@@ -144,6 +143,10 @@ function visit(id){
             window.location.href = "/post/" + id;
         });
     }
+}
+function pageLoaded(config){
+    
+
 }
 </script>
 <script th:replace="partials/script :: fra"></script>

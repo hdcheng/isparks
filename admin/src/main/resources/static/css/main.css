@@ -5,8 +5,6 @@ section[class = 'is-main-content']{
 [v-cloak],[is-loading]{
     display: none !important;
 }
-
-
 /* hightlight 插件自定义*/
 pre {
     white-space: pre;

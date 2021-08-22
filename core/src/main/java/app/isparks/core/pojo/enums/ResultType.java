@@ -7,6 +7,7 @@ package app.isparks.core.pojo.enums;
  * @date 2020/7/22
  */
 public enum ResultType implements IEnum<Integer>{
+
     SUCCESS(8101, "success"),
     FAIL(8102, "fail"),
     ERROR(8103, "error");

@@ -49,6 +49,5 @@ dependencies {
     implementation project(":plugin")
     implementation project(":service")
     implementation project(":addons")
-
 }
 

@@ -46,7 +46,7 @@ public class LogServiceImpl extends AbstractService<Log> implements ILogService 
     @Override
     public boolean delete(String id) {
         notEmpty(id,"log id must not be empty");
-        return abstractGetById(id).isPresent();
+        return abstractDelete(id).isPresent();
     }
 
     @Override

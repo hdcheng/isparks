@@ -23,7 +23,7 @@ public class LogApi extends BasicApi {
         this.logService = logService;
     }
 
-    @GetMapping("logs")
+    @GetMapping("log/page")
     @ApiOperation("Get logs | 分页获取日志数据")
     public Result get(@RequestParam(name = "page",defaultValue = "1") int page ,
                       @RequestParam(name = "size",defaultValue = "10") int size,
@@ -40,7 +40,7 @@ public class LogApi extends BasicApi {
 
     @DeleteMapping("log/{id}")
     @ApiOperation("Delete by log id | 根据日志id删除日志数据")
-    public Result delete(@PathVariable("id")String id){
+    public Result delete(@PathVariable("id") String id){
         return build(logService.delete(id));
     }
 

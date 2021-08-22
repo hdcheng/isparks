@@ -36,11 +36,10 @@ public class CategoryApi extends BasicApi{
         return build(categoryService.create(dto));
     }
     
-    @DeleteMapping("category")
+    @DeleteMapping("category/name/{name}")
     @ApiOperation("Delete category by name | 根据分类名删除分类")
     @Log(description = "根据分类名删除分类",types = {LogType.DELETE})
-    public Result deleteByName(@RequestParam("name") String name){
-
+    public Result deleteByName(@PathVariable("name") String name){
         return build(categoryService.delete(name));
     }
 
@@ -51,7 +50,7 @@ public class CategoryApi extends BasicApi{
         return build(categoryService.page(page,size));
     }
 
-    @GetMapping("category/all")
+    @GetMapping("categories")
     @ApiOperation("Get all categories | 获取所有分类")
     public Result all(){
         return build(categoryService.listAll());
