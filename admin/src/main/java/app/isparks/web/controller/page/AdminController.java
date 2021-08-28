@@ -65,14 +65,6 @@ public class AdminController {
         return "index";
     }
 
-    @RequestMapping(value = {"/test/**"},method = {RequestMethod.GET})
-    public String pagess(HttpServletRequest request, Model model){
-        String url = request.getRequestURI();
-
-        return "123";
-    }
-
-
     @RequestMapping(value = "/login",method = {RequestMethod.GET})
     public String login(){
         return "login";

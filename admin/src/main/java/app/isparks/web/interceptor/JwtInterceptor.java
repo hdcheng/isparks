@@ -1,8 +1,6 @@
 package app.isparks.web.interceptor;
 
 import app.isparks.core.config.ISparksConstant;
-import app.isparks.core.dao.cache.AbstractCacheStore;
-import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.JsonUtils;
 import app.isparks.core.util.StringUtils;
@@ -42,7 +40,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (true)return true;
+//        if (true)return true;
 
         String uri = request.getRequestURI();
 

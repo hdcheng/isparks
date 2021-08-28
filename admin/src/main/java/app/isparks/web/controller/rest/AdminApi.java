@@ -12,11 +12,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
-
 /**
  * @author chenghd
  */
-
 @Api("后台管理接口")
 @RequestMapping("v1/admin")
 @RestController("v1_AdminApi")
@@ -34,6 +32,7 @@ public class AdminApi extends BasicApi{
     public Result login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(value = "authCode",required = false) String authCode){
+
         LoginParam params = new LoginParam();
         params.setLoginName(username);
         params.setPassword(password);
