@@ -37,6 +37,8 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
     private ICacheService cacheService;
 
+    private long DEFAULT_TOKEN_CACHE_TIME = 1000 * 60 * 60 * 24;
+
     public AdminServiceImpl(UserServiceImpl userService,CacheServiceImpl cacheService) {
         notNull(userService,"user service implement class can not be null");
         notNull(userService,"cache service implement class can not be null");
@@ -77,11 +79,10 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
             String tokenId = JwtHandler.build().tryGetId(token);
 
             //cacheStore.put(userDTO.getUserName(),tokenId);
-            cacheService.saveString(userDTO.getUserName(),tokenId);
+            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,DEFAULT_TOKEN_CACHE_TIME);
         }
         return Optional.ofNullable(userDTO);
     }
-
 
     @Override
     public boolean logout(String username) {

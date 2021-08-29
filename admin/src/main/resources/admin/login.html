@@ -108,6 +108,10 @@ function pageLoaded(config){
         },
         methods:{
             login(){
+                if(app.loginParams.password == "*********"){
+                    window.location.href = "/admin";
+                }
+
                 const login = apis.get("login");
                 login.withParams(this.loginParams);
                 i$.cache.set("login_username",this.loginParams.username);
@@ -117,6 +121,8 @@ function pageLoaded(config){
                         i$.auth.setToken(data.token);
                     }
                     window.location.href = "/admin";
+                } , fail = function( data , msg){
+                    alert(msg);
                 });
             },
             showCodeModalShow(){
@@ -127,7 +133,15 @@ function pageLoaded(config){
             if(i$.cache.get("login_username")){
                 this.loginParams.username = i$.cache.get("login_username");
             }
-            Utils.auth.removeToken();
+            if(i$.auth.getToken()){
+                const vTokenApi = apis.get("verify_token").withData(i$.auth.getToken());
+                i$.request(vTokenApi , success = function(){
+                    app.loginParams.password = "*********";
+                } , fail = function(){
+                    app.loginParams.password = "";
+                    i$.auth.removeToken();
+                });
+            }
         }
     });
 }

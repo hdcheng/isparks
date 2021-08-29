@@ -1,14 +1,15 @@
 package app.isparks.web.controller.page;
 
 import app.isparks.core.service.IPostService;
+import app.isparks.service.impl.PostServiceImpl;
 import app.isparks.web.controller.Router;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -31,19 +32,22 @@ public class AdminController {
      */
     private final static String INSTALL_REDIRECT_URI = "install.html";
 
-    @Autowired
     private Router router;
 
-    @Autowired
     private IPostService postService;
 
-    @RequestMapping(value = {"","/index","/"}, method = {RequestMethod.GET})
+    public AdminController(Router router, PostServiceImpl postService){
+        this.postService = postService;
+        this.router = router;
+    }
+
+    @GetMapping({"","/index","/"})
     public String index(Model model) {
         router.setPageModel(model,"dash");
         return "index";
     }
 
-    @RequestMapping(value = "page/post/review/{id}",method = {RequestMethod.GET})
+    @GetMapping("page/post/review/{id}")
     public String postReview(@PathVariable("id") String id,Model model){
         postService.getById(id).ifPresent((post) -> {
             model.addAttribute("title",post.getTitle());
@@ -55,7 +59,7 @@ public class AdminController {
         return "partials/sections/post/review";
     }
 
-    @RequestMapping(value = {"/**"}, method = {RequestMethod.GET})
+    @GetMapping("/**")
     public String pages(HttpServletRequest request, Model model){
         String url = request.getRequestURI();
         String pagePath = url.substring(url.indexOf("admin/")+6);
@@ -65,12 +69,12 @@ public class AdminController {
         return "index";
     }
 
-    @RequestMapping(value = "/login",method = {RequestMethod.GET})
-    public String login(){
+    @GetMapping("/login")
+    public String login(HttpServletRequest request){
         return "login";
     }
 
-    @RequestMapping(value = "install", method = {RequestMethod.GET})
+    @GetMapping("install")
     public String guider(Model model) {
         return "install";
     }

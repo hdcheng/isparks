@@ -18,8 +18,8 @@ public abstract class AbstractCacheCleaner<K,V> implements CacheStore<K, V> {
     private final static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public AbstractCacheCleaner(){
-        // 10 分钟清理一次
         executor.scheduleWithFixedDelay(() -> {
+            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
             try {
                 cleanExpireCache(allKeys());
             }catch (Exception e){
@@ -44,7 +44,7 @@ public abstract class AbstractCacheCleaner<K,V> implements CacheStore<K, V> {
         }
         for(K k : keys){
             getCacheWrapperByKey(k).ifPresent( wrapper -> {
-                log.debug("缓存->[{}]:[{}]",keys,wrapper);
+                log.debug("缓存->[{}]:[{}]",k,wrapper.getData());
                 if(!wrapper.isAlive()){
                     log.info("Cache [{}] has expired",k);
                     invalidate(k);

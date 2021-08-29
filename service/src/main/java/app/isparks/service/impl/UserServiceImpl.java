@@ -197,9 +197,7 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
             }catch (Exception e){
                 log.error("JWT验证异常");
             }
-
         }
-
         return false;
     }
 
@@ -238,4 +236,10 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
         return encryptPassword(DEFAULT_PASSWORD);
     }
 
+
+    public static void main(String[] args) {
+        String s1 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJU3BhcmtzIiwianRpIjoiMzllZDE5M2NiNDBhNDI0ZWE2NDM4YmNjMzBjMGUyOGEiLCJuYmYiOjE2MzAyMTQ2MTQsImlhdCI6MTYzMDIxNDYxNCwiZXhwIjoxNjMwMjQzNDE0LCJ1c2VyIjoiY2hlbmdoZCIsImVtYWlsIjoiZWFzdHJ5QHFxLmNvbSJ9.UX_vK0wXTLnf0snG67x95SbMriF1GeFbJnANmgaWPr0";
+        String s2 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJU3BhcmtzIiwianRpIjoiMzllZDE5M2NiNDBhNDI0ZWE2NDM4YmNjMzBjMGUyOGEiLCJuYmYiOjE2MzAyMTQ2MTQsImlhdCI6MTYzMDIxNDYxNCwiZXhwIjoxNjMwMjQzNDE0LCJ1c2VyIjoiY2hlbmdoZCIsImVtYWlsIjoiZWFzdHJ5QHFxLmNvbSJ9.UX_vK0wXTLnf0snG67x95SbMriF1GeFbJnANmgaWPr0";
+        System.out.println(s1.equals(s2));
+    }
 }

@@ -44,7 +44,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
         String uri = request.getRequestURI();
 
-        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate")) {
+        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate") ) {
             return true;
         }
 

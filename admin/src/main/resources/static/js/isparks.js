@@ -462,6 +462,14 @@ class API {
         }
     };
     DEFAULT_PATH_RESOLVE_FUNC = function(path_params, api) {
+        if (path_params) {
+            for(let key in path_params){
+                let key_place = "{" + key + "}";
+                if (api.href.indexOf(key_place) > -1) {
+                    api.href = api.href.replace(new RegExp(key_place, "g"), path_params[key]);
+                }
+            }
+        }
     };
     resolveParamsFunc = this.DEFAULT_RESOLVE_PARAMS_FUNC;
     resolvePathParamsFunc = this.DEFAULT_PATH_RESOLVE_FUNC;
@@ -513,6 +521,9 @@ const cache = {
             }
             return null;
         }
+    },
+    delete: function(key) {
+        localStorage.removeItem(key);
     }
 };
 let config = {
@@ -664,6 +675,10 @@ const auth = {
             return {
             };
         }
+    },
+    removeToken: function() {
+        cookies.delete(AUTH_KEY);
+        cache.delete(AUTH_KEY);
     }
 };
 function init_apis() {
@@ -684,7 +699,7 @@ const apis = {
         }
         let api = apis_map.get(key);
         if (api) {
-            return new API(api.title, api.href, api.method, api.content_type).withResolveParamsFunc(api.resolveParamsFunc);
+            return new API(api.title, api.href, api.method, api.content_type).withResolveParamsFunc(api.resolveParamsFunc).withResolvePathParamsFunc(api.resolvePathParamsFunc);
         } else {
             return null;
         }
@@ -713,6 +728,7 @@ category_apis.set("category_create", new API("Create category", "v1/admin/catego
 category_apis.set("category_update", new API("Create category", "v1/admin/category", Request_Method.PATCH));
 const login_api = new API("Authenticate", "v1/admin/authenticate");
 admin_apis.set("login", login_api);
+admin_apis.set("verify_token", new API("Verify Token", "v1/admin/authenticate", Request_Method.POST, "application/x-www-form-urlencoded;charset=utf-8"));
 const logout_api = new API("logout", "v1/admin/logout").withResolvePathParamsFunc((params, api)=>{
     if (params && params.username) {
         api.href = "v1/admin/logout/" + params.username;

@@ -6,8 +6,10 @@ import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.LoginParam;
 import app.isparks.core.service.IAdminService;
+import app.isparks.core.service.IUserService;
 import app.isparks.core.web.support.Result;
 import app.isparks.service.impl.AdminServiceImpl;
+import app.isparks.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +24,14 @@ public class AdminApi extends BasicApi{
 
     private IAdminService adminService;
 
-    public AdminApi(AdminServiceImpl adminService) {
-        this.adminService = adminService;
+    private IUserService userService;
+
+    public AdminApi(AdminServiceImpl adminService, UserServiceImpl userService) {
+        this.adminService = adminService;this.userService = userService;
     }
 
     @GetMapping("authenticate")
-    @ApiOperation(value = "Authenticate | 权限人证")
+    @ApiOperation(value = "Authenticate | 权限认证")
     @Log(description = "用户登录",types = {LogType.LOGIN})
     public Result login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
@@ -40,6 +44,13 @@ public class AdminApi extends BasicApi{
         UserDTO result = adminService.authenticate(params).orElseThrow(() -> new AuthException("登录失败", "密码错误"));
 
         return build(result);
+    }
+
+    @PostMapping("authenticate")
+    @ApiOperation(value = "Verify token | 认证token有效性")
+    @Log(description = "Token验证",types = {LogType.LOGIN})
+    public Result verifyToken(@RequestBody String token){
+        return build(userService.verifyJwtToken(token));
     }
 
     @GetMapping("logout/{username}")
