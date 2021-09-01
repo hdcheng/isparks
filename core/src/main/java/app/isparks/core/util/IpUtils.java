@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class IpUtils {
 
-
     /**
      * 获取真实 IP
      */
@@ -42,7 +41,5 @@ public class IpUtils {
 
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
-
-
 
 }

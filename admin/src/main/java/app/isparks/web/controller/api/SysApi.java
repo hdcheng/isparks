@@ -54,7 +54,6 @@ public class SysApi {
     @Log(description = "更新WEB设置", types = {LogType.MODIFY})
     public Result update(@RequestBody WebSettingParam param){
 
-
         Map<String,Object> config = new HashMap<>();
 
         config.put(WebProperties.WEBSITE_TITLE.getKey(),param.getName());

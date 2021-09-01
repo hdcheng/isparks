@@ -6,13 +6,19 @@ import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.LoginParam;
 import app.isparks.core.service.IAdminService;
+import app.isparks.core.service.ICaptchaService;
 import app.isparks.core.service.IUserService;
+import app.isparks.core.util.IpUtils;
 import app.isparks.core.web.support.Result;
 import app.isparks.service.impl.AdminServiceImpl;
+import app.isparks.service.impl.CaptchaServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chenghd
@@ -26,8 +32,11 @@ public class AdminApi extends BasicApi{
 
     private IUserService userService;
 
-    public AdminApi(AdminServiceImpl adminService, UserServiceImpl userService) {
+    private ICaptchaService captchaService;
+
+    public AdminApi(AdminServiceImpl adminService, UserServiceImpl userService, CaptchaServiceImpl captchaService) {
         this.adminService = adminService;this.userService = userService;
+        this.captchaService = captchaService;
     }
 
     @GetMapping("authenticate")
@@ -35,13 +44,23 @@ public class AdminApi extends BasicApi{
     @Log(description = "用户登录",types = {LogType.LOGIN})
     public Result login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        @RequestParam(value = "authCode",required = false) String authCode){
+                        @RequestParam("code") String code,
+                        @RequestParam(value = "remember" , required = false , defaultValue = "false") Boolean remember,
+                        HttpServletRequest request){
+        String ip = IpUtils.obtainIp(request);
 
-        LoginParam params = new LoginParam();
-        params.setLoginName(username);
-        params.setPassword(password);
-        params.setAuthCode(authCode);
-        UserDTO result = adminService.authenticate(params).orElseThrow(() -> new AuthException("登录失败", "密码错误"));
+        if(!captchaService.checkCaptcha(ip,code,true)){
+            return fail("验证码错误");
+        }
+        TimeUnit timeUnit = TimeUnit.HOURS;
+        long time ;
+        if(remember == null || !remember){
+            time = 8 ; // 缓存 8 小时密码
+        }else{
+            time = 24 * 30 ; // 缓存一个月的密码
+        }
+
+        UserDTO result = adminService.authenticate(username,password,time,timeUnit).orElseThrow(() -> new AuthException("登录失败", "密码错误"));
 
         return build(result);
     }

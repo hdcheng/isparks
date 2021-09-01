@@ -50,10 +50,10 @@ if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
             </div>
         </div>
 
-        <div class="uk-margin">
+        <div class="uk-margin" id="code_box">
             <div class="uk-inline">
                 <span class="uk-form-icon" uk-icon="icon: more"></span>
-                <input class="uk-input uk-border-rounded" type="text" placeholder="点击获取验证码"  v-model = "loginParams.authCode">
+                <input class="uk-input uk-border-rounded" type="text" placeholder="点击获取验证码"  v-model = "loginParams.code">
                 <a class="uk-form-icon uk-form-icon-flip uk-icon" style="left: auto;right: 0;" @click="showCodeModalShow">
                     <svg t="1612518806877" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7394" width="20" height="20"><path d="M812.194 234.4c0-23.457-19.06-42.562-42.578-42.562L235.527 191.838c-23.491 0-42.551 19.104-42.551 42.562l0 534.058c0 23.583 19.06 42.623 42.551 42.623l534.088 0c23.519 0 42.578-19.04 42.578-42.623L812.193 234.4zM862.37 780.563c0 44.573-36.136 80.715-80.695 80.715L223.494 861.278c-44.56 0-80.695-36.142-80.695-80.715L142.799 222.416c0-44.627 36.135-80.71 80.695-80.71l558.181 0c44.56 0 80.695 36.083 80.695 80.71L862.37 780.563zM643.224 351.515l-44.197 0L599.027 172.823l44.197 0L643.224 351.515zM366.534 177.7l0 261.896 241.129 0 0 117.938 233.669 0 0 45.059L606.373 602.593l0 112.063-44.308 0L562.065 483.649 420.052 483.649l0 203.156L156.035 686.805l0-43.598 220.276 0L376.311 483.649 321.71 483.649 321.71 179.072 366.534 177.7z" p-id="7395" fill="#bfbfbf"></path></svg>
                 </a>
@@ -61,7 +61,7 @@ if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
         </div>
         
         <div class="uk-margin" style="display: flex;flex-direction: row;justify-content: space-between;align-items: center;">
-            <label><input class="uk-checkbox uk-border-rounded" type="checkbox">&nbsp;&nbsp;记住密码</label>
+            <label><input class="uk-checkbox uk-border-rounded" type="checkbox"  v-model = "loginParams.remember" >&nbsp;&nbsp;记住密码</label>
             <button class="uk-button uk-button-link">忘记密码？</button>
         </div>
 
@@ -79,14 +79,9 @@ if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
 
     <!-- 验证码模块开始 -->
     <div id="code-modal" class="uk-flex-top" uk-modal>
-        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
-    
-            <button class="uk-modal-close-default" type="button" uk-close></button>
-    
-            <div class="uk-margin">
-                <!-- <img src="./static/images/favicon.ico"/> -->
-            </div>
-            
+        <div class="uk-modal-dialog uk-width-auto uk-margin-auto-vertical">
+            <button class="uk-modal-close-outside" type="button" uk-close></button>
+            <img :src="captcha" style="padding: 1rem;background: white;" @click="refreshCaptchaImage"/>
         </div>
     </div>
     <!-- 验证码模块结束 -->
@@ -103,45 +98,70 @@ function pageLoaded(config){
             loginParams:{
                 username : "",
                 password : "",
-                authCode : "" //验证码
-            }
+                code : "" ,//验证码
+                remember : false
+            },
+            captcha:"",
         },
         methods:{
+            init(){
+                if(i$.cache.get("login_remember")){
+                    this.loginParams.remember = (i$.cache.get("login_remember") == "true");
+                }
+                if(i$.cache.get("login_username")){
+                    this.loginParams.username = i$.cache.get("login_username");
+                }
+                if(i$.auth.getToken()){
+                    const vTokenApi = apis.get("verify_token").withData(i$.auth.getToken());
+                    i$.request(vTokenApi , success = function(){
+                        app.loginParams.password = "*********";
+                        document.getElementById("code_box").style.display = "none";
+                    } , fail = function(){
+                        app.loginParams.password = "";
+                        i$.auth.removeToken();
+                    });
+                }
+            },
             login(){
                 if(app.loginParams.password == "*********"){
                     window.location.href = "/admin";
+                }else{
+                    const login_params = this.loginParams;
+                    const login = apis.get("login");
+                    login.withParams(login_params);
+                    i$.cache.set("login_username",login_params.username);
+                    i$.cache.set("login_remember",login_params.remember);                    
+                    i$.request( login , success = function( data ){
+                        alert("欢迎：" + data.nickName + " 登录成功");
+                        if(data.token){
+                            i$.auth.setToken(data.token);
+                        }
+                        window.location.href = "/admin" ;
+                    } , fail = function( data , msg){
+                        alert(msg);
+                    });
                 }
-
-                const login = apis.get("login");
-                login.withParams(this.loginParams);
-                i$.cache.set("login_username",this.loginParams.username);
-                i$.request( login , success = function( data ){
-                    alert("欢迎：" + data.nickName + " 登录成功");
-                    if(data.token){
-                        i$.auth.setToken(data.token);
-                    }
-                    window.location.href = "/admin";
-                } , fail = function( data , msg){
-                    alert(msg);
-                });
             },
             showCodeModalShow(){
+                console.log(this.remember);
+                if(!this.captcha){
+                    this.refreshCaptchaImage();
+                }
                 UIkit.modal(document.getElementById("code-modal")).show();
+            },
+            refreshCaptchaImage(){
+                const captcha_api = apis.get("captcha_image");
+                i$.request(captcha_api, success = (response) => {
+                    response.blob().then( blob => {
+                        return i$.image.base64( blob );
+                    }).then( href => {
+                        this.captcha = href;
+                    });
+                });
             }
         },
         created(){
-            if(i$.cache.get("login_username")){
-                this.loginParams.username = i$.cache.get("login_username");
-            }
-            if(i$.auth.getToken()){
-                const vTokenApi = apis.get("verify_token").withData(i$.auth.getToken());
-                i$.request(vTokenApi , success = function(){
-                    app.loginParams.password = "*********";
-                } , fail = function(){
-                    app.loginParams.password = "";
-                    i$.auth.removeToken();
-                });
-            }
+            this.init();
         }
     });
 }

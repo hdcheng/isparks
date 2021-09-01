@@ -491,6 +491,25 @@ class API {
         return href1;
     }
 }
+const image = {
+    base64: function(b) {
+        if (b) {
+            return new Promise((resolve, reject)=>{
+                let reader = new FileReader();
+                reader.readAsDataURL(b);
+                reader.onload = (e)=>{
+                    if (e.target) {
+                        let res = e.target.result + "";
+                        resolve(res);
+                    }
+                };
+                reader.onerror = (e)=>{
+                    reject(e);
+                };
+            });
+        }
+    }
+};
 const cache = {
     cache_prefix: "is_cache_",
     set: function(key, value, expire) {
@@ -588,9 +607,11 @@ const apis_map = new Map();
 const log_apis = new Map();
 const category_apis = new Map();
 const admin_apis = new Map();
+const common_apis = new Map();
 let DEFAULT_HEADERS = {
     'Content-Type': 'application/json;charset=UTF-8',
-    'Authorization': 'Bearer ' + jwt()
+    'Authorization': 'Bearer ' + jwt(),
+    'Access-Control-Allow-Origin': '*'
 };
 let http = {
     post: function(href1, body, headers = DEFAULT_HEADERS) {
@@ -601,7 +622,11 @@ let http = {
         return api.post(href1, {
             body: body
         }).then((response2)=>{
-            return response2.json();
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
         });
     },
     put: function(href1, body, headers = DEFAULT_HEADERS) {
@@ -612,7 +637,11 @@ let http = {
         return api.put(href1, {
             body: body
         }).then((response2)=>{
-            return response2.json();
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
         });
     },
     patch: function(href1, body, headers = DEFAULT_HEADERS) {
@@ -623,7 +652,11 @@ let http = {
         return api.patch(href1, {
             body: body
         }).then((response2)=>{
-            return response2.json();
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
         });
     },
     get: function(href1, headers = DEFAULT_HEADERS) {
@@ -632,7 +665,11 @@ let http = {
             prefixUrl: config.prefixUrl
         });
         return api.get(href1).then((response2)=>{
-            return response2.json();
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
         });
     },
     delete: function(href1, headers = DEFAULT_HEADERS) {
@@ -642,7 +679,11 @@ let http = {
         });
         return api.delete(href1, {
         }).then((response2)=>{
-            return response2.json();
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
         });
     }
 };
@@ -691,6 +732,9 @@ function init_apis() {
     for (let key2 of admin_apis.keys()){
         apis_map.set(key2, admin_apis.get(key2));
     }
+    for (let key3 of common_apis.keys()){
+        apis_map.set(key3, common_apis.get(key3));
+    }
 }
 const apis = {
     get: function(key) {
@@ -737,6 +781,8 @@ const logout_api = new API("logout", "v1/admin/logout").withResolvePathParamsFun
     }
 });
 admin_apis.set("logout", logout_api);
+const captcha_image_api = new API("Authenticate", "v1/captcha/image");
+common_apis.set("captcha_image", captcha_image_api);
 const line = "==============================";
 const isparks = {
     init: function() {
@@ -771,20 +817,28 @@ const isparks = {
     },
     cache: cache,
     cookies: cookies,
-    auth: auth
+    auth: auth,
+    image: image
 };
 function resolveResult(result, success = isparks.default_success, fail = isparks.default_fail, error = isparks.default_error) {
-    if (result.code == 8101 && success) {
-        success(result.data, result.msg);
-        return;
-    } else if (result.code == 8102 && fail) {
-        fail(result.data, result.msg);
-        return;
-    } else if (result.code == 8103 && error) {
-        error(result);
-        return;
+    if (result.code) {
+        if (result.code == 8101 && success) {
+            success(result.data, result.msg);
+            return;
+        } else if (result.code == 8102 && fail) {
+            fail(result.data, result.msg);
+            return;
+        } else if (result.code == 8103 && error) {
+            error(result);
+            return;
+        }
+    } else if (result.status == 200) {
+        if (success) {
+            success(result);
+        }
+    } else {
+        resolveError(result, error);
     }
-    console.log(result);
 }
 function resolveError(result, error) {
     if (error && result) {

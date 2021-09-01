@@ -48,6 +48,7 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
     }
 
     @Override
+    @Deprecated
     public Optional<UserDTO> authenticate(LoginParam loginParam) {
         notNull(loginParam, "login params must not be null");
 
@@ -70,6 +71,44 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
             try {
                 token = JwtHandler.build().signJWT(claims,8,TimeUnit.HOURS);
+            }catch (JWTException e){
+                log.error("签发JWT异常",e);
+                return Optional.empty();
+            }
+            userDTO = BeanUtils.copyProperties(user, UserDTO.class).withToken(token);
+
+            String tokenId = JwtHandler.build().tryGetId(token);
+
+            //cacheStore.put(userDTO.getUserName(),tokenId);
+            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,DEFAULT_TOKEN_CACHE_TIME);
+        }
+        return Optional.ofNullable(userDTO);
+    }
+
+    @Override
+    public Optional<UserDTO> authenticate(String loginName, String password , long time , TimeUnit timeUnit) {
+        notEmpty(loginName,"login name must not be empty");
+        notEmpty(password,"password must not be empty");
+        notNull(time,"time unit must not be null");
+
+        User user = ValidateUtils.isEmail(loginName) ?
+                userService.getByEmail(loginName).orElseThrow(() -> new NoFoundException("邮箱不存在")) :
+                userService.getByName(loginName).orElseThrow(() -> new NoFoundException("用户不存在"));
+
+        boolean b = userService.passwordMatch(user, password);
+
+        UserDTO userDTO = null;
+        if (b) {
+            //todo:audience记录客户端信息，比如ip，浏览器版本等，防止token被截取使用。
+            Map<String,Object> claims = new HashMap<>();
+
+            claims.put("user",user.getUserName());
+            claims.put("email",user.getEmail());
+
+            String token = "";
+
+            try {
+                token = JwtHandler.build().signJWT(claims,time,timeUnit);
             }catch (JWTException e){
                 log.error("签发JWT异常",e);
                 return Optional.empty();
