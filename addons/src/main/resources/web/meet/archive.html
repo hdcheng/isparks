@@ -13,7 +13,7 @@
 </head>
 <body is-loading>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
-<div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;min-height: calc(90vh);" >
+<div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
     <ul uk-accordion = "multiple: true">
         <li th:each="archive,index : ${PageData.archives}" class="uk-open">
             <a class="uk-accordion-title" href="#">

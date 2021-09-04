@@ -89,7 +89,7 @@
         <h1 class="uk-heading-small"><span style="color: lightcoral;">i</span> Sparks !</h1>
         <small>这是一个简洁方便的建站系统。</small>
     </div>
-    <div class="uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="width: 100%;" >
+    <div class="uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid >
         <div v-for = "d in dataPanel">
             <div class="is-widget-box" >
                 <div class="is-widget-content">
@@ -107,18 +107,18 @@
         </div>
     </div>
 
-    <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="border-radius: 5px;width: 100%;">
+    <div class="uk-child-width-1-2@m uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid>
         <div >
-            <div class="uk-card uk-card-default uk-card-body uk-width-1-1@m">
+            <div class="uk-card uk-card-default uk-card-small uk-card-body uk-border-rounded uk-width-1-1@m">
                 <p class="uk-card-title">随笔</p>
                 <div>
-                    <textarea class="uk-textarea" rows="5" v-model="journal.content" maxlength="230"></textarea>
+                    <textarea class="uk-textarea uk-border-rounded" rows="5" v-model="journal.content" maxlength="230"></textarea>
                 </div>
-                <div><button class="uk-button uk-button-default" style="float: right;margin-top: .5rem;background: #334148;color:#fff;" @click="createJournal">发表随笔</button></div>
+                <div><button class="uk-button uk-button-default uk-border-rounded" style="float: right;margin-top: .5rem;background: #334148;color:#fff;" @click="createJournal">发表随笔</button></div>
             </div>
         </div>
         <div>
-            <div class="uk-light uk-background-secondary uk-padding " style="border-radius: 5px;overflow:hidden;">
+            <div class="uk-light uk-background-secondary uk-padding uk-border-rounded">
                 <p>网站运行了：</p>
                 <div id="countDown" class="uk-grid-small uk-child-width-auto uk-margin" uk-grid  style="display: flex;justify-content: center;">
                     <div>
@@ -142,65 +142,7 @@
         </div>
     </div>
 
-    <div class="uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid style="width: 100%;">
-        <div>
-            <div style="box-shadow: 0 0 28px rgb(0 0 0 / 10%);border-radius: 5px;overflow:hidden;">
-                <div id="logTypeSelect" style="display: flex;flex-wrap: wrap;" hidden>
-                    <label class="is-customize-checkbox" v-for="(value,key) in logTypes">
-                        <input type="checkbox" name="logType" v-model="key" value="1" />
-                        <span>{{value}}</span>
-                    </label>
-                </div>
-                <div style="display: flex;justify-content: center;padding: .3rem;margin: .5rem;border-radius: 5px;box-shadow: 0 0 3px darkgrey;">
-                    <a href="#" uk-icon="icon: thumbnails" uk-toggle="target: #logTypeSelect; animation: uk-animation-fade; queued: true"></a>
-                </div>
-                <table class="uk-table uk-table-responsive uk-table-divider" style="margin-bottom: 0;">
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th style="text-align: start;">操作</th>
-                            <th style="text-align: start;">类型</th>
-                            <th style="text-align: start;">时间</th>
-                            <th  style="text-align: start;">接口名</th>
-                            <th  style="text-align: start;">ip</th>
-                            <th  style="text-align: start;">用户</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for = "(log,index) in logData.logs">
-                            <td>{{(logData.page - 1) * logData.size + index + 1}}</td>
-                            <td>{{log.content}}</td>
-                            <td>{{log.types}}</td>
-                            <td>{{log.date}}</td>
-                            <td>/admin/post/update</td>
-                            <td>{{log.ip}} <a uk-icon="icon:info" @click="showIpInfo(log.ip)"></a></td>
-                            <td>admin</td>
-                        </tr>
-                    </tbody>
-
-                </table>
-                <ul class="uk-pagination uk-flex-center" uk-margin  style="margin-top: 0;">
-                    <li><a href="#" @click="logPre"><span uk-pagination-previous></span></a></li>
-                    <li><a href="#" @click="logNext"><span uk-pagination-next></span></a></li>
-                </ul>
-                <!-- ip info modal start-->
-                <div id="ip-info-modal" uk-modal>
-                    <div class="uk-modal-dialog uk-modal-body">
-                        <button class="uk-modal-close-default" type="button" uk-close></button>
-                        <h2 class="uk-modal-title">{{ipInfo.ip}}</h2>
-                        <div class="uk-margin">
-                            <div class="uk-inline" style="display: inline-block;width:100%;">
-                                <a class="uk-form-icon uk-form-icon-flip" href="#" @click="requestIpInfo"><i class="icon-paper-plane-empty" style="color: rgb(42, 57, 124);"></i></a>
-                                <input class="uk-input" type="text" placeholder="查询接口" v-model="ipInfo.api">
-                            </div>
-                        </div>
-                        <p>{{ipInfo.info}}</p>
-                    </div>
-                </div>
-                <!-- ip info modal end-->
-            </div>
-        </div>
-    </div>
+    
 </div>
 <script>
     function pageLoaded(config){

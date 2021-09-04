@@ -23,7 +23,7 @@
 <div class="app-brand">
     <a href="/admin" style="width: 100%;height: 100%;padding:10px"><img style="width: 100%;height: 100%;" th:src="${logo == '' ? '/static/images/logo.png': logo}"></a>
 </div>    
-<div class="sidebar-wrapper" uk-scrollspy="cls: uk-animation-slide-bottom; target:>div;delay: 100;">
+<div class="sidebar-wrapper">
     <div class="sidebar-unit" th:each="button : ${buttons}" th:title = "${button.name}">
         <a href="/admin" th:href = "${button.link}" th:utext = "${button.html != null && button.html != '' ? button.html : button.svg }"></a>
     </div>

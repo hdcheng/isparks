@@ -48,7 +48,7 @@
     }
 </style>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
-<div id="content" class="uk-container " style="margin-top: 2rem;min-height: calc(90vh);" >
+<div id="content" class="uk-container " style="margin-top: 2rem;" >
     <div class="uk-flex uk-flex-center uk-flex-row@l uk-flex-column@m uk-flex-wrap"  style="width:100%;">
         <!-- 友链 开始 -->
         <a class="link-wrapper"  th:each="link : ${PageData.data}" th:href="${link.url}" target="_blank">

@@ -91,6 +91,7 @@ if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
 <script src="../static/js/uikit-icons.min.js" th:src="@{/static/js/uikit-icons.min.js}" type="text/javascript"></script>
 <script src="../static/js/app.js" th:src="@{/static/js/app.js}"></script>
 <script>
+const password_placeholder = "*********";
 function pageLoaded(config){
     const app = new Vue({
         el: '#main',
@@ -114,8 +115,7 @@ function pageLoaded(config){
                 if(i$.auth.getToken()){
                     const vTokenApi = apis.get("verify_token").withData(i$.auth.getToken());
                     i$.request(vTokenApi , success = function(){
-                        app.loginParams.password = "*********";
-                        document.getElementById("code_box").style.display = "none";
+                        app.loginParams.password = password_placeholder;
                     } , fail = function(){
                         app.loginParams.password = "";
                         i$.auth.removeToken();
@@ -123,14 +123,14 @@ function pageLoaded(config){
                 }
             },
             login(){
-                if(app.loginParams.password == "*********"){
+                const login_params = this.loginParams;
+                i$.cache.set("login_username",login_params.username);
+                i$.cache.set("login_remember",login_params.remember);
+                if(app.loginParams.password == password_placeholder){
                     window.location.href = "/admin";
                 }else{
-                    const login_params = this.loginParams;
                     const login = apis.get("login");
-                    login.withParams(login_params);
-                    i$.cache.set("login_username",login_params.username);
-                    i$.cache.set("login_remember",login_params.remember);                    
+                    login.withParams(login_params);               
                     i$.request( login , success = function( data ){
                         alert("欢迎：" + data.nickName + " 登录成功");
                         if(data.token){
@@ -162,6 +162,15 @@ function pageLoaded(config){
         },
         created(){
             this.init();
+        },
+        watch:{
+            "loginParams.password":function(newVal){
+                if(newVal == password_placeholder){
+                    document.getElementById("code_box").style.display = "none";
+                }else{
+                    document.getElementById("code_box").style.display = "block";
+                }
+            }
         }
     });
 }

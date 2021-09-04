@@ -51,7 +51,7 @@ public class CaptchaServiceImpl implements ICaptchaService {
 
     @Override
     public boolean checkCaptcha(String key, String code ,  boolean clear) {
-        if(key == null || key.isEmpty() || code == null){
+        if(key == null || key.isEmpty() || code == null || code.isEmpty()){
             return false;
         }else{
             key = CAPTCHA_CODE_KE_PREFIX + key;

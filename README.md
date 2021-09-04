@@ -24,7 +24,8 @@
 
 ## 技术栈
 
-![Java 1.8 +](https://img.shields.io/badge/java-1.8%20%2B-blue) ![Spring](https://img.shields.io/badge/spring-5.2.9-yellowgreen) ![h2 database](https://img.shields.io/badge/h2%20database-1.4-orange) ![mybatis](https://img.shields.io/badge/mybatis-3.5-cirtical) ![Uikit](https://img.shields.io/badge/Uikit-3-green) ...
+![Java 1.8 +](https://img.shields.io/badge/Java-1.8%20%2B-blue) ![Spring](https://img.shields.io/badge/Spring-5.2.9-yellowgreen) ![h2 database](https://img.shields.io/badge/H2%20Database-1.4-orange) ![mybatis](https://img.shields.io/badge/Mybatis-3.5-cirtical) ![Thymleaf](https://img.shields.io/badge/Thymleaf-3-cirtical) 
+![Uikit](https://img.shields.io/badge/Uikit-3-green) ![Vuejs](https://img.shields.io/badge/Vuejs-2-green) 
 
 
 ## 许可证

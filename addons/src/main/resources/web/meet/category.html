@@ -6,9 +6,6 @@
 <link th:replace="partials/head :: link"/>
 <style th:replace = "partials/head :: style"></style>
     <style>
-        .uk-button{
-            border-radius: .5rem!important;
-        }
 
     </style>
 </head>
@@ -17,8 +14,8 @@
 <div id="content" v-cloak  class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
 
     <div class="uk-grid-small uk-text-center" uk-grid>
-        <div><button class="uk-button uk-button-default" type="button" th:onclick="loadPostByCategory(null)">全部（{{all}}）</button></div>
-        <div th:each="c : ${PageData.data}"><button class="uk-button uk-button-default" type="button"  th:text="${c.name}+'('+${c.postNumber}+')'" th:onclick="loadPostByCategory([[${c.id}]])"></button></div>
+        <div><button class="uk-button uk-button-default uk-border-rounded" type="button" th:onclick="loadPostByCategory(null)">全部（{{all}}）</button></div>
+        <div th:each="c : ${PageData.data}"><button class="uk-button uk-button-default uk-border-rounded" type="button"  th:text="${c.name}+'('+${c.postNumber}+')'" th:onclick="loadPostByCategory([[${c.id}]])"></button></div>
     </div>
 
     <div class="uk-margin-top">
