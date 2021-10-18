@@ -37,16 +37,19 @@
         justify-content: space-between;
     }
     .is-edit-content-left{
-        width: 50%;
+        /* width: 50%; */
+        width: 100%;
         min-height: 300px;
         border: .5px solid rgba(0,0,0,.3);
         padding: .5rem;
+        overflow: auto;
     }
     .is-edit-content-right{
         width: 50%;
         border: .5px solid rgba(0,0,0,.3);
         border-left: 0;
         padding: .5rem;
+        overflow: auto;
     }
     .is-tag{
         display: flex;
@@ -89,14 +92,14 @@
     <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-text">标题</label>
         <div class="uk-form-controls">
-            <input class="uk-input" id="form-stacked-text" type="text" v-model="title">
+            <input class="uk-input uk-border-rounded" id="form-stacked-text" type="text" v-model="title">
         </div>
     </div>
 
     <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-select">分类</label>
         <div class="uk-form-controls">
-            <select id="category-select" class="uk-select" @change="selectCategory($event)">
+            <select id="category-select" class="uk-select uk-border-rounded" @change="selectCategory($event)">
                 <option></option>
                 <option v-for="category in categories" :value="category.id" >{{category.name}}</option>
             </select>
@@ -106,12 +109,25 @@
     <!-- markdwon 编辑器 开始 -->
     <div class="is-edit">
         <div class="is-edit-menu">
-            <span class="is-eidt-menu-button"><span uk-icon="icon: grid"></span></span>
+            <span class="is-eidt-menu-button" href="#md-modal-full" uk-toggle><span uk-icon="icon: grid"></span></span>
+            <span class="is-eidt-menu-button"  v-if="review == false" @click="switchReview(true)"><i class="icon-eye"></i></span>
+            <span class="is-eidt-menu-button" v-if="review == true" @click="switchReview(false)"><i class="icon-eye-off"></i></span>
+            <!-- md content modal -->
+            <div id="md-modal-full" class="uk-modal-full" uk-modal>
+                <div class="uk-modal-dialog" style="height: 100%;">
+                    <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+                    <div style="padding: 60px 1rem;height: 100%;">
+                        <div class="is-edit-content-left uk-border-rounded" style="height: 100%;" contenteditable="true" v-html="markdownText"  @input="changeText($event)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- md content modal -->
         </div>
         <div class="is-edit-content">
-            <div id="markdownTextContent" class="is-edit-content-left" contenteditable="true" @input="changeText($event)">
+            <div id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-html="markdownText"  @input="changeText($event)">
             </div>
-            <div class="is-edit-content-right" v-html="markdownParse">
+            <div class="is-edit-content-right uk-border-rounded" v-if="review == true" v-html="markdownParse">
             </div>
         </div>
     </div>
@@ -121,9 +137,8 @@
     <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-text">标签</label>
         <div class="is-tag">
-
             <div class="is-tag-item is-tag-add">
-                <input type="text" v-model="newTag" /> <span uk-icon="plus-circle" @click="addTag"></span>
+                <input type="text" v-model="newTag" class="uk-border-rounded"/> <span uk-icon="plus-circle" @click="addTag"></span>
             </div>
             <div class="is-tag-item" v-for="tag in tags">{{tag}} <span uk-icon="close" @click="removeTag(tag)"></span></div>
         </div>
@@ -133,7 +148,7 @@
     <!-- 简介开始 -->
     <div class="uk-margin">
         <label class="uk-form-label" for="form-stacked-select">简介</label>
-        <textarea class="uk-textarea" rows="3" v-model="summary"></textarea>
+        <textarea class="uk-textarea uk-border-rounded" rows="3" v-model="summary"></textarea>
     </div>
     <!-- 简介结束 -->
 
@@ -141,11 +156,12 @@
 
     <div class="uk-margin">
         <div class="uk-button-group">
-            <button class="uk-button uk-button-secondary" v-if="!isUpdate" @click="create" >发布</button>
-            <button class="uk-button uk-button-secondary" v-if="!isUpdate" @click="createTemp" >草稿箱</button>
-            <button class="uk-button" v-if="isUpdate" @click="update" >更新</button>
+            <button class="uk-button uk-button-secondary uk-border-rounded" v-if="!isUpdate" @click="create" >发布</button>
+            <button class="uk-button uk-button-secondary uk-border-rounded" v-if="!isUpdate" @click="createTemp" >草稿箱</button>
+            <button class="uk-button uk-border-rounded" v-if="isUpdate" @click="update" >更新</button>
         </div>
     </div>
+
 
 </div>
 
@@ -156,14 +172,15 @@ function pageLoaded(config){
             el: '#edit-page',
             data:{
                 categoryId:"",
-                markdownText :"",
+                markdownText :"111",
                 markdownParse :"",
                 categories:[],
                 title:"",
                 summary : "",
                 newTag:"",
                 tags:[],
-                isUpdate:false
+                isUpdate:false,
+                review:false
             },
             methods:{
                 initPageData(){
@@ -240,8 +257,8 @@ function pageLoaded(config){
                 },
                 changeText(event){
                     this.markdownText = event.currentTarget.innerText;
-                    const html = marked(this.markdownText);
-                    this.markdownParse = html;
+                    //const html = marked(this.markdownText);
+                    //this.markdownParse = html;
                 },
                 addTag(){
                     let tags = this.tags;
@@ -306,8 +323,10 @@ function pageLoaded(config){
                     }).catch(err => {
                         console.log(err);
                     });
+                },
+                switchReview(review){
+                    this.review = (review == true);
                 }
-                
             },
             created(){
                 this.initPageData();
@@ -317,10 +336,25 @@ function pageLoaded(config){
                     this.getUpdatePostInfo(id);
                 }
 
+            },
+            watch:{
+                review:function(newVal){
+                    if(newVal){
+                        document.getElementById("markdownTextContent").style.width = "50%";
+                    }else{
+                        document.getElementById("markdownTextContent").style.width = "100%";
+
+                    }
+                },
+                markdownText:function(newVal){
+                    console.log(newVal);
+                    const html = marked(newVal);
+                    this.markdownParse = html;
+                }
+
             }
         });
     });
-    
 }
 </script>
 </section>

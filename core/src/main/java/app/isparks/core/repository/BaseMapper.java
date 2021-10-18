@@ -7,4 +7,5 @@ import app.isparks.core.pojo.base.BaseEntity;
  * @date： 2021/3/25
  */
 public interface BaseMapper<D extends BaseEntity> {
+
 }

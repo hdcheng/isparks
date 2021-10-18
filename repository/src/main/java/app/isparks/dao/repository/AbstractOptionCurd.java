@@ -11,6 +11,4 @@ public abstract class AbstractOptionCurd extends AbstractCurd<Option> {
         return new Option();
     }
 
-
-
 }

@@ -2,7 +2,6 @@ package app.isparks.core.pojo.base;
 
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -49,7 +48,6 @@ public class BaseDTO extends BaseProperty implements Serializable {
         this.createTime = createTime;
     }
 
-    // with
     public BaseDTO withId(String id) {
         this.id = id;
         return this;

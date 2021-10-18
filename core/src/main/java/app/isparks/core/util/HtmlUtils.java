@@ -43,20 +43,4 @@ public final class HtmlUtils {
         return content;
     }
 
-
-    public static void main(String[] args) {
-        String html = "<div id='123'>abc</div>" +
-                "<script>console.log('123123');</script><span>123123</span>";
-        String text = htmlEscapeAndRemoveByTags(html,"script");
-        System.out.println("text.....................");
-        System.out.println(htmlEscape("text:"+text));
-        System.out.println("text.....................");
-
-        html = htmlUnescape(text);
-        System.out.println("html.....................");
-        System.out.println("html:"+html);
-        System.out.println("html.....................");
-    }
-
-
 }

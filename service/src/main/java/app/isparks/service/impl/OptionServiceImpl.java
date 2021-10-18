@@ -109,6 +109,7 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
         Option option = new Option();
         option.setKey(key);
+
         return abstractListBy(option).stream().findFirst();
     }
 
@@ -123,7 +124,5 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
         return result;
     }
-
-
 
 }

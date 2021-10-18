@@ -40,11 +40,4 @@ public class JsonUtils {
         return gson.fromJson(jsonStr,Map.class);
     }
 
-    public static void main(String[] args) {
-        String j = null;
-        Map map = toMap(j);
-        System.out.println(map);
-
-    }
-
 }
