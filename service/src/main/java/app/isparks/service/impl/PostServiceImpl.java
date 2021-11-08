@@ -56,7 +56,8 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
                            AbstractPostCategoryRLCurd pcRLCurd,
                            AbstractPostTagRLCurd ptRLCurd,
                            TagServiceImpl tagService,
-                           CacheServiceImpl cacheService){
+                           CacheServiceImpl cacheService,
+                           CategoryServiceImpl categoryService){
         super(postCurd);
         this.postCurd = postCurd;
 
@@ -67,6 +68,7 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
 
         this.tagService = tagService;
         this.cacheService = cacheService;
+        this.categoryService = categoryService;
         this.pcRLCurd = pcRLCurd;
         this.ptRLCurd = ptRLCurd;
     }
