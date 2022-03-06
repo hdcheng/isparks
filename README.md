@@ -1,3 +1,5 @@
+<h1 align="center"><a href="https://github.com/" target="_blank"><span style="color:#FF7F50">注意：</span> 重构代码中，项目暂可能运行不起来 </a>!</h1>
+
 <h1 align="center"><a href="https://github.com/" target="_blank"><span style="color:#FF7F50">i</span> sparks </a>!</h1>
 
 <p align="center">一款简洁的建站系统。</p>
