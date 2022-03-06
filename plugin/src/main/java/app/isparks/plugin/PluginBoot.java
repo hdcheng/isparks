@@ -1,7 +1,6 @@
 package app.isparks.plugin;
 
 import app.isparks.core.framework.IBoot;
-import app.isparks.core.plugin.IPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -28,30 +27,12 @@ public class PluginBoot implements IBoot {
 
     @Override
     public void boot(Object... args) {
-
-        DefaultPluginManager pluginManager= DefaultPluginManager.instance();
-//        ApplicationContext context1 = IOCUtils.getApplicationContext();
-//        PluginManager p = IOCUtils.getBeanByClass(SpringPluginManager.class).get();
-//        System.out.println(context1);
-//        List<ITestExtensionPoint> ps = p.getExtensions(ITestExtensionPoint.class);
-//        List<PluginWrapper> pws = p.getPlugins();
-//        p.startPlugins();
-//        System.out.println(pws.size());
-
-
-
-//        IOCUtils.getBeanByClass(PluginManager.class).ifPresent(pm -> {
-//            ISparksApplication.instance().register(new DefaultPluginManager());
-//        });
-
-        //loadPlugin();
-        //activePlugin();
-
+        PluginManager.singleton();
     }
 
     /**
      * 加载插件
-     */
+
     public void loadPlugin(){
         ClassPathResource resource =new ClassPathResource("plugin/config/image-plugin.properties");
 
@@ -87,15 +68,15 @@ public class PluginBoot implements IBoot {
         }
 
     }
-
+     */
 
     /**
      * 激活插件
-     */
+
     public void activePlugin(Object ... args){
         plugins.values().forEach((plugin) -> {
             plugin.activate(args);
         });
     }
-
+     */
 }

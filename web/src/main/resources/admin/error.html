@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>异常页面</title>
+</head>
+<style>
+
+</style>
+<body>
+发生异常了
+<p th:text="${exception}"></p>
+</body>
+<script th:inline="javascript">
+    let pd = [[${exception}]];
+    console.log(pd);
+</script>
+</html>

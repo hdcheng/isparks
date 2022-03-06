@@ -1,6 +1,16 @@
 group = 'app.isparks'
 version = '0.0.1'
 dependencies {
+
+    // jwt
+    // implementation 'com.auth0:java-jwt:$jwtVersion'
+    // jose4j
+    implementation "org.bitbucket.b_c:jose4j:$jose4jVersion"
+
+    // shiro
+    compile "org.apache.shiro:shiro-core:$shiroVersion"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
     // 依赖其他模块
     implementation project(":core")
     implementation project(":repository")

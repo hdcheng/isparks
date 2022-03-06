@@ -161,6 +161,23 @@ public class IOCUtils {
         return applicationContext;
     }
 
+
+    /**
+     * 移除指定类型的 bean
+     * @param tClass
+     */
+    public static <T> void removeBean(Class<T> tClass){
+        if(tClass == null){
+            return;
+        }
+
+        getBeansByClass(tClass).ifPresent(beans -> {
+            beans.entrySet().forEach(bean -> {
+                beanFactory.removeBeanDefinition(bean.getKey());
+            });
+        });
+    }
+
     private static void check() {
         if (applicationContext == null) {
             throw new RuntimeException("系统还未初始化完成");

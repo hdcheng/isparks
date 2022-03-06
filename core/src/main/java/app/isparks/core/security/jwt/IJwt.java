@@ -4,7 +4,6 @@ import app.isparks.core.security.jwt.exception.JWTAuthException;
 import app.isparks.core.security.jwt.exception.JWTException;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**

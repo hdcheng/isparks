@@ -1,7 +1,7 @@
 package app.isparks.dao.repository.impl;
 
+import app.isparks.core.exception.RepositoryException;
 import app.isparks.core.pojo.entity.User;
-import app.isparks.core.util.thread.LocalThreadUtils;
 import app.isparks.dao.mybatis.mapper.UserMapper;
 import app.isparks.dao.repository.AbstractUserCurd;
 import org.springframework.stereotype.Repository;
@@ -25,13 +25,11 @@ public class UserCurdImpl extends AbstractUserCurd {
     public User insert(User user) {
         beforeInsert(user);
         if(selectByName(user.getUserName()) != null){
-            LocalThreadUtils.setMessage("用户名已存在："+user.getUserName());
-            return null;
+            throw new RepositoryException("用户名已存在："+user.getUserName());
         }
 
         if(selectByEmail(user.getEmail()) != null){
-            LocalThreadUtils.setMessage("邮箱已被使用："+user.getUserName());
-            return null;
+            throw new RepositoryException("邮箱已被使用："+user.getUserName());
         }
         
         return userMapper.insert(user) == 1 ? user : null;

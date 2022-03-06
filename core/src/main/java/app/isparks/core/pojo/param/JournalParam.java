@@ -1,7 +1,6 @@
 package app.isparks.core.pojo.param;
 
 import app.isparks.core.pojo.base.BaseParam;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

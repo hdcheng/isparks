@@ -51,7 +51,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements ITagService 
 
         if(tagCurd.findByName(param.getName()) != null){
 
-            LocalThreadUtils.setMessage("标签["+param.getName()+"]不存在");
+            resultMessage("标签["+param.getName()+"]不存在");
 
             return Optional.empty();
         }
@@ -121,7 +121,7 @@ public class TagServiceImpl extends AbstractService<Tag> implements ITagService 
         Tag tag = tagCurd.findByName(tagName);
 
         if(tag == null){
-            LocalThreadUtils.setMessage("标签["+tagName+"]不存在");
+            resultMessage("标签["+tagName+"]不存在");
             return Optional.empty();
         }
 

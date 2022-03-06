@@ -1,217 +1,74 @@
 package app.isparks.plugin;
 
-import app.isparks.core.config.ISparksProperties;
-import app.isparks.plugin.enhance.AbstractViewModelEnhancer;
-import app.isparks.plugin.enhance.web.WebPage;
-import app.isparks.core.plugin.PluginInfo;
-import app.isparks.core.plugin.PluginListener;
-import app.isparks.core.plugin.PluginManager;
-import app.isparks.core.plugin.PluginStatus;
-import app.isparks.core.pojo.enums.LinkType;
-import app.isparks.core.pojo.param.LinkParam;
-import app.isparks.core.repository.BaseMapper;
-import app.isparks.core.service.ILinkService;
-import app.isparks.core.util.IOCUtils;
-import app.isparks.core.util.StringUtils;
-import org.pf4j.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEvent;
+import app.isparks.plugin.pf4j.PF4JPluginManager;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractPluginManager implements PluginManager {
+public abstract class AbstractPluginManager implements IPluginManager {
 
-    private Logger log = LoggerFactory.getLogger(AbstractPluginManager.class);
+    /**
+     * 使用 pf4j 时间插件管理
+     */
+    private final static IPluginManager PM = new PF4JPluginManager();
 
-    // 基于 pf4j 实现插件
-    private static org.pf4j.PluginManager pluginManager;
-
-    private final static Map<String,PluginInfo> plugins = new ConcurrentHashMap<>();
-
-    public AbstractPluginManager(){
-        pluginManager = new org.pf4j.DefaultPluginManager(Paths.get(ISparksProperties.PLUGINS_FILE_PATH));
-        refresh();
+    @Override
+    public final boolean register(IPlugin plugin) {
+        return PM.register(plugin);
     }
 
     @Override
-    public synchronized void refresh() {
-
-        plugins().clear();
-
-        pluginManager.loadPlugins();
-
-        pluginManager.getPlugins().forEach(pluginWrapper -> {
-            PluginInfo info = change(pluginWrapper);
-            if(info != null){
-                plugins.put(pluginWrapper.getPluginId(),info);
-            }
-        });
-
-        startPlugins();
-
-        log.info("plugins count {}",plugins.size());
-
-    }
-
-    private PluginInfo change(PluginWrapper wrapper){
-        if(wrapper == null){
-            return null;
-        }
-        PluginDescriptor descriptor = wrapper.getDescriptor();
-
-        PluginInfo pluginInfo = new PluginInfo();
-        pluginInfo.setId(descriptor.getPluginId());
-        pluginInfo.setClassName(descriptor.getPluginClass());
-        pluginInfo.setProvider(descriptor.getProvider());
-        pluginInfo.setVersion(descriptor.getVersion());
-
-        pluginInfo.setStatus(statusConverter(wrapper.getPluginState()));
-
-        List<PluginDependency> dependencies = descriptor.getDependencies();
-        List<String> ds = new ArrayList<>(dependencies.size());
-        dependencies.forEach(d -> ds.add(d.getPluginId()));
-        pluginInfo.setDependencies(ds);
-
-        return pluginInfo;
-    }
-
-    private PluginStatus statusConverter(PluginState state){
-        switch (state){
-            case STOPPED:
-                return PluginStatus.STOPPED;
-            case STARTED:
-                return PluginStatus.STARTED;
-            case DISABLED:
-                return PluginStatus.DISABLED;
-            default:
-                return PluginStatus.LOADED;
-        }
+    public final boolean startPlugin(String pluginId) {
+        return PM.startPlugin(pluginId);
     }
 
     @Override
-    public int size() {
-        return plugins.size();
+    public final boolean stopPlugin(String pluginId) {
+        return PM.stopPlugin(pluginId);
     }
 
-    @Override
-    public List<PluginInfo> plugins() {
-        List<PluginInfo> infos = new ArrayList<>(plugins.size());
-
-        plugins.values().forEach(info -> infos.add(info));
-
-        return infos;
-    }
 
     @Override
-    public List<PluginInfo> plugins(PluginStatus status) {
-
-        List<PluginInfo> infos = new ArrayList<>();
-
-        plugins().forEach( info -> {
-            if(info.getStatus() == status){
-                infos.add(info);
-            }
-        });
-
-        return infos;
-    }
-
-    @Override
-    public PluginInfo plugin(String pluginId) {
-        return plugins.get(pluginId);
-    }
-
-    @Override
-    public void load(String path) {
-        Path p = Paths.get(path);
-        try {
-            pluginManager.loadPlugin(p);
-            refresh();
-        }catch (PluginRuntimeException e){
-            log.error("加载插件异常",e);
-        }
-    }
-
-    @Override
-    public synchronized void loads() {
-        pluginManager.loadPlugins();
-        refresh();
-    }
-
-    @Override
-    public synchronized void startPlugins() {
-        pluginManager.startPlugins();
-    }
-
-    @Override
-    public synchronized void startPlugin(String pluginId) {
-        if(!plugins.containsKey(pluginId)){
-            return;
-        }
-        pluginManager.startPlugin(pluginId);
-    }
-
-    @Override
-    public synchronized void stopPlugins() {
-        pluginManager.stopPlugins();
-    }
-
-    @Override
-    public synchronized PluginStatus stopPlugin(String pluginId) {
-        if(plugins.containsKey(pluginId)){
-            return PluginStatus.DISABLED;
-        }
-        PluginState state = pluginManager.stopPlugin(pluginId);
-        PluginStatus status = statusConverter(state);
-
-        plugins.get(pluginId).setStatus(status);
-
-        return status;
-    }
-
-    @Override
-    public synchronized boolean deletePlugin(String id) {
-        if(plugins.containsKey(id)){
-
-            plugins.remove(id);
-
-            return pluginManager.deletePlugin(id);
+    public final boolean reject(String pluginId) {
+        IPlugin plugin = PM.plugin(pluginId);
+        if(plugin != null && (plugin.getState() == PluginState.STOPPED || plugin.getState() == PluginState.DISABLE)){
+            return PM.reject(pluginId);
         }
         return false;
     }
 
-    public synchronized void addPlugin(String path,String name,String logo){
-        if(StringUtils.hasEmpty(path,name,logo)){
-            return;
+    @Override
+    public List<IPlugin> plugins() {
+        return PM.plugins();
+    }
+
+    @Override
+    public IPlugin plugin(String id) {
+        return PM.plugin(id);
+    }
+
+    /**
+     * 初始化
+     */
+    public final synchronized void init(){
+        load();
+        startAll();
+    }
+
+    /**
+     * 加载插件
+     */
+    protected synchronized void load(){
+
+    }
+
+    protected final synchronized void startAll(){
+        List<IPlugin> plugins = plugins();
+        if(plugins != null){
+            for(IPlugin plugin : plugins){
+                startPlugin(plugin.getId());
+            }
         }
-
-        String url = "/admin/plugin/"+path;
-
-        url = url.replaceAll("/+","/");
-
-        LinkParam param = new LinkParam();
-        param.setName(name);
-        param.setUrl(url);
-        param.setLogo(logo);
-
-        IOCUtils.getBeanByClass(ILinkService.class).ifPresent(linkService -> {
-            linkService.save(param, LinkType.PLUGIN);
-        });
     }
 
 
-    public abstract <T> void registerHttpApi(Class<T> controllerType);
-
-    public abstract <E extends ApplicationEvent> void registerAsynchronousListener(PluginListener<E> listener);
-
-    public abstract <M extends BaseMapper> Optional<M> registerMyBatisMapper(String mapperName, Class<M> mapperClass);
-
-    public abstract void registerWebPageEnhancer(AbstractViewModelEnhancer nextEnhancer, WebPage webPage);
 }

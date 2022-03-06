@@ -2,13 +2,8 @@ package app.isparks.dao.repository;
 
 
 
-import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
 import app.isparks.dao.template.AbstractCurd;
-
-import java.util.List;
-import java.util.Optional;
-
 
 /**
  * @author chenghd

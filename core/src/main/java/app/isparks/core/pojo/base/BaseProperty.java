@@ -22,30 +22,39 @@ public class BaseProperty {
     /**
      * 设置属性
      */
-    public void setProperties(Map<String,Object> properties){
-        this.properties = properties;
+    public void addProperties(Map<String,Object> properties){
+        this.properties.putAll(properties);
     }
 
     /**
      * 设置属性，如果key值存在则覆盖
      */
-    public void setProperty(String key,Object value){
+    public void addProperty(String key, Object value){
         this.properties.put(key,value);
     }
 
     /**
      * 设置属性，如果key值存在则失败
      */
-    public void setPropertyIfAbsent(String key,Object value){
+    public void addPropertyIfAbsent(String key, Object value){
         this.properties.putIfAbsent(key,value);
     }
 
     /**
      * 获取属性值
      */
-    public Optional<Object> getProperty(String key){
+    public Optional<Object> obtainProperty(String key){
         return Optional.ofNullable(this.properties.get(key));
     }
 
-
+    /**
+     * 获取指定类型的属性值
+     */
+    public <T> Optional<T> obtainProperty(String key , Class<T> tClass){
+        if(tClass == null){
+            return Optional.empty();
+        }
+        Object v = this.properties.get(key);
+        return v != null && tClass.isInstance(v) ? Optional.of((T)v) : Optional.empty();
+    }
 }

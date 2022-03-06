@@ -10,12 +10,11 @@ import app.isparks.core.pojo.param.CategoryParam;
 import app.isparks.core.service.ICategoryService;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.StringUtils;
-import app.isparks.core.util.thread.LocalThreadUtils;
 import app.isparks.dao.repository.AbstractCategoryCurd;
 import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
 import app.isparks.dao.repository.impl.CategoryCurdImpl;
 import app.isparks.dao.repository.impl.PostCategoryRLCurdImpl;
-import app.isparks.service.base.AbstractService;
+import app.isparks.service.plugin.AbstractEnhancerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.beans.BeanCopier;
@@ -30,7 +29,7 @@ import java.util.Optional;
  * @date： 2021/2/26
  */
 @Service
-public class CategoryServiceImpl extends AbstractService<Category> implements ICategoryService {
+public class CategoryServiceImpl extends AbstractEnhancerService<Category, CategoryDTO> implements ICategoryService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -67,9 +66,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
         categoryCurd.insert(category);
 
-        CategoryDTO dto = CONVERTER.map(category);
-
-        return Optional.ofNullable(dto);
+        return Optional.ofNullable(converter(category));
 
     }
 
@@ -100,18 +97,18 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
         Category category = categoryCurd.findByName(categoryName);
 
         if(category == null){
-            LocalThreadUtils.setMessage("不存在分类：" + categoryName);
+            resultMessage("不存在分类：" + categoryName);
             return Optional.empty();
         }
 
         if(pcRLCurd.countByCategory(category.getId()) > 0){
-            LocalThreadUtils.setMessage("分类：" + categoryName + " 下数据不为空");
+            resultMessage("分类：" + categoryName + " 下数据不为空");
             return Optional.empty();
         }
 
         category = categoryCurd.delete(category.getId());
 
-        return Optional.ofNullable(CONVERTER.map(category));
+        return Optional.ofNullable(converter(category));
     }
 
     @Override
@@ -119,7 +116,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
         PageData<Category> pageData = categoryCurd.pageAll(new PageInfo(page,size));
 
-        PageData<CategoryDTO> result = pageData.convertData((c)->toDTO(c));
+        PageData<CategoryDTO> result = pageData.convertData((c) -> converter(c) );
 
         return result;
     }
@@ -133,7 +130,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
         Category category= categoryCurd.select(id);
 
-        return Optional.ofNullable(toDTO(category));
+        return Optional.ofNullable(converter(category));
     }
 
     @Override
@@ -141,9 +138,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
         List<Category> categories = categoryCurd.select();
 
-        List<CategoryDTO> dtos = CONVERTER.maps(categories);
-
-        return dtos;
+        return converter(categories);
     }
 
     @Override
@@ -154,7 +149,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
         Category category = categoryCurd.select(categoryId);
 
         if(category == null){
-            LocalThreadUtils.setMessage("不存在分类：" + param.getName());
+            resultMessage("不存在分类：" + param.getName());
             return Optional.empty();
         }
 
@@ -162,7 +157,7 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
 
         categoryCurd.updateById(category);
 
-        return Optional.ofNullable(CONVERTER.map(category));
+        return Optional.ofNullable(converter(category));
     }
 
     /**
@@ -170,13 +165,15 @@ public class CategoryServiceImpl extends AbstractService<Category> implements IC
      * @param category
      * @return
      */
-    private CategoryDTO toDTO(Category category){
+    protected CategoryDTO toDTO(Category category){
 
-        CategoryDTO temp = CONVERTER.map(category);
+        CategoryDTO dto = CONVERTER.map(category);
 
-        temp.setPostNumber(pcRLCurd.countByCategory(category.getId()));
+        dto.setPostNumber(pcRLCurd.countByCategory(category.getId()));
 
-        return temp;
+        execute(dto);
+
+        return dto;
     }
 
 

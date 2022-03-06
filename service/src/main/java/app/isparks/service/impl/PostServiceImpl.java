@@ -23,7 +23,7 @@ import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
 import app.isparks.dao.repository.AbstractPostCurd;
 import app.isparks.dao.repository.AbstractPostTagRLCurd;
 import app.isparks.dao.repository.impl.PostCurdImpl;
-import app.isparks.service.base.AbstractService;
+import app.isparks.service.plugin.AbstractEnhancerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ import java.util.*;
  * @date： 2021/2/28
  */
 @Service
-public class PostServiceImpl extends AbstractService<Post> implements IPostService {
+public class PostServiceImpl extends AbstractEnhancerService<Post,PostDTO> implements IPostService {
 
     private PostConverter CONVERTER = ConverterFactory.get(PostConverter.class);
 
@@ -52,12 +52,7 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
 
     private ICacheService cacheService;
 
-    public PostServiceImpl(PostCurdImpl postCurd,
-                           AbstractPostCategoryRLCurd pcRLCurd,
-                           AbstractPostTagRLCurd ptRLCurd,
-                           TagServiceImpl tagService,
-                           CacheServiceImpl cacheService,
-                           CategoryServiceImpl categoryService){
+    public PostServiceImpl(PostCurdImpl postCurd, AbstractPostCategoryRLCurd pcRLCurd, AbstractPostTagRLCurd ptRLCurd, TagServiceImpl tagService, CacheServiceImpl cacheService, CategoryServiceImpl categoryService){
         super(postCurd);
         this.postCurd = postCurd;
 
@@ -279,14 +274,12 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
      * post 转换成 postDTO
      *
      * @param post
-     * @return
      */
-    private PostDTO converter(Post post){
-        if(post == null){
-            return null;
-        }
+    @Override
+    protected PostDTO toDTO(Post post) {
 
         PostDTO dto = CONVERTER.map(post);
+
         String id = post.getId();
 
         // 分类
@@ -312,7 +305,6 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
 
         return dto;
     }
-
 
     /**
      * 转换程归档对象
@@ -352,12 +344,7 @@ public class PostServiceImpl extends AbstractService<Post> implements IPostServi
             archives.add(archive);
         });
 
-        archives.sort(new Comparator<PostArchiveDTO>() {
-            @Override
-            public int compare(PostArchiveDTO o1, PostArchiveDTO o2) {
-                return  o2.getDate() - o1.getDate();
-            }
-        });
+        archives.sort((o1, o2) -> o2.getDate() - o1.getDate());
 
         return archives;
     }

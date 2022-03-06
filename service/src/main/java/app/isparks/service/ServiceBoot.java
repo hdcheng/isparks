@@ -2,9 +2,9 @@ package app.isparks.service;
 
 import app.isparks.core.framework.IBoot;
 import app.isparks.core.framework.ISparksApplication;
-import app.isparks.core.service.IThemeService;
-import app.isparks.core.util.IOCUtils;
 import app.isparks.dao.RepositoryBoot;
+import app.isparks.plugin.PluginManager;
+import app.isparks.service.plugin.ServicePlugin;
 
 import java.util.Arrays;
 
@@ -24,20 +24,16 @@ public class ServiceBoot implements IBoot {
 
         });
 
+        // service 层依赖 repository 层
         ISparksApplication.instance().register("repository",new RepositoryBoot(args));
+
+        PluginManager.singleton().setServicePluginManager(new ServicePlugin());
     }
 
     @Override
     public void boot(Object... args) {
-        initDatabase();
 
-        IOCUtils.getBeanByClass(IThemeService.class).ifPresent(themeService -> {
-            themeService.initTheme();
-        });
-
-    }
-
-    private void initDatabase(){
+        PluginManager.singleton().init();
 
     }
 

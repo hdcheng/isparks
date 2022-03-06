@@ -8,7 +8,6 @@ import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
 import app.isparks.core.pojo.param.UpdateUserParam;
 import app.isparks.core.pojo.param.UserParam;
-import app.isparks.core.security.jwt.JwtHandler;
 import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.BeanUtils;
@@ -18,6 +17,7 @@ import app.isparks.core.util.thread.LocalThreadUtils;
 import app.isparks.dao.repository.AbstractUserCurd;
 import app.isparks.dao.repository.impl.UserCurdImpl;
 import app.isparks.service.base.AbstractService;
+import app.isparks.service.security.jwt.JwtHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -87,18 +87,18 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
         Assert.hasLength(newPwd,"new password must not be null.");
 
         if (oldPwd.equals(newPwd)){
-            LocalThreadUtils.setMessage("新旧密码不能相同");
+            resultMessage("新旧密码不能相同");
             return false;
         }
 
         User user = userCurd.selectByName(userName);
         if(user == null){
-            LocalThreadUtils.setMessage("用户不存在");
+            resultMessage("用户不存在");
             return false;
         }
 
         if(!passwordMatch(user,oldPwd)){
-            LocalThreadUtils.setMessage("原密码错误");
+            resultMessage("原密码错误");
             return false;
         }
 
@@ -208,7 +208,7 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
 
         if(StringUtils.isEmpty(password)){
             String msg = "密码不能为空";
-            LocalThreadUtils.setMessage(msg);
+            resultMessage(msg);
             return false;
         }
         return true;
@@ -234,12 +234,5 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
             return encryptPassword(user.getUserName() + DEFAULT_PASSWORD);
         }
         return encryptPassword(DEFAULT_PASSWORD);
-    }
-
-
-    public static void main(String[] args) {
-        String s1 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJU3BhcmtzIiwianRpIjoiMzllZDE5M2NiNDBhNDI0ZWE2NDM4YmNjMzBjMGUyOGEiLCJuYmYiOjE2MzAyMTQ2MTQsImlhdCI6MTYzMDIxNDYxNCwiZXhwIjoxNjMwMjQzNDE0LCJ1c2VyIjoiY2hlbmdoZCIsImVtYWlsIjoiZWFzdHJ5QHFxLmNvbSJ9.UX_vK0wXTLnf0snG67x95SbMriF1GeFbJnANmgaWPr0";
-        String s2 = "eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJJU3BhcmtzIiwianRpIjoiMzllZDE5M2NiNDBhNDI0ZWE2NDM4YmNjMzBjMGUyOGEiLCJuYmYiOjE2MzAyMTQ2MTQsImlhdCI6MTYzMDIxNDYxNCwiZXhwIjoxNjMwMjQzNDE0LCJ1c2VyIjoiY2hlbmdoZCIsImVtYWlsIjoiZWFzdHJ5QHFxLmNvbSJ9.UX_vK0wXTLnf0snG67x95SbMriF1GeFbJnANmgaWPr0";
-        System.out.println(s1.equals(s2));
     }
 }

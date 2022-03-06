@@ -97,7 +97,7 @@ public class FileUtils {
         try {
             return org.apache.commons.io.FileUtils.readFileToString(new File(path),charset);
         }catch (IOException e){
-            log.error("Read text content exception.");
+            log.error("Read text content exception. {}",e);
         }
         return "";
     }

@@ -64,12 +64,12 @@ public class BaseDTO extends BaseProperty implements Serializable {
     }
 
     public BaseDTO withProperty(String key, Object value) {
-        setProperty(key,value);
+        addProperty(key,value);
         return this;
     }
 
     public BaseDTO withPropertyMap(Map<String, Object> properties) {
-        setProperties(properties);
+        addProperties(properties);
         return this;
     }
 

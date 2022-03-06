@@ -1,5 +1,6 @@
 package app.isparks.core.service.support;
 
+import app.isparks.core.util.thread.LocalThreadUtils;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -46,14 +47,12 @@ public abstract class BaseService  {
     }
 
 
-
     /**
      * Set result message use ThreadLocal .
      * 使用 ThreadLocal 设置消息
      */
     protected String  resultMessage(String msg){
-        // todo: 使用 ThreadLocal 设置异常消息等。
-
+        LocalThreadUtils.setMessage(msg);
         return msg;
     }
 
