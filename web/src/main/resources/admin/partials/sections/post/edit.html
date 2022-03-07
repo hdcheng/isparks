@@ -198,196 +198,194 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    loadJS("/static/plugins/marked/marked.min.js",function(){
-        const app = new Vue({
-            el: '#edit-page',
-            data:{
-                categoryId:"",
-                markdownText :"Markdown Text",
-                categories:[],
-                title:"",
-                summary : "",
-                newTag:"",
-                tags:[],
-                isUpdate:false,
-                review:false,
-                newCategory:{
-                    name:"",
-                    description:""
+loadJS("/static/plugins/marked/marked.min.js",function(){
+    app = new Vue({
+        el: '#edit-page',
+        data:{
+            categoryId:"",
+            markdownText :"Markdown Text",
+            categories:[],
+            title:"",
+            summary : "",
+            newTag:"",
+            tags:[],
+            isUpdate:false,
+            review:false,
+            newCategory:{
+                name:"",
+                description:""
+            }
+        },
+        methods:{
+            initPageData(){
+                axios.get("/api/admin/category/list").then(res => {
+                    this.categories = res.data.data;
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            clearNewPost(){
+                const categorySelect = document.getElementById("category-select");
+                if(categorySelect.options[0]){
+                    categorySelect.options[0].selected = true;
+                }
+                this.title = "";
+                this.markdownText = "";
+                document.getElementById("markdownTextContent").innerText = "";
+                this.summary = "";
+                this.categoryId = "";
+                this.tags = [];
+            },
+            create(){
+                const data = {
+                    title:this.title,
+                    originContent:this.markdownText,
+                    categoryId:this.categoryId,
+                    tagNames:this.tags,
+                    summary:this.summary
+                }
+                axios.post("/api/admin/post/create",data).then(res => {
+                    console.log(res);
+                    this.clearNewPost();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            update(){
+                const id = this.getValueFromUrl("id");
+                if(id == null || id == ""){
+                    return;
+                }
+
+                const data = {
+                    title:this.title,
+                    originContent:this.markdownText,
+                    categoryId:this.categoryId,
+                    tagNames:this.tags,
+                    summary:this.summary,
+                    id:id
+                }
+                axios.post("/api/admin/post/update",data).then(res => {
+                    this.clearNewPost();
+                    const id = this.getValueFromUrl("id");
+                    window.open("/admin/page/post/review/"+id);
+                    this.getUpdatePostInfo(id);
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            createTemp(){
+                const data = {
+                    title:this.title,
+                    originContent:this.markdownText,
+                    categoryId:this.categoryId,
+                    tagNames:this.tags,
+                    summary:this.summary
+                }
+                axios.post("/api/admin/post/create/temp",data).then(res => {
+                    this.clearNewPost();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            addTag(){
+                let tags = this.tags;
+                if(tags.indexOf(this.newTag) < 0){
+                    this.tags.push(this.newTag);
+                    this.newTag = "";
                 }
             },
-            methods:{
-                initPageData(){
-                    axios.get("/api/admin/category/list").then(res => {
-                        this.categories = res.data.data;
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                clearNewPost(){
-                    const categorySelect = document.getElementById("category-select");
-                    if(categorySelect.options[0]){
-                        categorySelect.options[0].selected = true;
-                    }
-                    this.title = "";
-                    this.markdownText = "";
-                    document.getElementById("markdownTextContent").innerText = "";
-                    this.summary = "";
-                    this.categoryId = "";
-                    this.tags = [];
-                },
-                create(){
-                    const data = {
-                        title:this.title,
-                        originContent:this.markdownText,
-                        categoryId:this.categoryId,
-                        tagNames:this.tags,
-                        summary:this.summary
-                    }
-                    axios.post("/api/admin/post/create",data).then(res => {
-                        console.log(res);
-                        this.clearNewPost();
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                update(){
-                    const id = this.getValueFromUrl("id");
-                    if(id == null || id == ""){
-                        return;
-                    }
-
-                    const data = {
-                        title:this.title,
-                        originContent:this.markdownText,
-                        categoryId:this.categoryId,
-                        tagNames:this.tags,
-                        summary:this.summary,
+            createCategory(){
+                if(this.newCategory.name == ""){
+                    return;
+                }
+                axios.post("/api/admin/category/create",this.newCategory).then(res => {
+                    this.newCategory.name = "";
+                    this.newCategory.description = "";
+                    this.initPageData();
+                    UIkit.modal(document.getElementById("modal-create-category")).hide();
+                    this.initPageData();
+                }).catch(err => {
+                    console.log(err);
+                });
+            },
+            removeTag(name){
+                const len = this.tags.length;
+                let tags = this.tags;
+                const index = tags.indexOf(name);
+                if(index > -1){
+                    this.tags.splice(index,1);
+                }
+            },    
+            getValueFromUrl(name){
+                let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                let r = window.location.search.substr(1).match(reg);
+                if (r!=null) return unescape(r[2]); return null;
+            },
+            selectCategory(e){
+                this.categoryId = e.target.value;
+            },
+            getUpdatePostInfo(id){
+                axios.get("/api/admin/post/get/by/id",{
+                    params:{
                         id:id
                     }
-                    axios.post("/api/admin/post/update",data).then(res => {
-                        this.clearNewPost();
-                        const id = this.getValueFromUrl("id");
-                        window.open("/admin/page/post/review/"+id);
-                        this.getUpdatePostInfo(id);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                createTemp(){
-                    const data = {
-                        title:this.title,
-                        originContent:this.markdownText,
-                        categoryId:this.categoryId,
-                        tagNames:this.tags,
-                        summary:this.summary
-                    }
-                    axios.post("/api/admin/post/create/temp",data).then(res => {
-                        this.clearNewPost();
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                addTag(){
-                    let tags = this.tags;
-                    if(tags.indexOf(this.newTag) < 0){
-                        this.tags.push(this.newTag);
-                        this.newTag = "";
-                    }
-                },
-                createCategory(){
-                    if(this.newCategory.name == ""){
-                        return;
-                    }
-                    axios.post("/api/admin/category/create",this.newCategory).then(res => {
-                        this.newCategory.name = "";
-                        this.newCategory.description = "";
-                        this.initPageData();
-                        UIkit.modal(document.getElementById("modal-create-category")).hide();
-                        this.initPageData();
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                removeTag(name){
-                    const len = this.tags.length;
-                    let tags = this.tags;
-                    const index = tags.indexOf(name);
-                    if(index > -1){
-                        this.tags.splice(index,1);
-                    }
-                },    
-                getValueFromUrl(name){
-                    let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-                    let r = window.location.search.substr(1).match(reg);
-                    if (r!=null) return unescape(r[2]); return null;
-                },
-                selectCategory(e){
-                    this.categoryId = e.target.value;
-                },
-                getUpdatePostInfo(id){
-                    axios.get("/api/admin/post/get/by/id",{
-                        params:{
-                            id:id
+                }).then(res => {
+                    if(res.data.code == 8101){
+                        //this.markdownText = res.data.data.originContent;
+                        let markdownText = res.data.data.originContent;
+                        if(markdownText == null ){
+                            markdownText = ""; 
                         }
-                    }).then(res => {
-                        if(res.data.code == 8101){
-                            //this.markdownText = res.data.data.originContent;
-                            let markdownText = res.data.data.originContent;
-                            if(markdownText == null ){
-                               markdownText = ""; 
-                            }
-                            
-                            this.title = res.data.data.title;
-                            
-                            document.getElementById("markdownTextContent").innerText = markdownText;
+                        
+                        this.title = res.data.data.title;
+                        
+                        document.getElementById("markdownTextContent").innerText = markdownText;
 
-                            this.summary = res.data.data.summary;
-                            const tags = res.data.data.properties.tags;
-                            for(i in tags){
-                                this.tags.push(tags[i].name);
-                            }
-                            const category = res.data.data.properties.category;
-                            const categorySelect = document.getElementById("category-select");
-                            const options = categorySelect.options;
-
-                            for(i in options){
-                                if(options[i].value == category.id){
-                                    categorySelect.options[i].selected = true;
-                                }
-                            }
-                            this.categoryId = category.id;
-
+                        this.summary = res.data.data.summary;
+                        const tags = res.data.data.properties.tags;
+                        for(i in tags){
+                            this.tags.push(tags[i].name);
                         }
-                        this.isUpdate = true;
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                }
-            },
-            created(){
-                this.initPageData();
+                        const category = res.data.data.properties.category;
+                        const categorySelect = document.getElementById("category-select");
+                        const options = categorySelect.options;
 
-                const id = this.getValueFromUrl("id");
-                if(id != null){
-                    this.getUpdatePostInfo(id);
-                }
-                
-            },
-            watch:{
-                review:function(newVal){
-                    if(newVal){
-                        document.getElementById("markdownTextContent").style.width = "50%";
-                    }else{
-                        document.getElementById("markdownTextContent").style.width = "100%";
+                        for(i in options){
+                            if(options[i].value == category.id){
+                                categorySelect.options[i].selected = true;
+                            }
+                        }
+                        this.categoryId = category.id;
 
                     }
+                    this.isUpdate = true;
+                }).catch(err => {
+                    console.log(err);
+                });
+            }
+        },
+        created(){
+            this.initPageData();
+
+            const id = this.getValueFromUrl("id");
+            if(id != null){
+                this.getUpdatePostInfo(id);
+            }
+            
+        },
+        watch:{
+            review:function(newVal){
+                if(newVal){
+                    document.getElementById("markdownTextContent").style.width = "50%";
+                }else{
+                    document.getElementById("markdownTextContent").style.width = "100%";
+
                 }
             }
-        });
+        }
     });
-}
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

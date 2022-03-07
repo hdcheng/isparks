@@ -85,161 +85,158 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    const app = new Vue({
-        el: '#file-page',
-        data:{
-            removedFiles:[],
-            files:[],
-            page:1,
-            size:5,
-            totalPage:0,
-            totalData:0
+app = new Vue({
+    el: '#file-page',
+    data:{
+        removedFiles:[],
+        files:[],
+        page:1,
+        size:5,
+        totalPage:0,
+        totalData:0
+    },
+    methods:{
+        initPageData(){
+            axios.get("/api/admin/file/page",{
+                params:{
+                    page:this.page,
+                    size:this.size
+                }
+            }).then(res => {
+                this.files = res.data.data.data;
+                this.page = res.data.data.page;
+                this.totalPage = res.data.data.totalPage;
+                this.totalData = res.data.data.totalData;
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        methods:{
-            initPageData(){
-                axios.get("/api/admin/file/page",{
-                    params:{
-                        page:this.page,
-                        size:this.size
-                    }
-                }).then(res => {
-                    this.files = res.data.data.data;
-                    this.page = res.data.data.page;
-                    this.totalPage = res.data.data.totalPage;
-                    this.totalData = res.data.data.totalData;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            refreshTrashData(){
-                axios.get("/api/admin/file/list/all/removed").then(res => {
-                    this.removedFiles = res.data.data;
-                }).catch(err => {console.log(err);} );
-            },
-            removeById(id){
-                axios.get("/api/admin/file/remove",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-
-                    this.initPageData();
-                    this.removedFiles = [];
-
-                }).catch(err => {
-                    console.log(err);
-                });
-
-            },
-            restoreById(id){
-                axios.get("/api/admin/file/restore",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-
-                    this.initPageData();
-                    this.refreshTrashData();
-
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            deleteById(id){
-                axios.get("/api/admin/file/delete",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-                    if(res.status == 200){
-                        this.refreshTrashData();
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            copyLink(link){ // 复制链接到粘贴板
-                let transfer = document.createElement('input');
-                document.body.appendChild(transfer);
-                transfer.value = link;  // 这里表示想要复制的内容
-                transfer.focus();
-                transfer.select();
-                if (document.execCommand('copy')) {
-                    document.execCommand('copy');
+        refreshTrashData(){
+            axios.get("/api/admin/file/list/all/removed").then(res => {
+                this.removedFiles = res.data.data;
+            }).catch(err => {console.log(err);} );
+        },
+        removeById(id){
+            axios.get("/api/admin/file/remove",{
+                params:{
+                    id:id
                 }
-                transfer.blur();
-                document.body.removeChild(transfer);
-                alert("文件链接已经复制");
-            },
-            openTrash(){
-                if(this.removedFiles.length == 0){
+            }).then(res => {
+
+                this.initPageData();
+                this.removedFiles = [];
+
+            }).catch(err => {
+                console.log(err);
+            });
+
+        },
+        restoreById(id){
+            axios.get("/api/admin/file/restore",{
+                params:{
+                    id:id
+                }
+            }).then(res => {
+
+                this.initPageData();
+                this.refreshTrashData();
+
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        deleteById(id){
+            axios.get("/api/admin/file/delete",{
+                params:{
+                    id:id
+                }
+            }).then(res => {
+                if(res.status == 200){
                     this.refreshTrashData();
                 }
-            },
-            pre(){
-                if(this.page > 1){
-                    this.page = this.page - 1;
-                    this.initPageData();
-                }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                console.log(page);
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
-                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        copyLink(link){ // 复制链接到粘贴板
+            let transfer = document.createElement('input');
+            document.body.appendChild(transfer);
+            transfer.value = link;  // 这里表示想要复制的内容
+            transfer.focus();
+            transfer.select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
             }
-            
+            transfer.blur();
+            document.body.removeChild(transfer);
+            alert("文件链接已经复制");
         },
-        created(){
-            this.initPageData();
+        openTrash(){
+            if(this.removedFiles.length == 0){
+                this.refreshTrashData();
+            }
+        },
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
         }
-    });
-    const bar = document.getElementById('js-progressbar');
-    UIkit.upload('.js-upload', {
+        
+    },
+    created(){
+        this.initPageData();
+    }
+});
+var bar = document.getElementById('js-progressbar');
+UIkit.upload('.js-upload', {
 
-        url: '/api/admin/file/upload',
-        multiple: true,
-        name:'file',
-        params:{
-            "authorization":Utils.auth.getToken()
-        },
-        error: function () {
-            console.log('error', arguments);
-        },
-        loadStart: function (e) {
-            bar.removeAttribute('hidden');
-            bar.max = e.total;
-            bar.value = e.loaded;
-        },
-        progress: function (e) {
-            bar.max = e.total;
-            bar.value = e.loaded;
-        },
+    url: '/api/admin/file/upload',
+    multiple: true,
+    name:'file',
+    params:{
+        "authorization":Utils.auth.getToken()
+    },
+    error: function () {
+        console.log('error', arguments);
+    },
+    loadStart: function (e) {
+        bar.removeAttribute('hidden');
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
+    progress: function (e) {
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
 
-        loadEnd: function (e) {
-            bar.max = e.total;
-            bar.value = e.loaded;
-        },
+    loadEnd: function (e) {
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
 
-        completeAll: function () {
-            app.initPageData();
-            setTimeout(function () {
-                bar.setAttribute('hidden', 'hidden');
-            }, 1000);
-        }
+    completeAll: function () {
+        app.initPageData();
+        setTimeout(function () {
+            bar.setAttribute('hidden', 'hidden');
+        }, 1000);
+    }
 
-    });
-    
-}
-pageLoaded();
+});
+
 </script>
 </section>
 <!-- 模板内容结束 -->

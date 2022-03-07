@@ -145,176 +145,170 @@
     
 </div>
 <script>
-    function contentLoaded(){
-        document.querySelectorAll("[is-loading]").forEach((item,i,obj)=>{
-            item.removeAttribute("is-loading");
-        })
-        const app = new Vue({
-            el: '#dash-page',
-            data:{
-                dataPanel : [],
-                logData :{
-                    logs : [],
-                    page : 1,
-                    size : 10,
-                    totalPage : 0,
-                    totalData : 0
-                },
-                logTypes:{},
-                dateCount :{
-                    installTime : 0 ,
-                    dateCountTimer : null,
-                    difDays : 0 ,
-                    difHours : 0 ,
-                    difMinutes : 0 ,
-                    difSeconds : 0
-                },
-                ipInfo:{
-                    ip:"",
-                    info:"",
-                    // 临时
-                    api:"http://www.svlik.com/t/ipapi/ip.php"
-                },
-                journal:{
-                    content:''
-                }
-            },
-            methods:{
-                initPage(){
-                    this.loadPanelData();
-                    this.loadLogData();
-                    this.loadLogTypes();
-                },
-                createJournal(){
-                    let content = this.journal.content;
-                    if(!content){
-                        console.log("随笔内容不能为空");
-                        return;
-                    }
-                    axios.post("/api/admin/journal/create",{
-                        content:content
-                    }).then(res => {
-                        if(res.data.code == 8101){
-                            this.initPage();
-                            this.journal.content = '';
-                        }
-                    }).catch(err => {console.log(err)});
-                },
-                loadPanelData(){
-                    axios.get("/api/admin/page/dash").then(res => {
-                        if(res.data.code == 8101){
-                            this.dataPanel = res.data.data.panel;
-                            this.dateCount.installTime = res.data.data.installTime ? res.data.data.installTime : new Date().getTime();
-                            this.startCountDate();
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                loadLogData(){
-                    axios.get("/api/admin/log/page",{
-                        params:{
-                            page:this.logData.page,
-                            size:this.logData.size
-                        }
-                    }).then(res => {
-                        console.log(res);
-                        if(res.data.code == 8101){
-                            this.logData.logs = res.data.data.data;
-                            this.logData.page = res.data.data.page;
-                            this.logData.size = res.data.data.size;
-                            this.logData.totalData = res.data.data.totalData;
-                            this.logData.totalPage = res.data.data.totalPage;
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                loadLogTypes(){
-                    axios.get("/api/admin/log/types").then(res => {
-                        console.log(res);
-                        this.logTypes = res.data.data;
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                },
-                startCountDate(){ // 启动时间统计
-                    if(this.dateCount.dateCountTimer != null){
-                        clearInterval(this.dateCountTimer);
-                    }
-
-                    const installTime = this.dateCount.installTime;
-                    let difTime = new Date().getTime() - installTime;
-
-                    this.dateCount.difDays = Math.floor(difTime / (24 * 3600 * 1000)) ;
-                    difTime %= (24 * 3600 * 1000); 
-                    this.dateCount.difHours = Math.floor(difTime / ( 3600 * 1000)) ;
-                    difTime %= ( 3600 * 1000); 
-                    this.dateCount.difMinutes = Math.floor(difTime / ( 60 * 1000)) ;
-                    difTime %= ( 60 * 1000); 
-                    this.dateCount.difSeconds = Math.floor(difTime / ( 1000)) ;;
-
-                    this.dateCount.dateCountTimer = setInterval(() => {
-                        if(this.dateCount.difSeconds < 59){
-                            this.dateCount.difSeconds ++ ;
-                        }else{
-                            this.dateCount.difSeconds = 0;
-                            if(this.dateCount.difMinutes < 59){
-                                this.dateCount.difMinutes ++ ;
-                            }else{
-                                this.dateCount.difMinutes = 0;
-                                if(this.dateCount.difHours < 23){
-                                    this.dateCount.difHours ++ ;
-                                }else{
-                                    this.dateCount.difHours = 0 ;
-                                    this.dateCount.difDays ++ ;
-                                }
-                            }
-                        }
-                    },1000);
-
-                },
-                logPre(){
-                    if(this.logData.page > 1){
-                        this.logData.page -= 1;
-                        this.loadLogData();
-                    }
-                },
-                logNext(){
-                    if(this.logData.page < this.logData.totalPage){
-                        this.logData.page += 1 ;
-                        this.loadLogData();
-                    }
-                },
-                renderText(number){
-                    return number <= 9 ? '0' + number : ''+number;
-                },
-                showIpInfo(ip){
-                    this.ipInfo.ip = ip;
-                    UIkit.modal(document.getElementById("ip-info-modal")).show();
-                },
-                requestIpInfo(){
-                    let api = this.ipInfo.api;
-                    let ip = this.ipInfo.ip;
-                    if(api == ""){
-                        alert("查询接口不能为空");
-                        return;
-                    }
-                    if(api.indexOf("?") > -1){
-                        api += ("&ip="+ip);
-                    }else{
-                        api += ("?ip=" + ip);
-                    }
-                    window.open(api,'_blank');
-
-                }
-            },
-            created(){
-                this.initPage();
+app = new Vue({
+    el: '#dash-page',
+    data:{
+        dataPanel : [],
+        logData :{
+            logs : [],
+            page : 1,
+            size : 10,
+            totalPage : 0,
+            totalData : 0
+        },
+        logTypes:{},
+        dateCount :{
+            installTime : 0 ,
+            dateCountTimer : null,
+            difDays : 0 ,
+            difHours : 0 ,
+            difMinutes : 0 ,
+            difSeconds : 0
+        },
+        ipInfo:{
+            ip:"",
+            info:"",
+            // 临时
+            api:"http://www.svlik.com/t/ipapi/ip.php"
+        },
+        journal:{
+            content:''
+        }
+    },
+    methods:{
+        initPage(){
+            this.loadPanelData();
+            this.loadLogData();
+            this.loadLogTypes();
+        },
+        createJournal(){
+            let content = this.journal.content;
+            if(!content){
+                console.log("随笔内容不能为空");
+                return;
             }
-        });
+            axios.post("/api/admin/journal/create",{
+                content:content
+            }).then(res => {
+                if(res.data.code == 8101){
+                    this.initPage();
+                    this.journal.content = '';
+                }
+            }).catch(err => {console.log(err)});
+        },
+        loadPanelData(){
+            axios.get("/api/admin/page/dash").then(res => {
+                if(res.data.code == 8101){
+                    this.dataPanel = res.data.data.panel;
+                    this.dateCount.installTime = res.data.data.installTime ? res.data.data.installTime : new Date().getTime();
+                    this.startCountDate();
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        loadLogData(){
+            axios.get("/api/admin/log/page",{
+                params:{
+                    page:this.logData.page,
+                    size:this.logData.size
+                }
+            }).then(res => {
+                console.log(res);
+                if(res.data.code == 8101){
+                    this.logData.logs = res.data.data.data;
+                    this.logData.page = res.data.data.page;
+                    this.logData.size = res.data.data.size;
+                    this.logData.totalData = res.data.data.totalData;
+                    this.logData.totalPage = res.data.data.totalPage;
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        loadLogTypes(){
+            axios.get("/api/admin/log/types").then(res => {
+                console.log(res);
+                this.logTypes = res.data.data;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        startCountDate(){ // 启动时间统计
+            if(this.dateCount.dateCountTimer != null){
+                clearInterval(this.dateCountTimer);
+            }
+
+            const installTime = this.dateCount.installTime;
+            let difTime = new Date().getTime() - installTime;
+
+            this.dateCount.difDays = Math.floor(difTime / (24 * 3600 * 1000)) ;
+            difTime %= (24 * 3600 * 1000); 
+            this.dateCount.difHours = Math.floor(difTime / ( 3600 * 1000)) ;
+            difTime %= ( 3600 * 1000); 
+            this.dateCount.difMinutes = Math.floor(difTime / ( 60 * 1000)) ;
+            difTime %= ( 60 * 1000); 
+            this.dateCount.difSeconds = Math.floor(difTime / ( 1000)) ;;
+
+            this.dateCount.dateCountTimer = setInterval(() => {
+                if(this.dateCount.difSeconds < 59){
+                    this.dateCount.difSeconds ++ ;
+                }else{
+                    this.dateCount.difSeconds = 0;
+                    if(this.dateCount.difMinutes < 59){
+                        this.dateCount.difMinutes ++ ;
+                    }else{
+                        this.dateCount.difMinutes = 0;
+                        if(this.dateCount.difHours < 23){
+                            this.dateCount.difHours ++ ;
+                        }else{
+                            this.dateCount.difHours = 0 ;
+                            this.dateCount.difDays ++ ;
+                        }
+                    }
+                }
+            },1000);
+
+        },
+        logPre(){
+            if(this.logData.page > 1){
+                this.logData.page -= 1;
+                this.loadLogData();
+            }
+        },
+        logNext(){
+            if(this.logData.page < this.logData.totalPage){
+                this.logData.page += 1 ;
+                this.loadLogData();
+            }
+        },
+        renderText(number){
+            return number <= 9 ? '0' + number : ''+number;
+        },
+        showIpInfo(ip){
+            this.ipInfo.ip = ip;
+            UIkit.modal(document.getElementById("ip-info-modal")).show();
+        },
+        requestIpInfo(){
+            let api = this.ipInfo.api;
+            let ip = this.ipInfo.ip;
+            if(api == ""){
+                alert("查询接口不能为空");
+                return;
+            }
+            if(api.indexOf("?") > -1){
+                api += ("&ip="+ip);
+            }else{
+                api += ("?ip=" + ip);
+            }
+            window.open(api,'_blank');
+
+        }
+    },
+    created(){
+        this.initPage();
     }
-    contentLoaded();
+});
 </script>
 </section>
 <!-- section end -->

@@ -328,133 +328,130 @@
     </div>
 </div>
 <script>
-function pageLoaded(config){
-    const app = new Vue({
-        el: '#profile-page',
-        data:{
-            settingSections:["generalSetting","securitySetting","passwordSetting"],
-            user:{},
-            newUser:{},
-            oldPwd:"",
-            newPwd:"",
-            reNewPwd:""
+app = new Vue({
+    el: '#profile-page',
+    data:{
+        settingSections:["generalSetting","securitySetting","passwordSetting"],
+        user:{},
+        newUser:{},
+        oldPwd:"",
+        newPwd:"",
+        reNewPwd:""
+    },
+    methods:{
+        initPage(){
+            axios.get("/api/admin/user/get/login/info").then(res => {
+                console.log(res);
+                this.user = res.data.data;
+                this.newUser = JSON.parse(JSON.stringify(res.data.data));
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        methods:{
-            initPage(){
-                axios.get("/api/admin/user/get/login/info").then(res => {
-                    console.log(res);
-                    this.user = res.data.data;
-                    this.newUser = JSON.parse(JSON.stringify(res.data.data));
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            hideAll(index){
-                const len = this.settingSections.length;
-                // if(index > len){
-                //     return;
-                // }    
-                for(var i = 0 ; i < len ; ++i){
-                    document.getElementById(this.settingSections[i]).setAttribute("hidden",true);
-                }
-                //UIkit.toggle(document.getElementById(this.settingSections[index])).toggle();
-                //document.getElementById(this.settingSections[index]).removeAttribute("hidden");
-            },
-            filterNickName(nickName){
+        hideAll(index){
+            const len = this.settingSections.length;
+            // if(index > len){
+            //     return;
+            // }    
+            for(var i = 0 ; i < len ; ++i){
+                document.getElementById(this.settingSections[i]).setAttribute("hidden",true);
+            }
+            //UIkit.toggle(document.getElementById(this.settingSections[index])).toggle();
+            //document.getElementById(this.settingSections[index]).removeAttribute("hidden");
+        },
+        filterNickName(nickName){
 
-                if(nickName == undefined || nickName == null || nickName == ""){
-                    return "I S";
-                }
+            if(nickName == undefined || nickName == null || nickName == ""){
+                return "I S";
+            }
 
-                return nickName.toUpperCase();
-            },
-            msToDate(mills){
-                var birthday = (mills == undefined || mills == null || mills == "") ? new Date() : new Date(mills);
-                
-                return birthday.getFullYear() + "年" + 
-                        birthday.getMonth() + "月" + 
-                        birthday.getDay() + "日  " + 
-                        birthday.getHours() + ":" + 
-                        birthday.getMinutes() + ":" + 
-                        birthday.getSeconds();
-            },
-            updateUserInfo(){
-                const user = this.user;
-                const newUser = this.newUser;
-                const newUserInfo = {
-                    id : user.id,
-                    nickName : user.nickName == newUser.nickName ? null : newUser.nickName,
-                    email : user.email == newUser.email ? null : newUser.email,
-                    avatar : user.avatar == newUser.avatar ? null : newUser.avatar,
-                }
+            return nickName.toUpperCase();
+        },
+        msToDate(mills){
+            var birthday = (mills == undefined || mills == null || mills == "") ? new Date() : new Date(mills);
+            
+            return birthday.getFullYear() + "年" + 
+                    birthday.getMonth() + "月" + 
+                    birthday.getDay() + "日  " + 
+                    birthday.getHours() + ":" + 
+                    birthday.getMinutes() + ":" + 
+                    birthday.getSeconds();
+        },
+        updateUserInfo(){
+            const user = this.user;
+            const newUser = this.newUser;
+            const newUserInfo = {
+                id : user.id,
+                nickName : user.nickName == newUser.nickName ? null : newUser.nickName,
+                email : user.email == newUser.email ? null : newUser.email,
+                avatar : user.avatar == newUser.avatar ? null : newUser.avatar,
+            }
 
-                axios.post("/api/admin/user/update/info",newUserInfo).then(res => {
-                    if(res.data.code == 8101){
-                        this.initPage();
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            updatePwd(){
-                if(this.user.userName == null || this.user.userName == ""){
-                    return;
+            axios.post("/api/admin/user/update/info",newUserInfo).then(res => {
+                if(res.data.code == 8101){
+                    this.initPage();
                 }
-                if(this.oldPwd == null || this.oldPwd == ""){
-                    return;
-                }
-                if(this.newPwd == "" || this.reNewPwd == "" || this.newPwd != this.reNewPwd){
-                    return;
-                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        updatePwd(){
+            if(this.user.userName == null || this.user.userName == ""){
+                return;
+            }
+            if(this.oldPwd == null || this.oldPwd == ""){
+                return;
+            }
+            if(this.newPwd == "" || this.reNewPwd == "" || this.newPwd != this.reNewPwd){
+                return;
+            }
 
-                axios.get("/api/admin/user/update/pwd",{
-                    params:{
-                        userName:this.user.userName,
-                        oldPwd:this.oldPwd,
-                        newPwd:this.newPwd
-                    }
-                }).then(res => {
-                    if(res.data.code == 8101){
-                        if(Utils.auth.removeToken()){
-                            window.location.href = "/admin/login";
-                        }
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            logout(){ // 注销登录
-                const userName = Utils.auth.getInfoFromToken("user");
-                axios.get("/api/admin/logout",{
-                    params:{user:userName}
-                }).then(res => {
+            axios.get("/api/admin/user/update/pwd",{
+                params:{
+                    userName:this.user.userName,
+                    oldPwd:this.oldPwd,
+                    newPwd:this.newPwd
+                }
+            }).then(res => {
+                if(res.data.code == 8101){
                     if(Utils.auth.removeToken()){
                         window.location.href = "/admin/login";
                     }
-                }).catch(err => {
-                    console.log(err);
-                });
-            }
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         },
-        created(){
-            this.initPage();
-        },
-        watch:{
-            "user.nickName":function(oVal,nVal){
-                
-            },
-            "user.email":function(oVal,nVal){
-                
-            },
-            "user.avatar":function(oVal,nVal){
-                
-            }
-
-
+        logout(){ // 注销登录
+            const userName = Utils.auth.getInfoFromToken("user");
+            axios.get("/api/admin/logout",{
+                params:{user:userName}
+            }).then(res => {
+                if(Utils.auth.removeToken()){
+                    window.location.href = "/admin/login";
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         }
-    });
-}
-pageLoaded();
+    },
+    created(){
+        this.initPage();
+    },
+    watch:{
+        "user.nickName":function(oVal,nVal){
+            
+        },
+        "user.email":function(oVal,nVal){
+            
+        },
+        "user.avatar":function(oVal,nVal){
+            
+        }
+
+
+    }
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

@@ -45,7 +45,6 @@ public class AdminApi {
         return ResultUtils.success("登录成功", result.getToken());
     }
 
-
     @ApiOperation(value = "注销", notes = "")
     @RequestMapping(value = "logout", method = {RequestMethod.GET})
     @Log(description = "用户注销", types = {LogType.SYS})

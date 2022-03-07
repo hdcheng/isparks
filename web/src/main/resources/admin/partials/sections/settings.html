@@ -148,86 +148,83 @@
 
 </div>
 <script>   
-function pageLoaded(config){
-    const app = new Vue({
-        el: '#settings',
-        data:{
-            webSettings:{
-                name:"", // 站名
-                domain:"", // 网站域名
-                description:"", // 描述 
-                copy:"", // footer脚步版本信息
-                logText:"", // 文字logo
-                logo:"",// logo url
-                themeId:"" // theme id
-            },
-            themeSettings:{
-                themeids:[]
-            },
-            buttons:{
-                webEditText:"编辑111"
-
-            }
+app = new Vue({
+    el: '#settings',
+    data:{
+        webSettings:{
+            name:"", // 站名
+            domain:"", // 网站域名
+            description:"", // 描述 
+            copy:"", // footer脚步版本信息
+            logText:"", // 文字logo
+            logo:"",// logo url
+            themeId:"" // theme id
         },
-        methods:{
-            refresh(){
-
-                axios.get("/api/sys/get/web/settings").then(res => {
-                    const data = res.data.data;
-                    this.webSettings.name = data.name;
-                    this.webSettings.domain = data.domain;
-                    this.webSettings.copy = data.copy;
-                    this.webSettings.logText = data.logText;
-                    this.webSettings.logo = data.logo;
-                    this.webSettings.description = data.description;
-                    this.webSettings.themeId = data.themeId;
-                }).catch(res => {
-                    console.log(res);
-                });
-                axios.get("/api/admin/theme/list").then(res => {
-                    const data = res.data.data;
-                    for(let key in data){
-                        this.themeSettings.themeids.push({'themeId':key,'path':data[key]});
-                    }
-
-                }).catch(res => {
-                    console.log(res);
-                });
-
-            },
-            updateWebSettings(){
-                //update/web/settings
-                axios.post("/api/sys/update/web/settings",this.webSettings).then(res => {
-                    if(res.data.code == 8101){
-                        location.reload();
-                    }else{
-                        console.log(res.data.msg);
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-
-            },
-            updateTheme(){
-                axios.get("/api/admin/theme/update",{
-                    params:{themeId:this.webSettings.themeId}
-                }).then(res => {
-                    if(res.data.code == 8101){
-                        console.log("更新主题成功！");
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-                console.log("更新成："+this.webSettings.themeId);
-            }
+        themeSettings:{
+            themeids:[]
         },
-        created(){
-            this.refresh();
+        buttons:{
+            webEditText:"编辑111"
+
         }
+    },
+    methods:{
+        refresh(){
 
-    });
-}
-pageLoaded();
+            axios.get("/api/sys/get/web/settings").then(res => {
+                const data = res.data.data;
+                this.webSettings.name = data.name;
+                this.webSettings.domain = data.domain;
+                this.webSettings.copy = data.copy;
+                this.webSettings.logText = data.logText;
+                this.webSettings.logo = data.logo;
+                this.webSettings.description = data.description;
+                this.webSettings.themeId = data.themeId;
+            }).catch(res => {
+                console.log(res);
+            });
+            axios.get("/api/admin/theme/list").then(res => {
+                const data = res.data.data;
+                for(let key in data){
+                    this.themeSettings.themeids.push({'themeId':key,'path':data[key]});
+                }
+
+            }).catch(res => {
+                console.log(res);
+            });
+
+        },
+        updateWebSettings(){
+            //update/web/settings
+            axios.post("/api/sys/update/web/settings",this.webSettings).then(res => {
+                if(res.data.code == 8101){
+                    location.reload();
+                }else{
+                    console.log(res.data.msg);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+
+        },
+        updateTheme(){
+            axios.get("/api/admin/theme/update",{
+                params:{themeId:this.webSettings.themeId}
+            }).then(res => {
+                if(res.data.code == 8101){
+                    console.log("更新主题成功！");
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+            console.log("更新成："+this.webSettings.themeId);
+        }
+    },
+    created(){
+        this.refresh();
+    }
+
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

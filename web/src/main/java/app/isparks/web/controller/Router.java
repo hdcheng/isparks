@@ -43,7 +43,7 @@ public class Router {
 
     static {
 
-        DEFAULT_MENUS.add(new Menu("首页","/admin"));
+        DEFAULT_MENUS.add(new Menu("首页","/admin/dash"));
         DEFAULT_MENUS.add(new Menu("文件管理","/admin/file"));
         DEFAULT_MENUS.add(new Menu("链接管理","/admin/link"));
         DEFAULT_MENUS.add(new Menu("评论管理","/admin/comment"));
@@ -53,7 +53,7 @@ public class Router {
         postManage.add(new Menu("随笔管理","/admin/journal/manage"));
         postManage.add(new Menu("文章分类","/admin/post/category"));
         postManage.add(new Menu("文章标签","/admin/post/tag"));
-        postManage.add(new Menu("文章管理","/admin/post/manage.html"));
+        postManage.add(new Menu("文章管理","/admin/post/manage"));
         postManage.add(new Menu("写文章","/admin/post/edit"));
         DEFAULT_MENUS.add(new Menu("内容管理","#",postManage));
 

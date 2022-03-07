@@ -55,79 +55,77 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    let app = new Vue({
-        el: '#plugins-page',
-        data:{
-            plugins:[],
-            modalInfo:{
-                pluginName:"",
-                pluginVersion:"",
-                pluginProvider:"",
-                className:""
-            }
-        },
-        methods:{
-            initPage(){
-                let url = "/api/admin/plugin/all";
-                axios.get(url).then(res => {
-                    console.log(res);
-                    if(res.status == 200){
-                      this.plugins = res.data.data;
-                    }
-                });
-            },
-            showPluginManagerModal(id){
-                this.modalInfo.pluginName = "" 
-                this.modalInfo.pluginVersion = "" 
-                this.modalInfo.pluginProvider = "" 
-                this.modalInfo.className = "" 
-                let plugins = this.plugins;
-                for(let i in plugins){
-                    if(id == plugins[i].id){
-                        this.modalInfo.pluginName = plugins[i].id;
-                        this.modalInfo.pluginVersion = plugins[i].version;
-                        this.modalInfo.pluginProvider = plugins[i].provider;
-                        this.modalInfo.className = plugins[i].className;
-                        break;
-                    }
-                    return;
-                }
-                UIkit.modal(document.getElementById('plugin-manager-modal')).show();
-            },
-            stopPlugin(id){
-                
-                if(id == null || id == ""){
-                    return;
-                }
-
-                let url = "/api/admin/plugin/stop?id="+id;
-                axios.get(url);
-
-            },
-            startPlugin(id){
-                
-                if(id == null || id == ""){
-                    return;
-                }
-
-                let url = "/api/admin/plugin/start?id="+id;
-                axios.get(url);
-            },
-            deletePlugin(id){
-
-                if(id == null || id == ""){
-                    return;
-                }
-
-                let url = "/api/admin/plugin/delete?id="+id;
-                axios.get(url);
-            }
-        },
-        created(){
-            this.initPage();
+app = new Vue({
+    el: '#plugins-page',
+    data:{
+        plugins:[],
+        modalInfo:{
+            pluginName:"",
+            pluginVersion:"",
+            pluginProvider:"",
+            className:""
         }
-    });
-}
+    },
+    methods:{
+        initPage(){
+            let url = "/api/admin/plugin/all";
+            axios.get(url).then(res => {
+                console.log(res);
+                if(res.status == 200){
+                  this.plugins = res.data.data;
+                }
+            });
+        },
+        showPluginManagerModal(id){
+            this.modalInfo.pluginName = ""
+            this.modalInfo.pluginVersion = ""
+            this.modalInfo.pluginProvider = ""
+            this.modalInfo.className = ""
+            let plugins = this.plugins;
+            for(let i in plugins){
+                if(id == plugins[i].id){
+                    this.modalInfo.pluginName = plugins[i].id;
+                    this.modalInfo.pluginVersion = plugins[i].version;
+                    this.modalInfo.pluginProvider = plugins[i].provider;
+                    this.modalInfo.className = plugins[i].className;
+                    break;
+                }
+                return;
+            }
+            UIkit.modal(document.getElementById('plugin-manager-modal')).show();
+        },
+        stopPlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/stop?id="+id;
+            axios.get(url);
+
+        },
+        startPlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/start?id="+id;
+            axios.get(url);
+        },
+        deletePlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/delete?id="+id;
+            axios.get(url);
+        }
+    },
+    created(){
+        this.initPage();
+    }
+});
 </script>
 </section>

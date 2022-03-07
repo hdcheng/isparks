@@ -55,108 +55,104 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    const app = new Vue({
-        el: '#comment-page',
-        data:{
-            page:1,
-            size:12,
-            totalPage:0,
-            totalData:0,
-            comments:[],
-            comment:{
-                ip:"",
-                address:"",
-                email:"",
-                content:""
-            }
-        },
-        methods:{
-            initPageData(){
-                let url = "/api/admin/comment/page/all";
-                axios.get(url,{
-                    params:{
-                        page:this.page,
-                        size:this.size
-                    }
-                }).then(res => {
-                    if(res.status == 200){
-                        this.comments = res.data.data.data;
-                        this.page = res.data.data.page;
-                        this.totalPage = res.data.data.totalPage;
-                        this.totalData = res.data.data.totalData;
-                    }
-                }).catch(err => {console.log(err);});
-            },
-            showDetailModal(id){
-                let comments = this.comments;
-                for(let i in comments ){
-                    if(comments[i].id == id){
-                        this.comment = {
-                            ip:comments[i].ip,
-                            address:comments[i].address,
-                            email:comments[i].email,
-                            content:comments[i].content
-                        }
-                        UIkit.modal(document.getElementById("comment-detail-modal")).show();
-                        break;
-                    }
-                }
-            },
-            formatDate(ms){
-                const date = new Date(ms);
-                return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " +
-                       date.getDate().toString() + ":" + date.getMinutes().toString() ;
-            },
-            valid(id){
-                axios.get("/api/admin/comment/valid?id="+id).then(res => {
-                    if(res.status == 200){
-                        this.initPageData();
-                    }
-                });
-            },
-            invalid(id){
-                axios.get("/api/admin/comment/invalid?id="+id).then(res => {
-                    if(res.status == 200){
-                        this.initPageData();
-                    }
-                });
-            },
-            deleteById(id){
-                axios.get("/api/admin/comment/delete?id="+id).then(res => {
-                    if(res.status == 200){
-                        this.initPageData();
-                    }
-                });
-            },
-            pre(){
-                if(this.page > 1){
-                    this.page = this.page - 1;
-                    this.initPageData();
-                }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                console.log(page);
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
-                }
-            }
-
-        },
-        created(){
-            this.initPageData();
+app = new Vue({
+    el: '#comment-page',
+    data:{
+        page:1,
+        size:12,
+        totalPage:0,
+        totalData:0,
+        comments:[],
+        comment:{
+            ip:"",
+            address:"",
+            email:"",
+            content:""
         }
-    });
+    },
+    methods:{
+        initPageData(){
+            let url = "/api/admin/comment/page/all";
+            axios.get(url,{
+                params:{
+                    page:this.page,
+                    size:this.size
+                }
+            }).then(res => {
+                if(res.status == 200){
+                    this.comments = res.data.data.data;
+                    this.page = res.data.data.page;
+                    this.totalPage = res.data.data.totalPage;
+                    this.totalData = res.data.data.totalData;
+                }
+            }).catch(err => {console.log(err);});
+        },
+        showDetailModal(id){
+            let comments = this.comments;
+            for(let i in comments ){
+                if(comments[i].id == id){
+                    this.comment = {
+                        ip:comments[i].ip,
+                        address:comments[i].address,
+                        email:comments[i].email,
+                        content:comments[i].content
+                    }
+                    UIkit.modal(document.getElementById("comment-detail-modal")).show();
+                    break;
+                }
+            }
+        },
+        formatDate(ms){
+            const date = new Date(ms);
+            return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " +
+                    date.getDate().toString() + ":" + date.getMinutes().toString() ;
+        },
+        valid(id){
+            axios.get("/api/admin/comment/valid?id="+id).then(res => {
+                if(res.status == 200){
+                    this.initPageData();
+                }
+            });
+        },
+        invalid(id){
+            axios.get("/api/admin/comment/invalid?id="+id).then(res => {
+                if(res.status == 200){
+                    this.initPageData();
+                }
+            });
+        },
+        deleteById(id){
+            axios.get("/api/admin/comment/delete?id="+id).then(res => {
+                if(res.status == 200){
+                    this.initPageData();
+                }
+            });
+        },
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
+        }
 
-}
-pageLoaded();
+    },
+    created(){
+        this.initPageData();
+    }
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

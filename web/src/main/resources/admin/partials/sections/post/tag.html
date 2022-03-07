@@ -63,95 +63,92 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    var app = new Vue({
-        el: '#tage-page',
-        data:{
-            newTag:{
-                name:"",
-                description:""
-            },
-            tags:[],
-            page:1,
-            size:5,
-            totalPage:0,
-            totalData:0
+app = new Vue({
+    el: '#tage-page',
+    data:{
+        newTag:{
+            name:"",
+            description:""
         },
-        methods:{
-            initPageData(){
-                axios.get("/api/admin/tag/page",{
-                    params:{
-                        page:this.page,
-                        size:this.size
-                    }
-                }).then(res => {
-                    console.log(res);
-                    this.tags = res.data.data.data;
-                    this.page = res.data.data.page;
-                    this.totalPage = res.data.data.totalPage;
-                    this.totalData = res.data.data.totalData;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            create(){
-                if(this.newTag.name == ""){
-                    return;
+        tags:[],
+        page:1,
+        size:5,
+        totalPage:0,
+        totalData:0
+    },
+    methods:{
+        initPageData(){
+            axios.get("/api/admin/tag/page",{
+                params:{
+                    page:this.page,
+                    size:this.size
                 }
+            }).then(res => {
+                console.log(res);
+                this.tags = res.data.data.data;
+                this.page = res.data.data.page;
+                this.totalPage = res.data.data.totalPage;
+                this.totalData = res.data.data.totalData;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        create(){
+            if(this.newTag.name == ""){
+                return;
+            }
 
-                axios.post("/api/admin/tag/create",this.newTag).then(res => {
-                    this.newTag.name = "";
-                    this.newTag.description = "";
-                    this.initPageData();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            deleteByName(tagName){
-                axios.get("/api/admin/tag/delete/by/name",{
-                    params:{
-                        name:tagName
-                    }
-                }).then(res => {
-                    this.initPageData();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            more(){
-                if(this.size < this.totalData){
-                    this.size += 5;
-                    this.initPageData();
-                }else{
-                    Utils.popup.info("没有更多了");
+            axios.post("/api/admin/tag/create",this.newTag).then(res => {
+                this.newTag.name = "";
+                this.newTag.description = "";
+                this.initPageData();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        deleteByName(tagName){
+            axios.get("/api/admin/tag/delete/by/name",{
+                params:{
+                    name:tagName
                 }
-            },
-            pre(){
-                if(this.page > 1){
-                    this.page = this.page - 1;
-                    this.initPageData();
-                }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                console.log(page);
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
-                }
+            }).then(res => {
+                this.initPageData();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        more(){
+            if(this.size < this.totalData){
+                this.size += 5;
+                this.initPageData();
+            }else{
+                Utils.popup.info("没有更多了");
             }
         },
-        created(){
-            this.initPageData();
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
         }
-    });
-
-}
+    },
+    created(){
+        this.initPageData();
+    }
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

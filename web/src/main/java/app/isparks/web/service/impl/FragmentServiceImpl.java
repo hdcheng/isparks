@@ -3,6 +3,7 @@ package app.isparks.web.service.impl;
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.util.ResourcesUtils;
 import app.isparks.core.util.StringUtils;
+import app.isparks.core.web.property.WebConstant;
 import app.isparks.web.pojo.dto.FragmentDTO;
 import app.isparks.web.service.IFragmentService;
 import org.slf4j.Logger;
@@ -32,6 +33,13 @@ public class FragmentServiceImpl implements IFragmentService {
     }
 
     private String resolveThymeleaf(String path, String fragment){
+        if(path.startsWith("/admin/plugin")){
+            path = path.replace("/admin/plugin", WebConstant.PLUGIN_TEMPLATE_PATH_NAME + "/sections");
+        }
+        else if(path.startsWith("/admin")){
+            path = path.replace("/admin","partials/sections/");
+        }
+
         StringBuilder html = new StringBuilder("");
         try {
             Context context = new Context();

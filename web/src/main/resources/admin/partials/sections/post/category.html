@@ -125,133 +125,130 @@
 <!-- 更新 category 结束 -->
 </div>
 <script>
-function pageLoaded(config){
-    var app = new Vue({
-        el: '#category-page',
-        data:{
-            newCategory:{
-                name:"",
-                description:""
-            },
-            updateCategory:{
-                id:"",
-                name:"",
-                description:""
-            },
-            categories:[],
-            page:1,
-            size:5,
-            totalPage:0,
-            totalData:0
+app = new Vue({
+    el: '#category-page',
+    data:{
+        newCategory:{
+            name:"",
+            description:""
         },
-        methods:{
-            initPageData(){
-                axios.get("/api/admin/category/page",{
-                    params:{
-                        page:this.page,
-                        size:this.size
-                    }
-                }).then(res => {
-                    this.categories = res.data.data.data;
-                    this.page = res.data.data.page;
-                    this.totalPage = res.data.data.totalPage;
-                    this.totalData = res.data.data.totalData;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            create(){
-
-                if(this.newCategory.name == ""){
-                    return;
+        updateCategory:{
+            id:"",
+            name:"",
+            description:""
+        },
+        categories:[],
+        page:1,
+        size:5,
+        totalPage:0,
+        totalData:0
+    },
+    methods:{
+        initPageData(){
+            axios.get("/api/admin/category/page",{
+                params:{
+                    page:this.page,
+                    size:this.size
                 }
+            }).then(res => {
+                this.categories = res.data.data.data;
+                this.page = res.data.data.page;
+                this.totalPage = res.data.data.totalPage;
+                this.totalData = res.data.data.totalData;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        create(){
 
-                axios.post("/api/admin/category/create",this.newCategory).then(res => {
-                    this.newCategory.name = "";
-                    this.newCategory.description = "";
-                    this.initPageData();
-                    UIkit.modal(document.getElementById("modal-create-category")).hide();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            deleteByName(name){
-                axios.get("/api/admin/category/delete/by/name",{
-                    params:{
-                        name:name
-                    }
-                }).then(res => {
-                    console.log(res);
-                    if(res.data.code != 8101){
-                        Utils.popup.error(res.data.msg);
-                    }else {
-                        this.initPageData();
-                    }
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            openUpdateModel(id){
-                this.updateModelDataById(id);
-            },
-            updateModelDataById(id){
-                const categories = this.categories;
-                const len = categories.length;
-                
-                for(var i = 0 ; i < len ; ++i){
-                    if(categories[i].id == id){
-                        this.updateCategory.id = id;
-                        this.updateCategory.name = categories[i].name;
-                        this.updateCategory.description  = categories[i].description;
-                        break;
-                    }
+            if(this.newCategory.name == ""){
+                return;
+            }
+
+            axios.post("/api/admin/category/create",this.newCategory).then(res => {
+                this.newCategory.name = "";
+                this.newCategory.description = "";
+                this.initPageData();
+                UIkit.modal(document.getElementById("modal-create-category")).hide();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        deleteByName(name){
+            axios.get("/api/admin/category/delete/by/name",{
+                params:{
+                    name:name
                 }
-            },
-            updateById(){
-                if(this.updateCategory.name == "" || this.updateCategory.id == ""){
-                    return;
-                }
-
-                axios.get("/api/admin/category/update",{
-                    params:this.updateCategory
-                }).then(res => {
-
-                    this.updateCategory.id = "";
-                    this.updateCategory.name = "";
-                    this.updateCategory.description = "";
-
-                    this.initPageData();
-                    UIkit.modal(document.getElementById("modal-update-category")).hide();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            pre(){
-                if(this.page > 1){
-                    this.page = this.page - 1;
+            }).then(res => {
+                console.log(res);
+                if(res.data.code != 8101){
+                    Utils.popup.error(res.data.msg);
+                }else {
                     this.initPageData();
                 }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                console.log(page);
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        openUpdateModel(id){
+            this.updateModelDataById(id);
+        },
+        updateModelDataById(id){
+            const categories = this.categories;
+            const len = categories.length;
+            
+            for(var i = 0 ; i < len ; ++i){
+                if(categories[i].id == id){
+                    this.updateCategory.id = id;
+                    this.updateCategory.name = categories[i].name;
+                    this.updateCategory.description  = categories[i].description;
+                    break;
                 }
             }
         },
-        created(){
-            this.initPageData();
-        }
-    });
+        updateById(){
+            if(this.updateCategory.name == "" || this.updateCategory.id == ""){
+                return;
+            }
 
-}
+            axios.get("/api/admin/category/update",{
+                params:this.updateCategory
+            }).then(res => {
+
+                this.updateCategory.id = "";
+                this.updateCategory.name = "";
+                this.updateCategory.description = "";
+
+                this.initPageData();
+                UIkit.modal(document.getElementById("modal-update-category")).hide();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
+        }
+    },
+    created(){
+        this.initPageData();
+    }
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

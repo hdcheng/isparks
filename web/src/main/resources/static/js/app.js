@@ -113,3 +113,58 @@ function loadJSLine(arr,callback){
     });
 }
 
+/**
+ 更新dom 元素
+*/
+function loadContent(parent,path,fragment){
+    if( !parent || !page ){
+        return;
+    }
+
+    parent.innerHTML = "";
+
+    let xhr ;
+    if(XMLHttpRequest){
+        xhr = new XMLHttpRequest();
+    }
+
+    if(!xhr){
+        console.log("目前浏览器版本较低，请使用更高版本的浏览器。");
+        return;
+    }
+
+    const url = "/api/admin/fragment";
+    xhr.open('post',url,true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("Accept", "application/json, text/plain, */*");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) {
+            let res = JSON.parse(xhr.responseText);
+            parent.innerHTML = res.data;
+            loadScript(parent);
+        }
+    };
+    let jsonData = {
+        "path":path,
+        "fragment":fragment
+   }
+   xhr.send(JSON.stringify(jsonData));
+}
+// 重新加载 script 标签
+function loadScript(parent){
+    let scripts = parent.getElementsByTagName("script");
+    for(let i = 0; i < scripts.length; i++){
+        let script = scripts[i];
+        let parent = script.parentElement;
+        let script_content = script.innerText;
+        script.parentElement.removeChild(script);
+        runScript(parent,script_content);
+    }
+}
+// 重新运行 js
+function runScript(parent,script){
+    let script_dom =document.createElement("script");
+    script_dom.type = "text/javascript";
+    script_dom.text = script;
+    parent.appendChild(script_dom);
+}

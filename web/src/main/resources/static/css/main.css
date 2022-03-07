@@ -3,7 +3,7 @@ section[class = 'is-main-content']{
     height:100%;
 }
 [v-cloak],[is-loading]{
-    /* display: none !important;*/
+    display: none !important;
 }
 /* hightlight 插件自定义*/
 pre {

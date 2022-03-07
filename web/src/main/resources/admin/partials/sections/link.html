@@ -153,169 +153,166 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    const app = new Vue({
-        el: '#file-page',
-        data:{
-            newLink:{
-                name:"",
-                url:"",
-                logo:"",
-                type:4
-            },
-            updateLink:{
-                id:"",
-                name:"",
-                url:"",
-                logo:""
-            },
-            offsiteLink:{
-                links:[],
-                page:1,
-                size:10,
-                totalPage:0,
-                totalData:0
-            },
-            siteLink:{
-                links:[],
-                page:1,
-                size:10,
-                totalPage:0,
-                totalData:0
-            }
+app = new Vue({
+    el: '#file-page',
+    data:{
+        newLink:{
+            name:"",
+            url:"",
+            logo:"",
+            type:4
         },
-        methods:{
-            initPageData(){
-                this.loadOffSiteLink();
-                this.loadSiteLink();
-            },
-            clearNewLink(){
-                this.newLink.id = "";
-                this.newLink.name = "";
-                this.newLink.url = "";
-                this.newLink.logo = "";
-                this.newLink.type = 4;
-            },
-            saveLink(){
-                let url = "/api/admin/link/save";
-                axios.post(url,this.newLink).then(res => {
-                    this.initPageData();
-                    UIkit.modal(document.getElementById("createModel")).hide();
-                    this.clearNewLink();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            showUpdateModel(id){
-                if(id == null || id == ""){
-                    return;
-                }
-                let link = null;
-                let links = this.offsiteLink.links;
-                for(i in links){
-                    if(links[i].id == id){
-                        link = links[i]
-                        break;
-                    }
-                }
-
-
-                if(link != null){
-                    this.updateLink.id = id;
-                    this.updateLink.name = link.name;
-                    this.updateLink.url = link.url;
-                    this.updateLink.logo = link.logo;
-
-                    UIkit.modal(document.getElementById("updateModel")).show();
-                }
-            },
-            loadOffSiteLink(){ // 加载站外链接
-                let url = "/api/admin/link/page/by/type";
-                axios.get(url,{
-                    params:{
-                        type:4,
-                        page:this.offsiteLink.page,
-                        size:this.offsiteLink.size
-                    }
-                }).then(res => {
-                    if(res.status == 200){
-                        this.offsiteLink.links = res.data.data.data;
-                        this.offsiteLink.page = res.data.data.page;
-                        this.offsiteLink.totalData = res.data.data.totalData;
-                        this.offsiteLink.totalPage = res.data.data.totalPage;
-                    }
-                }).catch(err => {console.log(err);});
-            },
-            loadSiteLink(){
-                let url = "/api/admin/link/page/by/type";
-                axios.get(url,{
-                    params:{
-                        type:1,
-                        page:this.siteLink.page,
-                        size:this.siteLink.size
-                    }
-                }).then(res => {
-                    if(res.status == 200){
-                        this.siteLink.links = res.data.data.data;
-                        this.siteLink.page = res.data.data.page;
-                        this.siteLink.totalData = res.data.data.totalData;
-                        this.siteLink.totalPage = res.data.data.totalPage;
-                    }
-                }).catch(err => {console.log(err);});
-            },
-            deleteById(id){
-                if(id == "" || id == null ){
-                    return;
-                }
-                axios.get("/api/admin/link/delete",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-                    this.initPageData();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            updateById(id){
-                if(id == "" || id == null ){
-                    return;
-                }
-                axios.post("/api/admin/link/update",this.updateLink).then(res => {
-                    this.initPageData();
-                    UIkit.modal(document.getElementById("updateModel")).hide();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            pre(type){
-                if(this.page > 1){
-                    this.page = this.page - 1;
-                    this.initPageData();
-                }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                console.log(page);
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
-                }
-            }
-            
+        updateLink:{
+            id:"",
+            name:"",
+            url:"",
+            logo:""
         },
-        created(){
-            this.initPageData();
+        offsiteLink:{
+            links:[],
+            page:1,
+            size:10,
+            totalPage:0,
+            totalData:0
+        },
+        siteLink:{
+            links:[],
+            page:1,
+            size:10,
+            totalPage:0,
+            totalData:0
         }
-    });
+    },
+    methods:{
+        initPageData(){
+            this.loadOffSiteLink();
+            this.loadSiteLink();
+        },
+        clearNewLink(){
+            this.newLink.id = "";
+            this.newLink.name = "";
+            this.newLink.url = "";
+            this.newLink.logo = "";
+            this.newLink.type = 4;
+        },
+        saveLink(){
+            let url = "/api/admin/link/save";
+            axios.post(url,this.newLink).then(res => {
+                this.initPageData();
+                UIkit.modal(document.getElementById("createModel")).hide();
+                this.clearNewLink();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        showUpdateModel(id){
+            if(id == null || id == ""){
+                return;
+            }
+            let link = null;
+            let links = this.offsiteLink.links;
+            for(i in links){
+                if(links[i].id == id){
+                    link = links[i]
+                    break;
+                }
+            }
+
+
+            if(link != null){
+                this.updateLink.id = id;
+                this.updateLink.name = link.name;
+                this.updateLink.url = link.url;
+                this.updateLink.logo = link.logo;
+
+                UIkit.modal(document.getElementById("updateModel")).show();
+            }
+        },
+        loadOffSiteLink(){ // 加载站外链接
+            let url = "/api/admin/link/page/by/type";
+            axios.get(url,{
+                params:{
+                    type:4,
+                    page:this.offsiteLink.page,
+                    size:this.offsiteLink.size
+                }
+            }).then(res => {
+                if(res.status == 200){
+                    this.offsiteLink.links = res.data.data.data;
+                    this.offsiteLink.page = res.data.data.page;
+                    this.offsiteLink.totalData = res.data.data.totalData;
+                    this.offsiteLink.totalPage = res.data.data.totalPage;
+                }
+            }).catch(err => {console.log(err);});
+        },
+        loadSiteLink(){
+            let url = "/api/admin/link/page/by/type";
+            axios.get(url,{
+                params:{
+                    type:1,
+                    page:this.siteLink.page,
+                    size:this.siteLink.size
+                }
+            }).then(res => {
+                if(res.status == 200){
+                    this.siteLink.links = res.data.data.data;
+                    this.siteLink.page = res.data.data.page;
+                    this.siteLink.totalData = res.data.data.totalData;
+                    this.siteLink.totalPage = res.data.data.totalPage;
+                }
+            }).catch(err => {console.log(err);});
+        },
+        deleteById(id){
+            if(id == "" || id == null ){
+                return;
+            }
+            axios.get("/api/admin/link/delete",{
+                params:{
+                    id:id
+                }
+            }).then(res => {
+                this.initPageData();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        updateById(id){
+            if(id == "" || id == null ){
+                return;
+            }
+            axios.post("/api/admin/link/update",this.updateLink).then(res => {
+                this.initPageData();
+                UIkit.modal(document.getElementById("updateModel")).hide();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        pre(type){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
+        }
+        
+    },
+    created(){
+        this.initPageData();
+    }
+});
     
-}
-pageLoaded();
 </script>
 </section>
 <!-- 模板内容结束 -->

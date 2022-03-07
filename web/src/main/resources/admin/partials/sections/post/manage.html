@@ -68,219 +68,216 @@
 </div>
 
 <script>
-function pageLoaded(config){
-    var app = new Vue({
-        el: '#post-manage-page',
-        data:{
-            valid:{
-                posts:[],
-                page:1
-            },
-            temp:{
-                posts:[],
-                page:1
-            },
-            removed:{
-                posts:[],
-                page:1
-            },
+app = new Vue({
+    el: '#post-manage-page',
+    data:{
+        valid:{
             posts:[],
-            page:1,
-            size:5,
-            totalPage:0,
-            totalData:0,
-            postStatus:"",
-            url:"",
-            minutes:5,
-            tempPostLinkId:"",
-            tempPostLink:""
+            page:1
         },
-        methods:{
-            initPageData(callback){
+        temp:{
+            posts:[],
+            page:1
+        },
+        removed:{
+            posts:[],
+            page:1
+        },
+        posts:[],
+        page:1,
+        size:5,
+        totalPage:0,
+        totalData:0,
+        postStatus:"",
+        url:"",
+        minutes:5,
+        tempPostLinkId:"",
+        tempPostLink:""
+    },
+    methods:{
+        initPageData(callback){
 
-                let fn = callback || function(){};
+            let fn = callback || function(){};
 
-                axios.get(this.url,{
-                    params:{
-                        page:this.page,
-                        size:this.size
-                    }
-                }).then(res => {
-                    this.posts = res.data.data.data;
-                    this.page = res.data.data.page;
-                    this.totalPage = res.data.data.totalPage;
-                    this.totalData = res.data.data.totalData;
-                    
-                    fn();
-                }).catch(err => {
+            axios.get(this.url,{
+                params:{
+                    page:this.page,
+                    size:this.size
+                }
+            }).then(res => {
+                this.posts = res.data.data.data;
+                this.page = res.data.data.page;
+                this.totalPage = res.data.data.totalPage;
+                this.totalData = res.data.data.totalData;
+                
+                fn();
+            }).catch(err => {
 
-                    this.posts = [];
-                    console.log(err);
-                    
-                    fn();
+                this.posts = [];
+                console.log(err);
+                
+                fn();
+            });
+        },
+        pageValid(){
+            if(this.postStatus == "valid"){
+                return;
+            }else{
+                this.postStatus = "valid";
+                this.url = "/api/admin/post/page/valid";
+            }
+            
+            if(this.valid.posts.length > 0 && this.valid.page == this.page){
+                this.posts = this.valid.posts;
+                return;
+            }
+            
+            this.initPageData(() => {
+                this.valid.posts = this.posts;
+                this.valid.page = this.page;
+            });
+        },
+        pageTemp(){
+            if(this.postStatus == "temp"){
+                return;
+            }else{
+                this.postStatus = "temp";
+                this.url = "/api/admin/post/page/temp";
+            }
+
+            if(this.temp.posts.length > 0 && this.temp.page == this.page){
+                this.posts = this.temp.posts;
+                return;
+            }
+            
+            this.initPageData(() => {
+                this.temp.posts = this.posts;
+                this.temp.page = this.page;
+            });
+        },
+        pageRemoved(){
+
+            if(this.postStatus == "removed"){
+                return;
+            }else{
+                this.postStatus = "removed";
+                this.url = "/api/admin/post/page/removed";
+            }
+
+
+            if(this.removed.posts.length > 0 && this.removed.page == this.page){
+                this.posts = this.removed.posts;
+                return;
+            }
+            
+            this.initPageData(() => {
+                this.removed.posts = this.posts;
+                this.removed.page = this.page;
+            });
+            
+        },
+        remove(id){
+            axios.get("/api/admin/post/remove",{
+                params:{
+                    id:id
+                }
+            }).then(res => {
+                this.initPageData(()=>{
+                    this.removed.posts = [];
                 });
-            },
-            pageValid(){
-                if(this.postStatus == "valid"){
-                    return;
-                }else{
-                    this.postStatus = "valid";
-                    this.url = "/api/admin/post/page/valid";
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        restore(id){ // 恢复
+            axios.get("/api/admin/post/restore",{
+                params:{
+                    id:id
                 }
-                
-                if(this.valid.posts.length > 0 && this.valid.page == this.page){
-                    this.posts = this.valid.posts;
-                    return;
-                }
-                
+            }).then(res => {
                 this.initPageData(() => {
-                    this.valid.posts = this.posts;
-                    this.valid.page = this.page;
+                    this.valid.posts = [];
                 });
-            },
-            pageTemp(){
-                if(this.postStatus == "temp"){
-                    return;
-                }else{
-                    this.postStatus = "temp";
-                    this.url = "/api/admin/post/page/temp";
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        edit(id){
+            window.location.href = "/admin/post/edit?id="+id;
+        },
+        deleteById(id){
+            axios.get("/api/admin/post/delete",{
+                params:{
+                    id:id
                 }
+            }).then(res => {
+                this.initPageData();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        generateTempLink(){
+            axios.get("/api/admin/post/create/temp/link",{
+                params:{
+                    id:this.tempPostLinkId,
+                    minutes:parseInt(this.minutes)
+                }
+            }).then(res => {
+                this.tempPostLink = res.data.data;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        showTempLinkModal(id){
+            if(id == null || id == ''){
+                return;
+            }
+            this.tempPostLinkId = id;
+            this.tempPostLink = "";
 
-                if(this.temp.posts.length > 0 && this.temp.page == this.page){
-                    this.posts = this.temp.posts;
-                    return;
-                }
-                
-                this.initPageData(() => {
-                    this.temp.posts = this.posts;
-                    this.temp.page = this.page;
-                });
-            },
-            pageRemoved(){
-
-                if(this.postStatus == "removed"){
-                    return;
-                }else{
-                    this.postStatus = "removed";
-                    this.url = "/api/admin/post/page/removed";
-                }
-
-
-                if(this.removed.posts.length > 0 && this.removed.page == this.page){
-                    this.posts = this.removed.posts;
-                    return;
-                }
-                
-                this.initPageData(() => {
-                    this.removed.posts = this.posts;
-                    this.removed.page = this.page;
-                });
-                
-            },
-            remove(id){
-                axios.get("/api/admin/post/remove",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-                    this.initPageData(()=>{
-                        this.removed.posts = [];
-                    });
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            restore(id){ // 恢复
-                axios.get("/api/admin/post/restore",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-                    this.initPageData(() => {
-                        this.valid.posts = [];
-                    });
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            edit(id){
-                window.location.href = "/admin/post/edit?id="+id;
-            },
-            deleteById(id){
-                axios.get("/api/admin/post/delete",{
-                    params:{
-                        id:id
-                    }
-                }).then(res => {
-                    this.initPageData();
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            generateTempLink(){
-                axios.get("/api/admin/post/create/temp/link",{
-                    params:{
-                        id:this.tempPostLinkId,
-                        minutes:parseInt(this.minutes)
-                    }
-                }).then(res => {
-                    this.tempPostLink = res.data.data;
-                }).catch(err => {
-                    console.log(err);
-                });
-            },
-            showTempLinkModal(id){
-                if(id == null || id == ''){
-                    return;
-                }
-                this.tempPostLinkId = id;
-                this.tempPostLink = "";
-
-                UIkit.modal(document.getElementById("tempLinkModal")).show();
-            },
-            copyTempLink(){ // 复制链接到粘贴板
-                let transfer = document.createElement('input');
-                document.body.appendChild(transfer);
-                transfer.value = this.tempPostLink;  // 这里表示想要复制的内容
-                transfer.focus();
-                transfer.select();
-                if (document.execCommand('copy')) {
-                    document.execCommand('copy');
-                }
-                transfer.blur();
-                document.body.removeChild(transfer);
-                alert("临时链接已经复制到粘贴板");
-            },
-            pre(){
-                if(this.page > 1){
-                    this.page = this.page - 1;
-                    this.initPageData();
-                }
-            },
-            next(){
-                if(this.page < this.totalPage){
-                    this.page = this.page + 1 ;
-                    this.initPageData();
-                }
-            },
-            skip(page){
-                if(page > 0 && page <= this.totalPage && page != this.page){
-                    this.page = page;
-                    this.initPageData();
-                }
-            },
-            formatDate(ms){
-                const date = new Date(ms);
-                return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " +
-                       date.getDate().toString() + ":" + date.getMinutes().toString() ;
+            UIkit.modal(document.getElementById("tempLinkModal")).show();
+        },
+        copyTempLink(){ // 复制链接到粘贴板
+            let transfer = document.createElement('input');
+            document.body.appendChild(transfer);
+            transfer.value = this.tempPostLink;  // 这里表示想要复制的内容
+            transfer.focus();
+            transfer.select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+            }
+            transfer.blur();
+            document.body.removeChild(transfer);
+            alert("临时链接已经复制到粘贴板");
+        },
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
             }
         },
-        created(){
-            this.pageValid();
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
+        },
+        formatDate(ms){
+            const date = new Date(ms);
+            return date.getFullYear().toString() + "-" + (date.getMonth() + 1).toString() + "-" + date.getDate().toString() + " " +
+                    date.getDate().toString() + ":" + date.getMinutes().toString() ;
         }
-    });
-
-}
+    },
+    created(){
+        this.pageValid();
+    }
+});
 </script>
 </section>
 <!-- 模板内容结束 -->

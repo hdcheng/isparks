@@ -129,44 +129,12 @@
 <script th:inline="javascript">
     let page = [[${page}]];
     let content = [[${content}]];
-    let content_dom =document.getElementById("is-mid");
-    function contentLoad(page,fragment){
-        if(!page ){
-            return;
-        }
-        page = page.replace("/admin/","partials/sections/")
-        content_dom.innerHTML = "";
-        let url = "/api/admin/fragment";
-        axios.post(url,{
-            "path":page,
-            "fragment":content
-        }).then(res => {
-            if(res.status == 200){
-                content_dom.innerHTML = res.data.data;
-                loadScript();           
-            }
-        }).catch(err => {console.log(err);});
-    }
-    function loadScript(){
-        let parent = document.getElementById("is-mid");
-        let scripts = parent.getElementsByTagName("script");
-        for(i = 0; i < scripts.length; i++){
-            let script = scripts[i];
-            let parent = script.parentElement;
-            let script_content = script.innerText;
-            script.parentElement.removeChild(script);
-            runScript(parent,script_content);
-        }
-    }
-    function runScript(parent,script){
-        //document.body.appendChild(script);
-        let script_dom =document.createElement("script");
-        script_dom.type = "text/javascript";
-        script_dom.text = script;
-        parent.appendChild(script_dom);
+    let app ;
+    function updateContent(path,fragment){
+        loadContent(document.getElementById("is-mid"),path,fragment);
     }
     function pageLoaded(config){
-        contentLoad(page,content);
+        updateContent(page,content);
     }
 </script>
 </html>
