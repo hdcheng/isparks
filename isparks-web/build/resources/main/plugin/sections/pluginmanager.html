@@ -1,0 +1,131 @@
+<section th:fragment="fra" style="height: 100%;width: 100%;">
+<style>
+.plugin-box{
+    box-shadow: 0 0 28px rgb(0 0 0 / 27%);border-radius: 5px;height:150px;padding:1rem;display:flex;justify-content: space-between;
+}
+.plugin-box>.plugin-box-left{
+    width:100%;overflow: hidden;
+}
+.plugin-box>.plugin-box-right{
+    display: flex;flex-direction: column;justify-content: space-between;align-items: center;
+}
+.plugin-title{
+    margin: 0 0 .5rem 0;
+}
+.plugin-version{
+    margin: 0;
+}
+.plugin-box-right>.uk-button-text{
+    padding: 3px!important;
+}
+</style>
+<div id="plugins-page">
+    <div class="uk-child-width-1-4@m uk-child-width-1-3@s uk-child-width-1-1 uk-grid-match uk-grid-small" uk-grid>
+        <div v-for="p in plugins">
+            <div class="plugin-box" >
+                <div class="plugin-box-left uk-child-width-expand@s">
+                    <div>
+                        <h3 class="plugin-title">{{p.id}}</h3>
+                        <p class="plugin-version">{{p.version}}</p>
+                    </div>
+                </div>
+                <div class="plugin-box-right">
+                    <button class="uk-button uk-button-text" ><span uk-icon="nut" @click="showPluginManagerModal(p.id)"></span></button>
+                    <button class="uk-button uk-button-text"><span uk-icon="play" @click="startPlugin(p.id)"></span></button>
+                    <button class="uk-button uk-button-text"><span uk-icon="ban" @click="stopPlugin(p.id)"></span></button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <!-- 插件管理弹窗开始 -->
+    <div id="plugin-manager-modal" class="uk-flex-top" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+    
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div style="text-align: center;">
+                <p>{{modalInfo.pluginName}}</p>
+                <p>{{modalInfo.pluginVersion}}</p>
+                <p>{{modalInfo.pluginProvider}}</p>
+                <p>{{modalInfo.className}}</p>
+            </div>
+        </div>
+    </div>
+    <!-- 插件管理弹窗结束 -->
+</div>
+
+<script>
+app = new Vue({
+    el: '#plugins-page',
+    data:{
+        plugins:[],
+        modalInfo:{
+            pluginName:"",
+            pluginVersion:"",
+            pluginProvider:"",
+            className:""
+        }
+    },
+    methods:{
+        initPage(){
+            let url = "/api/admin/plugin/all";
+            axios.get(url).then(res => {
+                console.log(res);
+                if(res.status == 200){
+                  this.plugins = res.data.data;
+                }
+            });
+        },
+        showPluginManagerModal(id){
+            this.modalInfo.pluginName = ""
+            this.modalInfo.pluginVersion = ""
+            this.modalInfo.pluginProvider = ""
+            this.modalInfo.className = ""
+            let plugins = this.plugins;
+            for(let i in plugins){
+                if(id == plugins[i].id){
+                    this.modalInfo.pluginName = plugins[i].id;
+                    this.modalInfo.pluginVersion = plugins[i].version;
+                    this.modalInfo.pluginProvider = plugins[i].provider;
+                    this.modalInfo.className = plugins[i].className;
+                    break;
+                }
+                return;
+            }
+            UIkit.modal(document.getElementById('plugin-manager-modal')).show();
+        },
+        stopPlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/stop?id="+id;
+            axios.get(url);
+
+        },
+        startPlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/start?id="+id;
+            axios.get(url);
+        },
+        deletePlugin(id){
+
+            if(id == null || id == ""){
+                return;
+            }
+
+            let url = "/api/admin/plugin/delete?id="+id;
+            axios.get(url);
+        }
+    },
+    created(){
+        this.initPage();
+    }
+});
+</script>
+</section>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.LogMapper">
+
+    <sql id="table">
+        log
+    </sql>
+
+    <sql id="count">
+        SELECT count(1)
+        FROM
+        <include refid="table"/>
+    </sql>
+
+
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Log">
+        <id property="id" column="id"/>
+        <result property="types" column="types"/>
+        <result property="content" column="content"/>
+        <result property="ip" column="ip"/>
+        <result property="date" column="date"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectAll">
+        SELECT id,types,content,ip,date,create_time
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="types != null and types != ''">types,</if>
+        <if test="content != null and content != ''">content,</if>
+        <if test="ip != null and ip != ''">ip,</if>
+        <if test="date != null and date != ''">date,</if>
+        id,create_time
+        )
+        VALUES
+        (
+        <if test="types != null and types != ''">#{types},</if>
+        <if test="content != null and content != ''">#{content},</if>
+        <if test="ip != null and ip != ''">#{ip},</if>
+        <if test="date != null and date != ''">#{date},</if>
+        #{id},#{createTime}
+        )
+    </insert>
+
+
+    <select id="selectAll" resultMap="resultMap">
+        <include refid="selectAll"/>
+    </select>
+
+    <select id="selectByCond" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="types != null and types != ''">
+                AND types = #{types}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectByType" resultMap="resultMap" resultType="list">
+        <include refid="selectAll"/>
+        WHERE types = #{types}
+        ORDER BY create_time DESC
+    </select>
+
+    <delete id="deleteByCond">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="types != null and types != ''">
+                AND types = #{types}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updateByCond" >
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="types != null and types != ''">types = #{types} ,</if>
+            <if test="content != null and content != ''">content = #{content} ,</if>
+            <if test="ip != null and ip != ''">ip = #{ip} ,</if>
+            <if test="date != null and date != ''">date = #{date} ,</if>
+            <if test="status != null and status != ''">status = #{status} ,</if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="countByCond" resultType="long">
+        <include refid="count"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="types != null and types != ''">
+                AND types = #{types}
+            </if>
+            <if test="content != null and content != ''">
+                AND content = #{content}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="date != null and date != ''">
+                AND date = #{date}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>链接</title>
+<meta th:replace="partials/head :: meta"/>
+<link th:replace="partials/head :: link"/>
+<style th:replace = "partials/head :: style"></style>
+</head>
+<body is-loading>
+<style>
+    .link-wrapper{
+        overflow: hidden !important;
+        margin: 1rem;
+        box-shadow: 0 5px 15px rgb(0 0 0 / 8%);
+        border-radius: 10px;
+        color: black;
+    }
+    .link-wrapper:hover{
+        box-shadow: 0 5px 15px rgb(0 0 0 / 30%);
+        text-decoration: none;
+        color: black;
+    }
+    .link-box{
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;display: flex;justify-content: center;align-items: center;
+    }
+    .link-log-box{
+        height: 100px;
+        width: 100px;
+        overflow: hidden;
+        text-align: center;
+        line-height: 100px;
+        position: relative;
+    }
+    .link-log-box *{
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .text-decorate{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+<div th:insert = "partials/header :: nav" style="background-color: black;"></div>
+<div id="content" class="uk-container " style="margin-top: 2rem;" >
+    <div class="uk-flex uk-flex-center uk-flex-row@l uk-flex-column@m uk-flex-wrap"  style="width:100%;">
+        <!-- 友链 开始 -->
+        <a class="link-wrapper"  th:each="link : ${PageData.data}" th:href="${link.url}" target="_blank">
+            <div class="link-box">
+                <div style="width: 100px;height: 100px;margin:.5rem;display: flex;text-align: center;line-height: 100px;border: .5px solid #61616138;border-radius: 10px;" >
+                    <div th:utext ="${link.logo}" style="margin: auto;width: 100%;height: 100%;overflow: hidden;padding: .5rem;display: flex;justify-content: center;align-items: center;"></div>
+                </div>
+                <div style="width: 200px;height: 100px;padding:.5rem;display: flex;flex-direction: column;justify-content: center;align-items: start;">
+                    <div class="text-decorate" style="margin: 0;width: 100%;font-size: large;" th:text="${link.name}"></div>
+                    <div class="text-decorate" style="margin: 0;width: 100%;font-size: small;" th:text="${link.url}"></div>
+                </div>
+            </div>
+        </a>
+        <!-- 友链 结束 -->
+    </div>
+
+</div>
+<footer th:replace = "partials/footer :: fra"></footer>
+</body>
+<script  th:inline="javascript">
+    const data = [[${PageData}]];
+    console.log(data);
+</script>
+<script th:replace="partials/script :: fra"></script>
+</html>

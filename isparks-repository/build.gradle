@@ -1,0 +1,32 @@
+group = 'app.isparks'
+version = '0.0.1'
+description '持久层'
+
+dependencies {
+    // spring
+    compile "org.springframework:spring-tx:$springVersion"
+    compile "org.springframework:spring-jdbc:$springVersion"
+
+    // HikariCP数据库连接池
+    compile "com.zaxxer:HikariCP:$hikariCPVersion"
+
+    // h2数据库
+    compile "com.h2database:h2:$h2DatabaseVersion"
+
+    // mybatis
+    compile "org.mybatis:mybatis:$mybatisVersion"
+    compile "org.mybatis:mybatis-spring:$mybatisSpringVersion"
+
+    // postgresql
+    runtimeOnly "org.postgresql:postgresql:$postgresqlJDBCVersion"
+
+    // page helper
+    compile "com.github.pagehelper:pagehelper:$pageHelperVersion"
+
+    // guava
+    implementation "com.google.guava:guava:$guavaVersion"
+
+    // 依赖核心库
+    implementation project(":isparks-core")
+    implementation project(":isparks-plugin")
+}

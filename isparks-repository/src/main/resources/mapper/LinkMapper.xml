@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app.isparks.dao.mybatis.mapper.LinkMapper">
+
+    <sql id="table">
+        link
+    </sql>
+
+    <sql id="selectAll">
+        SELECT id,status,create_time,modify_time,name,url,logo,type
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <sql id="count">
+        SELECT count(1)
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Link">
+        <id property="id" column="id"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="name" property="name"/>
+        <result column="url" property="url"/>
+        <result column="logo" property="logo"/>
+        <result column="type" property="type"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+        <if test="name != null and name != ''">name,</if>
+        <if test="url != null and url != ''">url,</if>
+        <if test="logo != null and logo != ''">logo,</if>
+        <if test="type != null ">type,</if>
+        id,create_time,modify_time,status
+        )
+        VALUES
+        (
+        <if test="name != null and name != ''">#{name},</if>
+        <if test="url != null and url != ''">#{url},</if>
+        <if test="logo != null and logo != ''">#{logo},</if>
+        <if test="type != null">#{type},</if>
+        #{id},#{createTime},#{modifyTime},#{status}
+        )
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByCond">
+        DELETE FROM
+        <include refid="table"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="logo != null and logo != ''">
+                AND logo = #{logo}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </where>
+    </delete>
+
+    <update id="updateById">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="status != null and status != ''">status = #{status} ,</if>
+            <if test="name != null and name != ''">name = #{name} ,</if>
+            <if test="url != null and url != ''">url = #{url} ,</if>
+            <if test="logo != null and logo != ''">logo = #{logo} ,</if>
+            <if test="type != null">type = #{type} ,</if>
+            modify_time = #{modifyTime}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="selectByCond" resultType="list" resultMap="resultMap">
+        <include refid="selectAll"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="logo != null and logo != ''">
+                AND logo = #{logo}
+            </if>
+            <if test="type != null ">
+                AND type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="countByCond" resultType="long">
+        <include refid="count"/>
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
+            <if test="url != null and url != ''">
+                AND url = #{url}
+            </if>
+            <if test="logo != null and logo != ''">
+                AND logo = #{logo}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByUrl" resultType="app.isparks.core.pojo.entity.Link" resultMap="resultMap">
+        <include refid="selectAll"/>
+        WHERE url = #{url}
+    </select>
+
+</mapper>

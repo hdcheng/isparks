@@ -28,12 +28,12 @@ hs_err_pid*
 
 /.gradle/*
 /.idea/*
-/core/build/*
-/plugin/build/*
-/repository/build/*
-/service/build/*
+/isparks-core/build/*
+/isparks-plugin/build/*
+/isparks-repository/build/*
+/isparks-service/build/*
 /admin/build/*
 /build/*
-/addons/build/*
+/isparks-addons/build/*
 /TODO.md
 

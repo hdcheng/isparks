@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+    <head th:replace="partials/head/meta :: fra(${title},${description},${author},${keywords})"></head>
+    <head th:replace="partials/head/link :: fra" rel="stylesheet"></head>
+    <script>
+        const key = "isparks";
+        if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
+            const url = "/api/sys/installed";
+            const request = new XMLHttpRequest();
+            request.open('GET', url, false); // 同步
+            request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 
+            request.onreadystatechange = function () {
+
+                if (request.readyState == 4 && request.status == 200) {
+                    res = JSON.parse(request.responseText);
+                    console.log(res);
+                    if(res.data){
+                        localStorage.setItem(key,true);
+                    }else{
+                        localStorage.setItem(key,false);
+                        window.location.href = "/admin/install";
+                    }
+                }
+            };
+            request.send();
+        }
+    </script>
+    <script th:replace="partials/script/main :: fra"></script>
+</head>
+<style>
+*{box-sizing: border-box;}
+[is-loading]{
+    display: none;
+}
+.is-mid::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 3px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+.is-mid::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+    background: #535353;
+}
+.is-mid::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.2);
+    border-radius: 3px;
+    background: #EDEDED;
+}
+.is-main,.is-mid,.is-bottom{
+    position: relative;
+}
+.is-sidebar{
+    position: relative;
+    height: calc(100vh);
+    z-index: 99;
+}
+.is-main{
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; */
+    width:100%;
+    justify-content: space-between;
+    overflow: hidden;
+    height: calc(100vh);
+}
+.is-main>.is-main-top{
+    z-index: 98;
+    box-shadow: 0 5px 10px rgba(0,0,0,.5);
+}
+.is-main>.is-main-mid{
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content:space-between;
+    padding: .8rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.is-main>.is-main-bottom{
+    height:2.3rem;
+}
+.is-main>.is-main-mid::-webkit-scrollbar-thumb{
+    /*滚动条中的滚动块*/
+    border-radius:10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background:#535353; 
+}
+.is-main>.is-main-mid::-webkit-scrollbar-track{
+    background-color: rgba(0,0,0,0);
+}
+.is-main>.is-main-mid::-webkit-scrollbar{
+    width: 3px;
+}
+</style>
+<body class="bg-dark" is-loading>
+<div  style="height: calc(100vh);display: flex;">
+    <div id="sidebar" class="is-sidebar" hidden>
+        <div th:replace="partials/side/sidebar :: fra">
+            sidebar
+        </div>
+    </div>
+    <div class="is-main" >
+        <div class="is-main-top">
+            <div th:replace="partials/header/navbar :: fra(${menus},${logoText})">
+            header
+            </div>
+        </div>
+        <div class="is-main-mid" id="is-mid">
+<!--            <section th:replace="${page}::${content}"></section>-->
+        </div>
+        <div class="is-main-bottom" style="display: flex;background-color: rgba(0,0,0,.8);color:rgb(255,255,255);">
+            <div style="display: flex;justify-content: center;align-items: center;">
+                <div th:replace="partials/footer/buttons :: fra">
+                    buttons
+                </div>
+            </div>
+            <div style="position: relative;width: 100%;">
+                <footer th:replace="partials/footer/footer :: fra(${copy})">
+                footer
+                </footer>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    let page = [[${page}]];
+    let content = [[${content}]];
+    let app ;
+    function updateContent(path,fragment){
+        if(path == "#"){
+            return;
+        }
+        loadContent(document.getElementById("is-mid"),path,fragment);
+    }
+    function pageLoaded(config){
+        updateContent(page,content);
+    }
+</script>
+</html>

@@ -1,0 +1,261 @@
+<html>
+    <head>
+        <title>category</title>
+        <meta charset="utf-8"/>
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+        <link rel="icon" href="../../../../static/images/favicon.ico"  >
+        <meta name="description" content="设置页面">
+        <meta name="author" content="chenghd">
+        <link href="../../../../static/css/uikit.min.css"  rel="stylesheet"/>
+        <link href="../../../../static/css/uikit-rtl.min.css" rel="stylesheet"/>
+        <link href="../../../../static/css/main.css" rel="stylesheet"/>
+    </head>
+<body>
+
+<!-- 模板内容开始 -->
+<section th:fragment="fra" style="height: 100%;width: 100%;">
+<style>
+    .category-table th{
+        text-align: left;
+    }
+</style>
+
+<div id="category-page" v-cloak>
+    <div>
+        <nav class="uk-navbar-container uk-margin" uk-navbar="mode: click">
+            <div class="uk-navbar-center">
+                <ul class="uk-navbar-nav">
+                    <li class="uk-active"><a href="#modal-create-category" uk-toggle><span uk-icon="icon: plus-circle"></span>&nbsp;&nbsp;&nbsp;添加</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <table class="uk-table uk-table-divider uk-table-responsive category-table">
+            <thead >
+                <tr >
+                    <th>#</th>
+                    <th>分类名</th>
+                    <th>描述</th>
+                    <th>文章数量</th>
+                    <th >操作</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <tr v-for="(c,i) in categories">
+                    <td >{{(page - 1) * size + i + 1}}</td>
+                    <td>{{c.name}}</td>
+                    <td>{{c.description}}</td>
+                    <td>{{c.postNumber}}</td>
+                    <td>
+                        <a class="uk-button uk-button-link" href="#modal-update-category" uk-toggle><span uk-icon="pencil" @click="openUpdateModel(c.id)"></span></a>
+                        <button class="uk-button uk-button-link" @click="deleteByName(c.name)"><span uk-icon="trash"></span></button>
+                    </td>
+                </tr>
+            </tbody>
+            
+        </table>
+
+        <ul class="uk-pagination uk-flex-center" uk-margin>
+            <li><a href="#" @click="pre"><span uk-pagination-previous></span></a></li>
+
+            <li v-for="i of totalPage" :class="page == i ? 'uk-active' : ''"><span v-if="page == i">{{i}}</span><a href="#" v-if="page != i" @click="skip(i)">{{i}}</a></li>
+
+            <li><a href="#" @click="next"><span uk-pagination-next></span></a></li>
+        </ul>
+        
+    </div>
+<!-- 创建 category 开始 -->
+<div id="modal-create-category" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">创建新分类</h2>
+        <div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">分类名</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="name" v-model="newCategory.name">
+                </div>
+            </div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text" >描述</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="description" v-model="newCategory.description">
+                </div>
+            </div>
+
+        </div>
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">取消</button>
+            <button class="uk-button uk-button-primary" type="button" @click="create">创建</button>
+        </p>
+    </div>
+</div>
+<!-- 创建 category 结束 -->
+
+<!-- 更新 category 开始 -->
+<div id="modal-update-category" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">更新分类信息</h2>
+        <div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">分类名</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="name" v-model="updateCategory.name">
+                </div>
+            </div>
+
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-text">描述</label>
+                <div class="uk-form-controls">
+                    <input class="uk-input" id="form-stacked-text" type="text" placeholder="description" v-model="updateCategory.description">
+                </div>
+            </div>
+
+        </div>
+        <p class="uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">取消</button>
+
+            <button class="uk-button uk-button-primary" type="button" @click="updateById">更新</button>
+        </p>
+    </div>
+</div>
+<!-- 更新 category 结束 -->
+</div>
+<script>
+app = new Vue({
+    el: '#category-page',
+    data:{
+        newCategory:{
+            name:"",
+            description:""
+        },
+        updateCategory:{
+            id:"",
+            name:"",
+            description:""
+        },
+        categories:[],
+        page:1,
+        size:5,
+        totalPage:0,
+        totalData:0
+    },
+    methods:{
+        initPageData(){
+            axios.get("/api/admin/category/page",{
+                params:{
+                    page:this.page,
+                    size:this.size
+                }
+            }).then(res => {
+                this.categories = res.data.data.data;
+                this.page = res.data.data.page;
+                this.totalPage = res.data.data.totalPage;
+                this.totalData = res.data.data.totalData;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        create(){
+
+            if(this.newCategory.name == ""){
+                return;
+            }
+
+            axios.post("/api/admin/category/create",this.newCategory).then(res => {
+                this.newCategory.name = "";
+                this.newCategory.description = "";
+                this.initPageData();
+                UIkit.modal(document.getElementById("modal-create-category")).hide();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        deleteByName(name){
+            axios.get("/api/admin/category/delete/by/name",{
+                params:{
+                    name:name
+                }
+            }).then(res => {
+                console.log(res);
+                if(res.data.code != 8101){
+                    Utils.popup.error(res.data.msg);
+                }else {
+                    this.initPageData();
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        openUpdateModel(id){
+            this.updateModelDataById(id);
+        },
+        updateModelDataById(id){
+            const categories = this.categories;
+            const len = categories.length;
+            
+            for(var i = 0 ; i < len ; ++i){
+                if(categories[i].id == id){
+                    this.updateCategory.id = id;
+                    this.updateCategory.name = categories[i].name;
+                    this.updateCategory.description  = categories[i].description;
+                    break;
+                }
+            }
+        },
+        updateById(){
+            if(this.updateCategory.name == "" || this.updateCategory.id == ""){
+                return;
+            }
+
+            axios.get("/api/admin/category/update",{
+                params:this.updateCategory
+            }).then(res => {
+
+                this.updateCategory.id = "";
+                this.updateCategory.name = "";
+                this.updateCategory.description = "";
+
+                this.initPageData();
+                UIkit.modal(document.getElementById("modal-update-category")).hide();
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+        pre(){
+            if(this.page > 1){
+                this.page = this.page - 1;
+                this.initPageData();
+            }
+        },
+        next(){
+            if(this.page < this.totalPage){
+                this.page = this.page + 1 ;
+                this.initPageData();
+            }
+        },
+        skip(page){
+            console.log(page);
+            if(page > 0 && page <= this.totalPage && page != this.page){
+                this.page = page;
+                this.initPageData();
+            }
+        }
+    },
+    created(){
+        this.initPageData();
+    }
+});
+</script>
+</section>
+<!-- 模板内容结束 -->
+
+</body>
+<script src="../../../../static/js/uikit.min.js" type="text/javascript"></script>
+<script src="../../../../static/js/uikit-icons.min.js" type="text/javascript"></script>
+<script src="../../../../static/js/app.js" type="text/javascript"></script>
+</html>
+

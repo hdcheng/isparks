@@ -1,0 +1,52 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+
+group = 'app.isparks'
+version = '0.0.1'
+
+dependencies {
+
+    implementation ("org.springframework.boot:spring-boot-starter"){
+        exclude group : "org.slf4j"
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+    // springboot
+    implementation ("org.springframework.boot:spring-boot-starter-web"){
+        exclude group : "org.slf4j"
+        exclude group : "org.apache.logging"
+        exclude group : "org.springframework", module: 'spring-webmvc'
+    }
+    //implementation "org.springframework.boot:spring-boot-starter-jetty"
+    implementation ("org.springframework.boot:spring-boot-starter-validation"){
+        exclude group : "org.slf4j"
+        exclude group : "org.apache.logging"
+    }
+    // thymeleaf
+    implementation ("org.springframework.boot:spring-boot-starter-thymeleaf"){
+        exclude group : "org.slf4j"
+        exclude group : "org.apache.logging"
+    }
+    // swagger2
+    implementation ("io.springfox:springfox-swagger2:$swaggerVersion"){
+        exclude group:"org.mapstruct"
+        exclude group:"org.slf4j"
+        exclude group : "org.apache.logging"
+    }
+    implementation ("io.springfox:springfox-swagger-ui:$swaggerVersion"){
+        exclude group:"org.slf4j"
+        exclude group : "org.apache.logging"
+    }
+    // test
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        exclude group : "org.apache.logging"
+    }
+
+    implementation project(":isparks-core")
+    implementation project(":isparks-plugin")
+    implementation project(":isparks-service")
+}
+
