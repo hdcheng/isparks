@@ -32,7 +32,7 @@
                                 <!-- 小屏幕导航开始 -->
                                 <li th:each="menu : ${menus}">
                                     <a th:onclick="updateContent([[${menu.link}]],'fra')" th:text="${menu.name}" >父目录</a>
-                                    <a th:if="${not #lists.isEmpty(menu.subdirectory)}" th:each="subMenu : ${menu.subdirectory}" th:href="${subMenu.link}" th:text="${menu.name + '-' + subMenu.name}">子目录</a>
+                                    <a th:if="${not #lists.isEmpty(menu.subdirectory)}" th:each="subMenu : ${menu.subdirectory}" th:onclick="updateContent([[${subMenu.link}]],'fra')" th:text="${menu.name + '-' + subMenu.name}">子目录</a>
                                 </li>
                                 <!-- 小屏幕导航结束 -->
                             </ul>
