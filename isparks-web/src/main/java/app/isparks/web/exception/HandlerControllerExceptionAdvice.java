@@ -32,12 +32,6 @@ public class HandlerControllerExceptionAdvice {
         return "index";
     }
 
-    @ExceptionHandler(value = Exception.class)
-    public String error2(HttpServletRequest request,Exception e){
 
-        System.out.println("出错了2");
-
-        return "index";
-    }
 
 }

@@ -24,8 +24,8 @@ app/isparks/web/controller/rest/LinkApi.java
  app.isparks.web.controller.rest.LinkApi
 app/isparks/web/controller/api/TagApi.java
  app.isparks.web.controller.api.TagApi
-app/isparks/web/exception/HandlerControllerExceptionAdvice.java
- app.isparks.web.exception.HandlerControllerExceptionAdvice
+app/isparks/web/exception/ExceptionController.java
+ app.isparks.web.exception.ExceptionController
 app/isparks/web/controller/api/PageApi.java
  app.isparks.web.controller.api.PageApi
 app/isparks/web/service/IThemeService.java
@@ -111,5 +111,5 @@ app/isparks/web/controller/api/JournalApi.java
  app.isparks.web.controller.api.JournalApi
 app/isparks/web/controller/rest/AdminApi.java
  app.isparks.web.controller.rest.AdminApi
-app/isparks/web/exception/ExceptionController.java
- app.isparks.web.exception.ExceptionController
+app/isparks/web/exception/HandlerControllerExceptionAdvice.java
+ app.isparks.web.exception.HandlerControllerExceptionAdvice

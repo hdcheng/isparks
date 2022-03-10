@@ -1,8 +1,8 @@
 class HTTPError extends Error {
     constructor(response1, request, options2){
         const code1 = response1.status || response1.status === 0 ? response1.status : "";
-        const title1 = response1.statusText || "";
-        const status = `${code1} ${title1}`.trim();
+        const title = response1.statusText || "";
+        const status = `${code1} ${title}`.trim();
         const reason = status ? `status code ${status}` : "an unknown error";
         super(`Request failed with ${reason}`);
         this.name = "HTTPError";
@@ -400,97 +400,80 @@ const createInstance = (defaults)=>{
     return ky2;
 };
 const ky = createInstance();
-var Request_Method;
-(function(Request_Method1) {
-    Request_Method1[Request_Method1["POST"] = 0] = "POST";
-    Request_Method1[Request_Method1["GET"] = 1] = "GET";
-    Request_Method1[Request_Method1["DELETE"] = 2] = "DELETE";
-    Request_Method1[Request_Method1["PUT"] = 3] = "PUT";
-    Request_Method1[Request_Method1["PATCH"] = 4] = "PATCH";
-})(Request_Method || (Request_Method = {
-}));
-class API {
-    title;
-    method;
-    href;
-    content_type;
-    body;
-    url_params = "";
-    path_params = null;
-    constructor(title2, href, method = Request_Method.GET, content_type = "application/json"){
-        this.title = title2;
-        this.method = method;
-        this.href = href;
-        this.content_type = content_type;
-    }
-    withData(data) {
-        if (data) {
-            this.body = data;
-        }
-        return this;
-    }
-    withJsonBody(json) {
-        if (json) {
-            this.body = JSON.stringify(json);
-        }
-        return this;
-    }
-    withParams(params) {
-        if (this.resolveParamsFunc) {
-            this.resolveParamsFunc(params, this);
-        }
-        return this;
-    }
-    withPathParams(path_params) {
-        if (this.resolvePathParamsFunc) {
-            this.resolvePathParamsFunc(path_params, this);
-        }
-        return this;
-    }
-    DEFAULT_RESOLVE_PARAMS_FUNC = function(params, api) {
-        let urlParams = api.url_params ? api.url_params + "&" : "";
-        for(let key in params){
-            urlParams += key + "=" + encodeURI(params[key]) + "&";
-        }
-        if (urlParams.indexOf("&") > -1) {
-            urlParams = urlParams.substring(0, urlParams.length - 1);
-        }
-        if (api.href.indexOf("?") > -1) {
-            api.url_params = "&" + urlParams;
-        } else {
-            api.url_params = "?" + urlParams;
-        }
-    };
-    DEFAULT_PATH_RESOLVE_FUNC = function(path_params, api) {
-        if (path_params) {
-            for(let key in path_params){
-                let key_place = "{" + key + "}";
-                if (api.href.indexOf(key_place) > -1) {
-                    api.href = api.href.replace(new RegExp(key_place, "g"), path_params[key]);
-                }
+let http = {
+    post: function(href, body, headers = {
+    }) {
+        const api = ky.create({
+            headers: headers
+        });
+        return api.post(href, {
+            body: body
+        }).then((response2)=>{
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
             }
-        }
-    };
-    resolveParamsFunc = this.DEFAULT_RESOLVE_PARAMS_FUNC;
-    resolvePathParamsFunc = this.DEFAULT_PATH_RESOLVE_FUNC;
-    withResolveParamsFunc(func) {
-        if (func) {
-            this.resolveParamsFunc = func;
-        }
-        return this;
+        });
+    },
+    put: function(href, body, headers = {
+    }) {
+        const api = ky.create({
+            headers: headers
+        });
+        return api.put(href, {
+            body: body
+        }).then((response2)=>{
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
+        });
+    },
+    patch: function(href, body, headers = {
+    }) {
+        const api = ky.create({
+            headers: headers
+        });
+        return api.patch(href, {
+            body: body
+        }).then((response2)=>{
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
+        });
+    },
+    get: function(href, headers = {
+    }) {
+        const api = ky.create({
+            headers: headers
+        });
+        return api.get(href).then((response2)=>{
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
+        });
+    },
+    delete: function(href, headers = {
+    }) {
+        const api = ky.create({
+            headers: headers
+        });
+        return api.delete(href, {
+        }).then((response2)=>{
+            if (response2.headers.get("Content-Type") == "application/json") {
+                return response2.json();
+            } else {
+                return response2;
+            }
+        });
     }
-    withResolvePathParamsFunc(func) {
-        if (func) {
-            this.resolvePathParamsFunc = func;
-        }
-        return this;
-    }
-    href_with_params() {
-        let href1 = this.href + this.url_params;
-        this.url_params = "";
-        return href1;
-    }
-}
+};
 const image = {
     base64: function(b) {
         if (b) {
@@ -599,95 +582,8 @@ var ResultType;
     ResultType1[ResultType1["ERROR"] = 2] = "ERROR";
 })(ResultType || (ResultType = {
 }));
-function jwt() {
-    return new Date().getTime();
-}
 const AUTH_KEY = "authorization";
-const apis_map = new Map();
-const log_apis = new Map();
-const category_apis = new Map();
-const admin_apis = new Map();
-const common_apis = new Map();
-let DEFAULT_HEADERS = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Authorization': 'Bearer ' + jwt(),
-    'Access-Control-Allow-Origin': '*'
-};
-let http = {
-    post: function(href1, body, headers = DEFAULT_HEADERS) {
-        const api = ky.create({
-            headers: headers,
-            prefixUrl: config.prefixUrl
-        });
-        return api.post(href1, {
-            body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
-            } else {
-                return response2;
-            }
-        });
-    },
-    put: function(href1, body, headers = DEFAULT_HEADERS) {
-        const api = ky.create({
-            headers: headers,
-            prefixUrl: config.prefixUrl
-        });
-        return api.put(href1, {
-            body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
-            } else {
-                return response2;
-            }
-        });
-    },
-    patch: function(href1, body, headers = DEFAULT_HEADERS) {
-        const api = ky.create({
-            headers: headers,
-            prefixUrl: config.prefixUrl
-        });
-        return api.patch(href1, {
-            body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
-            } else {
-                return response2;
-            }
-        });
-    },
-    get: function(href1, headers = DEFAULT_HEADERS) {
-        const api = ky.create({
-            headers: headers,
-            prefixUrl: config.prefixUrl
-        });
-        return api.get(href1).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
-            } else {
-                return response2;
-            }
-        });
-    },
-    delete: function(href1, headers = DEFAULT_HEADERS) {
-        const api = ky.create({
-            headers: headers,
-            prefixUrl: config.prefixUrl
-        });
-        return api.delete(href1, {
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
-            } else {
-                return response2;
-            }
-        });
-    }
-};
-const DEFAULT_TOKEN_CACHE = 1000 * 60 * 60 * 24;
+const DEFAULT_TOKEN_CACHE = 1000 * 60 * 60 * 24 * 7;
 const auth = {
     getToken: function() {
         let token = cookies.get(AUTH_KEY);
@@ -706,9 +602,9 @@ const auth = {
         }
     },
     getClaims: function() {
-        const jwt1 = this.getToken();
-        if (jwt1) {
-            let parts = jwt1.split(".");
+        const jwt = this.getToken();
+        if (jwt) {
+            let parts = jwt.split(".");
             let payload = parts[1];
             payload = payload.replace(/-/g, '+').replace(/_/g, '/');
             return JSON.parse(window.atob(payload));
@@ -722,92 +618,40 @@ const auth = {
         cache.delete(AUTH_KEY);
     }
 };
-function init_apis() {
-    for (let key of log_apis.keys()){
-        apis_map.set(key, log_apis.get(key));
-    }
-    for (let key1 of category_apis.keys()){
-        apis_map.set(key1, category_apis.get(key1));
-    }
-    for (let key2 of admin_apis.keys()){
-        apis_map.set(key2, admin_apis.get(key2));
-    }
-    for (let key3 of common_apis.keys()){
-        apis_map.set(key3, common_apis.get(key3));
-    }
-}
-const apis = {
-    get: function(key) {
-        if (apis_map.size == 0) {
-            init_apis();
-        }
-        let api = apis_map.get(key);
-        if (api) {
-            return new API(api.title, api.href, api.method, api.content_type).withResolveParamsFunc(api.resolveParamsFunc).withResolvePathParamsFunc(api.resolvePathParamsFunc);
-        } else {
-            return null;
-        }
-    },
-    size: apis_map.size
-};
-log_apis.set("log_page", new API("Get Logs", "v1/admin/log/page"));
-log_apis.set("log_types", new API("Get Log Types", "v1/admin/log/types"));
-log_apis.set("log_delete", new API("Delete Log By Id", "v1/admin/log", Request_Method.DELETE).withResolvePathParamsFunc((params, api)=>{
-    if (params && params.id) {
-        api.href = "v1/admin/log/" + params.id;
-    } else {
-        api.href = "v1/admin/log";
-    }
-}));
-category_apis.set("categories", new API("Get Categories", "v1/admin/categories"));
-category_apis.set("category_delete", new API("Delete by name", "v1/admin/category/name", Request_Method.DELETE).withResolvePathParamsFunc((params, api)=>{
-    if (params && params.name) {
-        api.href = "v1/admin/category/name/" + params.name;
-    } else {
-        api.href = "v1/admin/category/name/";
-    }
-}));
-category_apis.set("category_page", new API("Get category by page", "v1/admin/category/page"));
-category_apis.set("category_create", new API("Create category", "v1/admin/category", Request_Method.POST));
-category_apis.set("category_update", new API("Create category", "v1/admin/category", Request_Method.PATCH));
-const login_api = new API("Authenticate", "v1/admin/authenticate");
-admin_apis.set("login", login_api);
-admin_apis.set("verify_token", new API("Verify Token", "v1/admin/authenticate", Request_Method.POST, "application/x-www-form-urlencoded;charset=utf-8"));
-const logout_api = new API("logout", "v1/admin/logout").withResolvePathParamsFunc((params, api)=>{
-    if (params && params.username) {
-        api.href = "v1/admin/logout/" + params.username;
-    } else {
-        api.href = "v1/admin/logout";
-    }
-});
-admin_apis.set("logout", logout_api);
-const captcha_image_api = new API("Authenticate", "v1/captcha/image");
-common_apis.set("captcha_image", captcha_image_api);
 const line = "==============================";
 const isparks = {
     init: function() {
-        apis.get("");
         console.log("Isparks For Everyone! GitHub -> https://github.com/hdcheng/isparks 📖");
     },
     default_fail: function(res, msg1 = '') {
         console.log(line);
-        console.log(new Date() + "request fail :");
-        console.log(msg1);
+        console.log(new Date() + " request fail :");
+        console.log(msg1 || "");
         console.log(res);
     },
     default_error: function(err) {
         console.log(line);
-        console.log(new Date() + "request error :");
+        console.log(new Date() + " request error :");
         console.log(err);
     },
     default_success: function(res, msg1) {
         console.log(line);
         console.log(new Date() + " request success :");
-        console.log(msg1);
+        console.log(msg1 || '');
         console.log(res);
     },
     request: function() {
-        console.log("Not initialized yet");
+        console.log("Not initialized yet!");
+    },
+    get: function() {
+    },
+    post: function() {
+    },
+    delete: function() {
+    },
+    put: function() {
+    },
+    patch: function() {
     },
     page: function() {
     },
@@ -818,7 +662,8 @@ const isparks = {
     cache: cache,
     cookies: cookies,
     auth: auth,
-    image: image
+    image: image,
+    http: http
 };
 function resolveResult(result, success = isparks.default_success, fail = isparks.default_fail, error = isparks.default_error) {
     if (result.code) {
@@ -847,101 +692,218 @@ function resolveError(result, error) {
         console.log(result);
     }
 }
+function jwt() {
+    return auth.getToken() || new Date().getTime();
+}
+const DEFAULT_HEADERS = {
+    'Content-Type': 'application/json;charset=UTF-8',
+    'Authorization': 'Bearer ' + jwt(),
+    'Access-Control-Allow-Origin': '*'
+};
+const is_get = function(api, success, fail, error) {
+    api = url_support(api);
+    api.method = "GET";
+    is_request(api, success, fail, error);
+};
+const is_post = function(api, success, fail, error) {
+    api = url_support(api);
+    api.method = "POST";
+    is_request(api, success, fail, error);
+};
+const is_delete = function(api, success, fail, error) {
+    api = url_support(api);
+    api.method = "DELETE";
+    is_request(api, success, fail, error);
+};
+const is_put = function(api, success, fail, error) {
+    api = url_support(api);
+    api.method = "PUT";
+    is_request(api, success, fail, error);
+};
+const is_patch = function(api, success, fail, error) {
+    api = url_support(api);
+    api.method = "PATCH";
+    is_request(api, success, fail, error);
+};
 const is_request = function(api, success, fail, error) {
-    if (!api) {
+    api = url_support(api);
+    if (!api || !api.href) {
+        console.log("request api is invalid : " + api);
         return;
     }
-    switch(api.method){
-        case Request_Method.GET:
-            http.get(api.href_with_params()).then((res)=>{
+    if (!api.method) {
+        api.method = "GET";
+    }
+    if (config.prefixUrl && api.href.indexOf(config.prefixUrl) != 0) {
+        api.href = config.prefixUrl + api.href;
+    }
+    resolve_url_params(api);
+    switch(api.method.toUpperCase()){
+        case "GET":
+            http.get(api.href, DEFAULT_HEADERS).then((res)=>{
                 page_info_storage(api, res);
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
             break;
-        case Request_Method.POST:
-            http.post(api.href_with_params(), api.body).then((res)=>{
+        case "POST":
+            http.post(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
             break;
-        case Request_Method.DELETE:
-            http.delete(api.href_with_params()).then((res)=>{
+        case "DELETE":
+            http.delete(api.href, DEFAULT_HEADERS).then((res)=>{
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
             break;
-        case Request_Method.PUT:
-            http.put(api.href_with_params(), api.body).then((res)=>{
+        case "PUT":
+            http.put(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
-        case Request_Method.PATCH:
-            http.patch(api.href_with_params(), api.body).then((res)=>{
+        case "PATCH":
+            http.patch(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
+    }
+};
+const resolve_url_params = function(api) {
+    if (!api) {
+        return;
+    }
+    if (api.params) {
+        if (api.href.indexOf("?") < 0) {
+            api.href += "?";
+        } else {
+            api.href += "&";
+        }
+        let url_params = "";
+        for(let i in api.params){
+            url_params += "&";
+            url_params += i;
+            url_params += "=";
+            url_params += api.params[i];
+        }
+        if (url_params.length > 0) {
+            url_params = url_params.substring(1, url_params.length);
+        }
+        api.href += url_params;
     }
 };
 const page_info_storage = function(api, res) {
     if (res.code == 8101 && res.data.page) {
-        let title3 = api.title;
-        localStorage.setItem(title3 + "[page]", res.data.page + "");
-        localStorage.setItem(title3 + "[total_page]", res.data.totalPage + "");
-        localStorage.setItem(title3 + "[total_data]", res.data.totalData + "");
-        localStorage.setItem(title3 + "[size]", res.data.size + "");
+        let title1 = get_key_from_href(api.href, api.title);
+        localStorage.setItem(title1 + "[page]", res.data.page + "");
+        localStorage.setItem(title1 + "[total_page]", res.data.totalPage + "");
+        localStorage.setItem(title1 + "[total_data]", res.data.totalData + "");
+        localStorage.setItem(title1 + "[size]", res.data.size + "");
     }
 };
-const is_request_page = function(api, page, size, success, fail, error) {
-    if (api) {
-        let title3 = api.title;
+const is_request_page = function(api, success, fail, error, page, size) {
+    api = url_support(api);
+    if (api && api.href) {
+        if (api.page) {
+            page = api.page;
+        }
+        if (api.params && api.params.page) {
+            page = api.params.page;
+        }
+        if (api.params && api.params.size) {
+            page = api.params.size;
+        }
+        let title1 = get_key_from_href(api.href, api.title);
         if (!page || page && page <= 0) {
-            page = 1;
+            let cache_page = localStorage.getItem(title1 + "[page]") || 1;
+            page = Number(cache_page);
         } else {
-            let total_page = localStorage.getItem(title3 + "[total_page]");
+            let total_page = localStorage.getItem(title1 + "[total_page]");
             if (Number(total_page) < page) {
                 page = Number(total_page);
             }
         }
-        localStorage.setItem(title3 + "[page]", page + "");
+        localStorage.setItem(title1 + "[page]", page + "");
         if (!size || size && size <= 0) {
-            size = 10;
+            let cache_size = localStorage.getItem(title1 + "[size]") || 10;
+            size = Number(cache_size);
         } else {
-            let total_data = localStorage.getItem(title3 + "[total_data]");
+            let total_data = localStorage.getItem(title1 + "[total_data]");
             if (Number(total_data) < size) {
                 size = Number(total_data);
             }
         }
-        localStorage.setItem(title3 + "[size]", size + "");
-        api.withParams({
-            page: page,
-            size: size
-        });
+        localStorage.setItem(title1 + "[size]", size + "");
+        if (api.params) {
+            api.params.page = page;
+            api.params.size = size;
+        } else {
+            api.params = {
+                page: page,
+                size: size
+            };
+        }
         is_request(api, success, fail, error);
     }
 };
 const is_request_page_next = function(api, success, fail, error) {
+    api = url_support(api);
     if (api) {
-        let title3 = api.title;
-        let page = localStorage.getItem(title3 + "[page]") || 0;
-        let size = localStorage.getItem(title3 + "[size]") || 10;
-        is_request_page(api, Number(page) + 1, Number(size), success, fail, error);
+        let title1 = get_key_from_href(api.href, api.title);
+        let page = localStorage.getItem(title1 + "[page]") || 0;
+        let size = localStorage.getItem(title1 + "[size]") || 10;
+        is_request_page(api, success, fail, error, Number(page) + 1, Number(size));
     }
 };
 const is_request_page_pre = function(api, success, fail, error) {
+    api = url_support(api);
     if (api) {
-        let title3 = api.title;
-        let page = localStorage.getItem(title3 + "[page]") || 2;
-        let size = localStorage.getItem(title3 + "[size]") || 10;
+        let title1 = get_key_from_href(api.href, api.title);
+        let page = localStorage.getItem(title1 + "[page]") || 2;
+        let size = localStorage.getItem(title1 + "[size]") || 10;
         let pageNumber = Number(page);
-        is_request_page(api, pageNumber > 1 ? pageNumber - 1 : 1, Number(size), success, fail, error);
+        is_request_page(api, success, fail, error, pageNumber > 1 ? pageNumber - 1 : 1, Number(size));
     }
 };
+const get_key_from_href = function(href, title1) {
+    if (!href) {
+        return "null";
+    }
+    let temp_href = "";
+    if (href.indexOf(config.prefixUrl) >= 0) {
+        temp_href = href.replace(config.prefixUrl, "");
+    } else {
+        temp_href = href;
+    }
+    if (temp_href.indexOf("?") > 0) {
+        temp_href = temp_href.substring(0, temp_href.indexOf("?"));
+    }
+    if (title1 && typeof title1 === "string") {
+        return title1 + ":" + temp_href.replace(/\/|:|\./g, '');
+    } else {
+        return temp_href.replace(/\/|:|\./g, '');
+    }
+};
+const url_support = function(api) {
+    if (api && typeof api === "string") {
+        let href = api;
+        api = {
+            href: href
+        };
+    }
+    return api;
+};
+isparks.get = is_get;
+isparks.post = is_post;
+isparks.delete = is_delete;
+isparks.put = is_put;
+isparks.patch = is_patch;
 isparks.request = is_request;
 isparks.page = is_request_page;
 isparks.next_page = is_request_page_next;

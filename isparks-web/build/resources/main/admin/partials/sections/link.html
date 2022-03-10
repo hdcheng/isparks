@@ -196,13 +196,21 @@ app = new Vue({
             this.newLink.type = 4;
         },
         saveLink(){
-            let url = "/api/admin/link/save";
-            axios.post(url,this.newLink).then(res => {
+            // let url = "/api/admin/link/save";
+            // axios.post(url,this.newLink).then(res => {
+            //     this.initPageData();
+            //     UIkit.modal(document.getElementById("createModel")).hide();
+            //     this.clearNewLink();
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+            i$.post({
+                href:"v1/admin/link",
+                body:this.newLink
+            },()=>{
                 this.initPageData();
                 UIkit.modal(document.getElementById("createModel")).hide();
                 this.clearNewLink();
-            }).catch(err => {
-                console.log(err);
             });
         },
         showUpdateModel(id){
@@ -229,82 +237,105 @@ app = new Vue({
             }
         },
         loadOffSiteLink(){ // 加载站外链接
-            let url = "/api/admin/link/page/by/type";
-            axios.get(url,{
-                params:{
-                    type:4,
-                    page:this.offsiteLink.page,
-                    size:this.offsiteLink.size
-                }
-            }).then(res => {
-                if(res.status == 200){
-                    this.offsiteLink.links = res.data.data.data;
-                    this.offsiteLink.page = res.data.data.page;
-                    this.offsiteLink.totalData = res.data.data.totalData;
-                    this.offsiteLink.totalPage = res.data.data.totalPage;
-                }
-            }).catch(err => {console.log(err);});
+            // let url = "/api/admin/link/page/by/type";
+            // axios.get(url,{
+            //     params:{
+            //         type:4,
+            //         page:this.offsiteLink.page,
+            //         size:this.offsiteLink.size
+            //     }
+            // }).then(res => {
+            //     if(res.status == 200){
+            //         this.offsiteLink.links = res.data.data.data;
+            //         this.offsiteLink.page = res.data.data.page;
+            //         this.offsiteLink.totalData = res.data.data.totalData;
+            //         this.offsiteLink.totalPage = res.data.data.totalPage;
+            //     }
+            // }).catch(err => {console.log(err);});
+            i$.page({
+                href:"v1/admin/link/page?type=4",
+                title:"4"
+            },(res) => {
+                this.offsiteLink.links = res.data;
+                this.offsiteLink.page = res.page;
+                this.offsiteLink.totalData = res.totalData;
+                this.offsiteLink.totalPage = res.totalPage;
+            });
+
         },
         loadSiteLink(){
-            let url = "/api/admin/link/page/by/type";
-            axios.get(url,{
-                params:{
-                    type:1,
-                    page:this.siteLink.page,
-                    size:this.siteLink.size
-                }
-            }).then(res => {
-                if(res.status == 200){
-                    this.siteLink.links = res.data.data.data;
-                    this.siteLink.page = res.data.data.page;
-                    this.siteLink.totalData = res.data.data.totalData;
-                    this.siteLink.totalPage = res.data.data.totalPage;
-                }
-            }).catch(err => {console.log(err);});
+            i$.page({
+                href:"v1/admin/link/page?type=1",
+                title:"1"
+            },(res) => {
+                this.siteLink.links = res.data;
+                this.siteLink.page = res.page;
+                this.siteLink.totalData = res.totalData;
+                this.siteLink.totalPage = res.totalPage;
+            });
         },
         deleteById(id){
-            if(id == "" || id == null ){
-                return;
-            }
-            axios.get("/api/admin/link/delete",{
-                params:{
-                    id:id
-                }
-            }).then(res => {
+            // if(id == "" || id == null ){
+            //     return;
+            // }
+            // axios.get("/api/admin/link/delete",{
+            //     params:{
+            //         id:id
+            //     }
+            // }).then(res => {
+            //     this.initPageData();
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+            i$.delete("v1/admin/link/"+id,(res)=> {
                 this.initPageData();
-            }).catch(err => {
-                console.log(err);
             });
         },
         updateById(id){
-            if(id == "" || id == null ){
-                return;
-            }
-            axios.post("/api/admin/link/update",this.updateLink).then(res => {
+            // if(id == "" || id == null ){
+            //     return;
+            // }
+            // axios.post("/api/admin/link/update",this.updateLink).then(res => {
+            //     this.initPageData();
+            //     UIkit.modal(document.getElementById("updateModel")).hide();
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+            i$.put({
+                href:"v1/admin/link",
+                body:this.updateLink
+            },(res) => {
                 this.initPageData();
                 UIkit.modal(document.getElementById("updateModel")).hide();
-            }).catch(err => {
-                console.log(err);
             });
         },
         pre(type){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.initPageData();
-            }
+            skip(this.page - 1, type);
         },
-        next(){
-            if(this.page < this.totalPage){
-                this.page = this.page + 1 ;
-                this.initPageData();
-            }
+        next(type){
+            skip(this.page + 1, type);
+
         },
-        skip(page){
-            console.log(page);
-            if(page > 0 && page <= this.totalPage && page != this.page){
-                this.page = page;
+        skip(page,type){
+            i$.page({
+                href:"v1/admin/link/page?type="+type,
+                title:type,
+                page:page
+            },(res) => {
+                if(type == '1'){
+                    this.siteLink.links = res.data;
+                    this.siteLink.page = res.page;
+                    this.siteLink.totalData = res.totalData;
+                    this.siteLink.totalPage = res.totalPage;
+                }
+                else if(type == "4"){
+                    this.offsiteLink.links = res.data;
+                    this.offsiteLink.page = res.page;
+                    this.offsiteLink.totalData = res.totalData;
+                    this.offsiteLink.totalPage = res.totalPage;
+                }
                 this.initPageData();
-            }
+            });
         }
         
     },

@@ -178,8 +178,6 @@ app = new Vue({
     methods:{
         initPage(){
             this.loadPanelData();
-            this.loadLogData();
-            this.loadLogTypes();
         },
         createJournal(){
             let content = this.journal.content;
@@ -187,52 +185,24 @@ app = new Vue({
                 console.log("随笔内容不能为空");
                 return;
             }
-            axios.post("/api/admin/journal/create",{
-                content:content
-            }).then(res => {
-                if(res.data.code == 8101){
-                    this.initPage();
-                    this.journal.content = '';
+            i$.request({
+                href:"api/admin/journal/create",
+                method:"POST",
+                body:{
+                    content:content
                 }
-            }).catch(err => {console.log(err)});
+            },(res)=>{
+                this.initPage();
+                this.journal.content = '';
+            });
         },
         loadPanelData(){
-            axios.get("/api/admin/page/dash").then(res => {
-                if(res.data.code == 8101){
-                    this.dataPanel = res.data.data.panel;
-                    this.dateCount.installTime = res.data.data.installTime ? res.data.data.installTime : new Date().getTime();
-                    this.startCountDate();
-                }
-            }).catch(err => {
-                console.log(err);
+            i$.request("api/admin/page/dash",(res) => {
+                this.dataPanel = res.panel;
+                this.dateCount.installTime = res.installTime ? res.installTime : new Date().getTime();
+                this.startCountDate();
             });
-        },
-        loadLogData(){
-            axios.get("/api/admin/log/page",{
-                params:{
-                    page:this.logData.page,
-                    size:this.logData.size
-                }
-            }).then(res => {
-                console.log(res);
-                if(res.data.code == 8101){
-                    this.logData.logs = res.data.data.data;
-                    this.logData.page = res.data.data.page;
-                    this.logData.size = res.data.data.size;
-                    this.logData.totalData = res.data.data.totalData;
-                    this.logData.totalPage = res.data.data.totalPage;
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        },
-        loadLogTypes(){
-            axios.get("/api/admin/log/types").then(res => {
-                console.log(res);
-                this.logTypes = res.data.data;
-            }).catch(err => {
-                console.log(err);
-            });
+
         },
         startCountDate(){ // 启动时间统计
             if(this.dateCount.dateCountTimer != null){
@@ -269,18 +239,6 @@ app = new Vue({
                 }
             },1000);
 
-        },
-        logPre(){
-            if(this.logData.page > 1){
-                this.logData.page -= 1;
-                this.loadLogData();
-            }
-        },
-        logNext(){
-            if(this.logData.page < this.logData.totalPage){
-                this.logData.page += 1 ;
-                this.loadLogData();
-            }
         },
         renderText(number){
             return number <= 9 ? '0' + number : ''+number;

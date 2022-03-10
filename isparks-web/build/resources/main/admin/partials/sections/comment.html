@@ -72,20 +72,12 @@ app = new Vue({
     },
     methods:{
         initPageData(){
-            let url = "/api/admin/comment/page/all";
-            axios.get(url,{
-                params:{
-                    page:this.page,
-                    size:this.size
-                }
-            }).then(res => {
-                if(res.status == 200){
-                    this.comments = res.data.data.data;
-                    this.page = res.data.data.page;
-                    this.totalPage = res.data.data.totalPage;
-                    this.totalData = res.data.data.totalData;
-                }
-            }).catch(err => {console.log(err);});
+            i$.page("api/admin/comment/page/all",(res) =>{
+                this.comments = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
         },
         showDetailModal(id){
             let comments = this.comments;
@@ -108,44 +100,42 @@ app = new Vue({
                     date.getDate().toString() + ":" + date.getMinutes().toString() ;
         },
         valid(id){
-            axios.get("/api/admin/comment/valid?id="+id).then(res => {
-                if(res.status == 200){
-                    this.initPageData();
-                }
+            i$.request("api/admin/comment/valid?id="+id,(res)=>{
+                this.initPageData();
             });
         },
         invalid(id){
-            axios.get("/api/admin/comment/invalid?id="+id).then(res => {
-                if(res.status == 200){
-                    this.initPageData();
-                }
+            i$.request("api/admin/comment/invalid?id="+id,(res)=>{
+                this.initPageData();
             });
         },
         deleteById(id){
-            axios.get("/api/admin/comment/delete?id="+id).then(res => {
-                if(res.status == 200){
-                    this.initPageData();
-                }
+            i$.request("api/admin/comment/delete?id="+id,(res)=>{
+                this.initPageData();
             });
         },
         pre(){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.initPageData();
-            }
+            i$.pre_page("api/admin/comment/page/all",(res) =>{
+                this.comments = res.data;
+                this.page = res.page;
+            });
         },
         next(){
-            if(this.page < this.totalPage){
-                this.page = this.page + 1 ;
-                this.initPageData();
-            }
+            i$.next_page("api/admin/comment/page/all",(res) =>{
+                this.comments = res.data;
+                this.page = res.page;
+            });
         },
         skip(page){
-            console.log(page);
-            if(page > 0 && page <= this.totalPage && page != this.page){
-                this.page = page;
-                this.initPageData();
-            }
+            i$.page({
+                href:"api/admin/comment/page/all",
+                params:{
+                    page:page
+                }
+            },(res) =>{
+                this.comments = res.data;
+                this.page = res.page;
+            });
         }
 
     },
