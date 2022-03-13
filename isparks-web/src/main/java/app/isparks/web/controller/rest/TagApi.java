@@ -32,10 +32,10 @@ public class TagApi extends BasicApi{
         return build(tagService.create(param));
     }
 
-    @DeleteMapping("tag")
+    @DeleteMapping("tag/name/{name}")
     @ApiOperation("Delete tag | 删除标签")
     @Log(description = "删除标签",types = {LogType.DELETE})
-    public Result deleteByName(@RequestParam(value = "name") String name){
+    public Result deleteByName(@PathVariable(value = "name") String name){
         return build(tagService.deleteByName(name));
     }
 

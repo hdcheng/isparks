@@ -69,7 +69,6 @@ app = new Vue({
     methods:{
         initPage(){
             i$.get("v1/admin/plugin" , (res) => {
-                console.log(res);
                 this.plugins = res;
             });
         },

@@ -77,7 +77,7 @@ public final class ResultUtils {
         } else {
 
             Result result = build(ResultType.FAIL);
-            LocalThreadUtils.getMessage().ifPresent((msg)->result.setData(msg));
+            LocalThreadUtils.getMessage().ifPresent((msg)->result.setMsg(msg));
 
             return result;
         }

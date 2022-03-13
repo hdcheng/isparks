@@ -145,19 +145,7 @@ app = new Vue({
     },
     methods:{
         initPageData(){
-            axios.get("/api/admin/category/page",{
-                params:{
-                    page:this.page,
-                    size:this.size
-                }
-            }).then(res => {
-                this.categories = res.data.data.data;
-                this.page = res.data.data.page;
-                this.totalPage = res.data.data.totalPage;
-                this.totalData = res.data.data.totalData;
-            }).catch(err => {
-                console.log(err);
-            });
+            this.skip(1);
         },
         create(){
 
@@ -165,30 +153,26 @@ app = new Vue({
                 return;
             }
 
-            axios.post("/api/admin/category/create",this.newCategory).then(res => {
-                this.newCategory.name = "";
+            i$.post({
+                href : "v1/admin/category",
+                body : this.newCategory
+            },(res) => {
                 this.newCategory.description = "";
                 this.initPageData();
                 UIkit.modal(document.getElementById("modal-create-category")).hide();
-            }).catch(err => {
-                console.log(err);
+                i$.toast.info("创建分类" + this.newCategory.name + "成功！");
+                this.newCategory.name = "";
+            },(msg)=>{
+                i$.toast.warn(msg);
             });
         },
         deleteByName(name){
-            axios.get("/api/admin/category/delete/by/name",{
-                params:{
-                    name:name
-                }
-            }).then(res => {
-                console.log(res);
-                if(res.data.code != 8101){
-                    Utils.popup.error(res.data.msg);
-                }else {
-                    this.initPageData();
-                }
-            }).catch(err => {
-                console.log(err);
-            });
+            i$.delete("v1/admin/category/name/"+name,(res) => {
+                i$.toast.warn("删除分类 “"+name+"” 成功！");
+                this.initPageData();
+            },(msg)=>{
+                i$.toast.warn("删除失败："+msg);
+            })
         },
         openUpdateModel(id){
             this.updateModelDataById(id);
@@ -211,38 +195,41 @@ app = new Vue({
                 return;
             }
 
-            axios.get("/api/admin/category/update",{
-                params:this.updateCategory
-            }).then(res => {
-
-                this.updateCategory.id = "";
-                this.updateCategory.name = "";
-                this.updateCategory.description = "";
-
+            i$.patch({
+                href:"v1/admin/category",
+                params : this.updateCategory
+            },(res) => {
+                i$.toast.info("更新分类 “"+this.updateCategory.name+"” 成功！");
                 this.initPageData();
-                UIkit.modal(document.getElementById("modal-update-category")).hide();
-            }).catch(err => {
-                console.log(err);
             });
+
         },
         pre(){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.initPageData();
-            }
+            i$.pre_page("v1/admin/category/page",(res) => {
+                this.categories = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
         },
         next(){
-            if(this.page < this.totalPage){
-                this.page = this.page + 1 ;
-                this.initPageData();
-            }
+            i$.next_page("v1/admin/category/page",(res) => {
+                this.categories = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
         },
         skip(page){
-            console.log(page);
-            if(page > 0 && page <= this.totalPage && page != this.page){
-                this.page = page;
-                this.initPageData();
-            }
+            i$.page({
+                href:"v1/admin/category/page",
+                page:page
+            },(res) => {
+                this.categories = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
         }
     },
     created(){

@@ -67,30 +67,4 @@ public class PageApi {
         return ResultUtils.success().setData(commentApi.pageValidComments(postId,p,s).getData());
     }
 
-
-
-
-
-    private Optional<HttpServletRequest> getRequest(){
-        HttpServletRequest request = null;
-        try {
-            request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        }catch (Exception e){
-            log.error("获取 HttpServletRequest 失败",e);
-        }finally {
-            return Optional.ofNullable(request);
-        }
-
-    }
-    private Optional<HttpServletResponse> getResponse(){
-        HttpServletResponse response = null;
-        try {
-            response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        }catch (Exception e){
-            log.error("获取 HttpServletResponse 失败",e);
-        }finally {
-            return Optional.ofNullable(response);
-        }
-    }
-
 }

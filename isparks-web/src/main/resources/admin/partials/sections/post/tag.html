@@ -55,7 +55,7 @@
         <input  type="text" placeholder="tag" v-model="newTag.name"><a uk-icon="plus"  style="color: rgb(0, 204, 255);font-weight: bold;" @click="create"></a>
     </div>
     <div class="tag-item" v-for="tag in tags">
-        <span >{{tag.name}}</span><span class="tag-post-number">{{tag.properties.postNumber}}</span><a uk-icon="close" style="color: rgb(255, 0, 0);font-weight: bold;" @click="deleteByName(tag.name)"></a>
+        <span >{{tag.name}}</span><span class="tag-post-number">{{tag.properties.postNumber || 0}}</span><a uk-icon="close" style="color: rgb(255, 0, 0);font-weight: bold;" @click="deleteByName(tag.name)"></a>
     </div>
     <div style="width: 100%;display: flex;justify-content: center;margin-top: 2rem;">
         <button class="uk-button uk-button-link" @click="more"><span uk-icon="more"></span></button>
@@ -78,43 +78,29 @@ app = new Vue({
     },
     methods:{
         initPageData(){
-            axios.get("/api/admin/tag/page",{
-                params:{
-                    page:this.page,
-                    size:this.size
-                }
-            }).then(res => {
-                console.log(res);
-                this.tags = res.data.data.data;
-                this.page = res.data.data.page;
-                this.totalPage = res.data.data.totalPage;
-                this.totalData = res.data.data.totalData;
-            }).catch(err => {
-                console.log(err);
-            });
+            this.skip(1);
         },
         create(){
             if(this.newTag.name == ""){
                 return;
             }
+            i$.post({
+                href:"v1/admin/tag",
+                body:this.newTag
+            },(res) => {
+                this.tags.unshift(res);
+                i$.toast.info("创建标签成功！");
+                this.newTag.name ="";
+                this.newTag.description ="";
 
-            axios.post("/api/admin/tag/create",this.newTag).then(res => {
-                this.newTag.name = "";
-                this.newTag.description = "";
-                this.initPageData();
-            }).catch(err => {
-                console.log(err);
             });
         },
         deleteByName(tagName){
-            axios.get("/api/admin/tag/delete/by/name",{
-                params:{
-                    name:tagName
-                }
-            }).then(res => {
+            i$.delete("v1/admin/tag/name/"+tagName,(res) => {
+                i$.toast.info("标签 “"+tagName+"” 删除成功！");
                 this.initPageData();
-            }).catch(err => {
-                console.log(err);
+            },(msg) => {
+                i$.toast.warn("标签删除失败" + msg);
             });
         },
         more(){
@@ -122,27 +108,21 @@ app = new Vue({
                 this.size += 5;
                 this.initPageData();
             }else{
-                Utils.popup.info("没有更多了");
-            }
-        },
-        pre(){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.initPageData();
-            }
-        },
-        next(){
-            if(this.page < this.totalPage){
-                this.page = this.page + 1 ;
-                this.initPageData();
+                i$.toast.info("没有更多了");
             }
         },
         skip(page){
-            console.log(page);
-            if(page > 0 && page <= this.totalPage && page != this.page){
-                this.page = page;
-                this.initPageData();
-            }
+            i$.page({
+                href:"v1/admin/tag/page",
+                page:page,
+                size:this.size
+            },(res)=>{
+                console.log(res);
+                this.tags = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
         }
     },
     created(){

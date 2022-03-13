@@ -1,17 +1,17 @@
-app/isparks/web/controller/rest/PostApi.java
- app.isparks.web.controller.rest.PostApi
+app/isparks/web/controller/rest/AdminApi.java
+ app.isparks.web.controller.rest.AdminApi
 app/isparks/web/controller/rest/JournalApi.java
  app.isparks.web.controller.rest.JournalApi
-app/isparks/web/controller/rest/TagApi.java
- app.isparks.web.controller.rest.TagApi
+app/isparks/web/controller/rest/PluginApi.java
+ app.isparks.web.controller.rest.PluginApi
 app/isparks/web/config/HttpConfig.java
  app.isparks.web.config.HttpConfig
 app/isparks/web/config/Swagger2Config.java
  app.isparks.web.config.Swagger2Config
 app/isparks/web/pojo/param/DatabaseSettingParam.java
  app.isparks.web.pojo.param.DatabaseSettingParam
-app/isparks/web/controller/page/PageController.java
- app.isparks.web.controller.page.PageController
+app/isparks/web/interceptor/JwtInterceptor.java
+ app.isparks.web.interceptor.JwtInterceptor
 app/isparks/web/controller/rest/CategoryApi.java
  app.isparks.web.controller.rest.CategoryApi
 app/isparks/web/service/impl/ThemeServiceImpl.java
@@ -69,12 +69,12 @@ app/isparks/web/pojo/dto/FragmentDTO.java
  app.isparks.web.pojo.dto.FragmentDTO
 app/isparks/web/controller/rest/LogApi.java
  app.isparks.web.controller.rest.LogApi
+app/isparks/web/controller/page/PageController.java
+ app.isparks.web.controller.page.PageController
 app/isparks/web/controller/api/LogApi.java
  app.isparks.web.controller.api.LogApi
 app/isparks/web/controller/api/CommentApi.java
  app.isparks.web.controller.api.CommentApi
-app/isparks/web/controller/rest/AdminApi.java
- app.isparks.web.controller.rest.AdminApi
 app/isparks/web/exception/HandlerRestControllerExceptionAdvice.java
  app.isparks.web.exception.HandlerRestControllerExceptionAdvice
 app/isparks/web/controller/api/LinkApi.java
@@ -83,6 +83,8 @@ app/isparks/web/controller/api/SysApi.java
  app.isparks.web.controller.api.SysApi
 app/isparks/web/controller/api/TagApi.java
  app.isparks.web.controller.api.TagApi
+app/isparks/web/controller/rest/TagApi.java
+ app.isparks.web.controller.rest.TagApi
 app/isparks/web/controller/rest/FileApi.java
  app.isparks.web.controller.rest.FileApi
 app/isparks/web/controller/api/PageApi.java
@@ -105,13 +107,11 @@ app/isparks/web/controller/api/FileApi.java
  app.isparks.web.controller.api.FileApi
 app/isparks/web/controller/api/UserApi.java
  app.isparks.web.controller.api.UserApi
-app/isparks/web/controller/api/JournalApi.java
- app.isparks.web.controller.api.JournalApi
 app/isparks/web/controller/api/AdminApi.java
  app.isparks.web.controller.api.AdminApi
 app/isparks/web/controller/api/CategoryApi.java
  app.isparks.web.controller.api.CategoryApi
-app/isparks/web/interceptor/JwtInterceptor.java
- app.isparks.web.interceptor.JwtInterceptor
-app/isparks/web/controller/rest/PluginApi.java
- app.isparks.web.controller.rest.PluginApi
+app/isparks/web/controller/api/JournalApi.java
+ app.isparks.web.controller.api.JournalApi
+app/isparks/web/controller/rest/PostApi.java
+ app.isparks.web.controller.rest.PostApi

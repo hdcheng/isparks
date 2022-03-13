@@ -28,18 +28,20 @@
             </div>
         </div>
         <div class="uk-grid-small uk-child-width-expand@s" uk-grid style="position: inherit;">
-            <div class="uk-card uk-card-default uk-card-body uk-width-1-4@m uk-width-1-1@s" v-for="comment in comments" style="margin-left: 1rem;">
-                <div v-if="comment.properties.status == 1" class="uk-card-badge uk-label" style="display:flex;"><span style="margin:auto;">已审核</span></div>
-                <div v-if="comment.properties.status == 0" class="uk-card-badge uk-label" style="background-color: #ff7b54;display:flex;"><span style="margin:auto;">未审核</span></div>
-                <h3 class="uk-card-title" >{{comment.name}}<span style="font-size: small;font-weight: 300;margin-left: 1rem;">{{formatDate(comment.createTime)}}</span></h3>
-                
-                <p class="commentContentBox">{{comment.content}}</p>
-                <ul class="uk-iconnav">
-                    <li v-if="comment.properties.status == 1"><a uk-icon="icon: close" @click="invalid(comment.id)"></a></li>
-                    <li v-if="comment.properties.status == 0"><a uk-icon="icon: check" @click="valid(comment.id)"></a></li>
-                    <li><a uk-icon="icon: trash" @click="deleteById(comment.id)"></a></li>
-                    <li><a href="#comment-detail-modal" @click="showDetailModal(comment.id)" uk-icon="icon: tablet"></a></li>
-                </ul>
+            <div class="uk-width-1-4@m uk-width-1-1@s" v-for="comment in comments" style="padding-left: 1rem;">
+                <div class="uk-card uk-card-default uk-card-body">
+                    <div v-if="comment.properties.status == 1" class="uk-card-badge uk-label" style="display:flex;"><span style="margin:auto;">已审核</span></div>
+                    <div v-if="comment.properties.status == 0" class="uk-card-badge uk-label" style="background-color: #ff7b54;display:flex;"><span style="margin:auto;">未审核</span></div>
+                    <h3 class="uk-card-title" >{{comment.name}}<span style="font-size: small;font-weight: 300;margin-left: 1rem;">{{formatDate(comment.createTime)}}</span></h3>
+                    
+                    <p class="commentContentBox">{{comment.content}}</p>
+                    <ul class="uk-iconnav">
+                        <li v-if="comment.properties.status == 1"><a uk-icon="icon: close" @click="invalid(comment.id)"></a></li>
+                        <li v-if="comment.properties.status == 0"><a uk-icon="icon: check" @click="valid(comment.id)"></a></li>
+                        <li><a uk-icon="icon: trash" @click="deleteById(comment.id)"></a></li>
+                        <li><a href="#comment-detail-modal" @click="showDetailModal(comment.id)" uk-icon="icon: tablet"></a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 

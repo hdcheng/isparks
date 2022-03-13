@@ -71,7 +71,7 @@ public class PostApi extends BasicApi{
         return build(postService.page(page,size, DataStatus.TEMP));
     }
 
-    @GetMapping("post/page/remove")
+    @GetMapping("post/page/removed")
     @ApiOperation("Get removed posts by page | 分页查询已移除的文章")
     public Result pageRemove(@RequestParam(value = "page",defaultValue = "1") int page,
                              @RequestParam(value = "size",defaultValue = "10") int size){
@@ -84,7 +84,7 @@ public class PostApi extends BasicApi{
         return build(postService.getById(id));
     }
 
-    @GetMapping("post/{id}/temp")
+    @GetMapping("post/temp/{id}")
     @ApiOperation(" Get temporary post link | 获取文章的临时链接")
     @Log(description = "获取文章的临时链接",types = {LogType.QUERY,LogType.INSERT})
     public Result generateTempLink(@PathVariable("id") String postId ,
@@ -101,14 +101,14 @@ public class PostApi extends BasicApi{
 
     }
 
-    @PatchMapping("post/{id}/remove")
+    @PatchMapping("post/remove/{id}")
     @ApiOperation("Update post status to remove | 将文章状态改为 remove")
     @Log(description = "将文章状态改为 remove",types = {LogType.MODIFY})
     public Result remove(@PathVariable("id") String id){
         return build(postService.remove(id));
     }
 
-    @PatchMapping("post/{id}/valid")
+    @PatchMapping("post/valid/{id}")
     @ApiOperation("Update post status to valid | 将文章状态改为 valid")
     @Log(description = "将文章状态改为 valid",types = {LogType.MODIFY})
     public Result restore(@PathVariable("id") String id){

@@ -22,11 +22,11 @@
             </a>
             <div class="uk-card-footer">
                 <ul class="uk-iconnav">
-                    <li v-if="postStatus != 'removed'"><a href="#" uk-icon="icon: link" @click="showTempLinkModal(p.id)"></a></li>
-                    <li v-if="postStatus != 'removed'"><a href="#" uk-icon="icon: file-edit" @click="edit(p.id)"></a></li>
+                    <li v-if="postStatus == 'valid' || postStatus == 'temp'"><a href="#" uk-icon="icon: link" @click="showTempLinkModal(p.id)"></a></li>
+                    <li v-if="postStatus == 'valid' || postStatus == 'temp'"><a href="#" uk-icon="icon: file-edit" @click="edit(p.id)"></a></li>
                     <li v-if="postStatus == 'valid'"><a href="#" uk-icon="icon: trash" @click="remove(p.id)"></a></li>
-                    <li v-if="postStatus != 'valid'"><a href="#" uk-icon="icon: refresh" @click="restore(p.id)"></a></li>
-                    <li v-if="postStatus != 'valid'"><a href="#" uk-icon="icon: close" @click="deleteById(p.id)"></a></li>
+                    <li v-if="postStatus == 'removed' || postStatus == 'temp'"><a href="#" uk-icon="icon: refresh" @click="restore(p.id)"></a></li>
+                    <li v-if="postStatus == 'removed'"><a href="#" uk-icon="icon: close" @click="deleteById(p.id)"></a></li>
                     <li ><a href="javascript:void(0);">{{formatDate(p.createTime)}}</a></li>
                 </ul>
             </div>
@@ -36,7 +36,7 @@
             <li class="uk-margin-auto-left"><a href="#" @click="next">下一页<span class="uk-margin-small-left" uk-pagination-next></span></a></li>
         </ul>
     </div>
-    <!-- modal start -->
+    <!-- 生成临时预览链接 modal start -->
     <div id="tempLinkModal" class="uk-modal-container" uk-modal>
         <div class="uk-modal-dialog">
 
@@ -52,8 +52,9 @@
                 </div>
                 <div class="uk-margin">
                     <div class="uk-inline" style="width: 100%;">
-                        <a class="uk-form-icon uk-form-icon-flip" href="#" uk-icon="icon: link" @click="copyTempLink"></a>
-                        <input class="uk-input" type="text" v-model="tempPostLink">
+                        <a v-if="tempPostLink != ''" class="uk-form-icon uk-form-icon-flip" href="#" uk-icon="icon: move" @click="copyTempLink" style="right:0"></a>
+                        <a v-if="tempPostLink != ''" class="uk-form-icon uk-form-icon-flip" :href="tempPostLink" target="_blank" uk-icon="icon: link"  style="right:40px"></a>
+                        <input class="uk-input" type="text" v-model="tempPostLink" disabled style="padding-right: 80px!important;">
                     </div>
                 </div>
             </div>
@@ -64,25 +65,13 @@
             </div>
         </div>
     </div>
-<!-- modal end -->
+    <!--生成临时预览链接  modal end -->
 </div>
 
 <script>
 app = new Vue({
     el: '#post-manage-page',
     data:{
-        valid:{
-            posts:[],
-            page:1
-        },
-        temp:{
-            posts:[],
-            page:1
-        },
-        removed:{
-            posts:[],
-            page:1
-        },
         posts:[],
         page:1,
         size:5,
@@ -95,137 +84,100 @@ app = new Vue({
         tempPostLink:""
     },
     methods:{
-        initPageData(callback){
+        initPageData(){
 
-            let fn = callback || function(){};
-
-            axios.get(this.url,{
-                params:{
-                    page:this.page,
-                    size:this.size
-                }
-            }).then(res => {
-                this.posts = res.data.data.data;
-                this.page = res.data.data.page;
-                this.totalPage = res.data.data.totalPage;
-                this.totalData = res.data.data.totalData;
-                
-                fn();
-            }).catch(err => {
-
-                this.posts = [];
-                console.log(err);
-                
-                fn();
-            });
+            if(this.postStatus == "valid"){
+                this.pageValid();
+            }
+            else if(this.postStatus == "temp"){
+                this.pageTemp();
+            }
+            else if(this.postStatus == "removed"){
+                this.pageRemoved();
+            }
         },
         pageValid(){
-            if(this.postStatus == "valid"){
-                return;
-            }else{
-                this.postStatus = "valid";
-                this.url = "/api/admin/post/page/valid";
-            }
+            this.postStatus = "valid";
             
-            if(this.valid.posts.length > 0 && this.valid.page == this.page){
-                this.posts = this.valid.posts;
-                return;
-            }
-            
-            this.initPageData(() => {
-                this.valid.posts = this.posts;
-                this.valid.page = this.page;
+            i$.page({
+                href:"v1/admin/post/page/valid",
+                page:this.page
+            },(res) => {
+                this.posts = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
             });
+ 
         },
         pageTemp(){
-            if(this.postStatus == "temp"){
-                return;
-            }else{
-                this.postStatus = "temp";
-                this.url = "/api/admin/post/page/temp";
-            }
+            this.postStatus = "temp";
+            i$.page({
+                href:"v1/admin/post/page/temp",
+                page:this.page
+            },(res) => {
+                this.posts = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
 
-            if(this.temp.posts.length > 0 && this.temp.page == this.page){
-                this.posts = this.temp.posts;
-                return;
-            }
-            
-            this.initPageData(() => {
-                this.temp.posts = this.posts;
-                this.temp.page = this.page;
             });
         },
         pageRemoved(){
 
-            if(this.postStatus == "removed"){
-                return;
-            }else{
-                this.postStatus = "removed";
-                this.url = "/api/admin/post/page/removed";
-            }
-
-
-            if(this.removed.posts.length > 0 && this.removed.page == this.page){
-                this.posts = this.removed.posts;
-                return;
-            }
-            
-            this.initPageData(() => {
-                this.removed.posts = this.posts;
-                this.removed.page = this.page;
+            this.postStatus = "removed";
+         
+            i$.page({
+                href:"v1/admin/post/page/removed",
+                page:this.page
+            },(res) => {
+                this.posts = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
             });
             
         },
         remove(id){
-            axios.get("/api/admin/post/remove",{
-                params:{
-                    id:id
-                }
-            }).then(res => {
-                this.initPageData(()=>{
-                    this.removed.posts = [];
-                });
-            }).catch(err => {
-                console.log(err);
+            i$.patch("v1/admin/post/remove/"+id,(res) =>{
+                i$.toast.info("移除成功");
+                this.initPageData();
             });
         },
         restore(id){ // 恢复
-            axios.get("/api/admin/post/restore",{
-                params:{
-                    id:id
-                }
-            }).then(res => {
-                this.initPageData(() => {
-                    this.valid.posts = [];
-                });
-            }).catch(err => {
-                console.log(err);
+            i$.patch("v1/admin/post/valid/"+id,(res) =>{
+                i$.toast.info("发布成功");
+                this.initPageData();
             });
         },
         edit(id){
-            window.location.href = "/admin/post/edit?id="+id;
+            if(app_params){
+                app_params.edit_post_id = id;
+                refreshMid("/admin/post/edit","fra");
+            }
         },
         deleteById(id){
-            axios.get("/api/admin/post/delete",{
-                params:{
-                    id:id
-                }
-            }).then(res => {
+           
+            i$.delete("v1/admin/post/"+id,(res) => {
+                i$.toast.warn("删除成功");
                 this.initPageData();
-            }).catch(err => {
-                console.log(err);
+            },(msg) =>{
+                i$.toast.warn(msg);
             });
         },
         generateTempLink(){
-            axios.get("/api/admin/post/create/temp/link",{
+            if(!this.tempPostLinkId){
+                return;
+            }
+            i$.get({
+                href:"v1/admin/post/temp/"+this.tempPostLinkId,
                 params:{
-                    id:this.tempPostLinkId,
                     minutes:parseInt(this.minutes)
                 }
-            }).then(res => {
-                this.tempPostLink = res.data.data;
-            }).catch(err => {
-                console.log(err);
+            },(res) =>{
+                this.tempPostLink = res;
+            },(msg)=>{
+                i$.toast.warn(msg);
             });
         },
         showTempLinkModal(id){
@@ -251,19 +203,20 @@ app = new Vue({
             alert("临时链接已经复制到粘贴板");
         },
         pre(){
-            if(this.page > 1){
-                this.page = this.page - 1;
-                this.initPageData();
-            }
+            this.skip(this.page - 1);
         },
         next(){
-            if(this.page < this.totalPage){
-                this.page = this.page + 1 ;
-                this.initPageData();
-            }
+            this.skip(this.page + 1);
         },
         skip(page){
-            if(page > 0 && page <= this.totalPage && page != this.page){
+            if(!page || page <= 0){
+                page = 1;
+            }
+            if(page > this.totalPage){
+                i$.toast.warn("没有数据了");
+                return;
+            }
+            if(page != this.page){
                 this.page = page;
                 this.initPageData();
             }

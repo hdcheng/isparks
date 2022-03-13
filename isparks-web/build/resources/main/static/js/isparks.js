@@ -487,7 +487,6 @@ const cache = {
     cache_prefix: "is_cache_",
     set: function(key, value, expire) {
         if (key) {
-            console.log("缓存", key, value);
             let cache_value = "";
             let current_time = new Date().getTime();
             if (expire && expire > 0) {
@@ -1298,6 +1297,9 @@ const is_request_page = function(api, success, fail, error, page, size) {
     if (api && api.href) {
         if (api.page) {
             page = api.page;
+        }
+        if (api.size) {
+            size = api.size;
         }
         if (api.params && api.params.page) {
             page = api.params.page;

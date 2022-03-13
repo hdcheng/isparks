@@ -128,19 +128,23 @@
 </div>
 </body>
 <script th:inline="javascript">
-    let page = [[${page}]];
-    let content = [[${content}]];
     let app ;
+    const app_params = {
+        
+    }
     window.onload = function(){
         const jsLine = ["/static/js/md5.min.js","/static/js/vue.min.js"];
         i$.html.loadJSLine(jsLine , () => {
-
             pageLoaded();
-
         });
     }
     function pageLoaded(){
-        refreshMid(page,content);
+        console.log(i$.cache.get("current_page"));
+        console.log(i$.cache.get("current_fragment"));
+
+        let page = i$.cache.get("current_page") || "/admin/dash";
+        let fragment = i$.cache.get("current_fragment") || "fra";
+        refreshMid(page,fragment);
         config.prefixUrl = "http://127.0.0.1:8174/"
         
         if(typeof sidbarLoaded === 'function'){
@@ -156,18 +160,28 @@
         if(path == "#"){
             return;
         }
+        
         loadContent(document.getElementById("is-mid"),path,fragment);
     }
     function loadContent(parent,path,fragment){
-        if(path == "#" || !parent || !page ){
+        if(path == "#" || !parent || !path ){
             return;
         }
         i$.post({
             href : "v1/admin/fragment",
             body : {"path":path,"fragment":fragment}
         },(data)=>{
+            if(!data){
+                i$.cache.delete("current_page");
+                i$.cache.delete("current_fragment");
+            }
+            else{
+                i$.cache.set("current_page",path);
+                i$.cache.set("current_fragment",fragment);
+            }
             i$.html.updateContent(parent,data);
         },(msg,res)=>{
+            
             i$.toast.error("没有权限");
             window.location.href = "/admin/login";
         });

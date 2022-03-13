@@ -158,7 +158,7 @@
             <!-- md content modal -->
         </div>
         <div class="is-edit-content">
-            <textarea id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-html="markdownText">
+            <textarea id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-model="markdownText">
             </textarea>
         </div>
     </div>
@@ -210,7 +210,8 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
             newTag:"",
             tags:[],
             isUpdate:false,
-            review:false,
+            postId : null, // 需要更新的 post id
+            review : false,
             newCategory:{
                 name:"",
                 description:""
@@ -218,10 +219,8 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
         },
         methods:{
             initPageData(){
-                axios.get("/api/admin/category/list").then(res => {
-                    this.categories = res.data.data;
-                }).catch(err => {
-                    console.log(err);
+                i$.get("v1/admin/categories",(res) => {
+                    this.categories = res;
                 });
             },
             clearNewPost(){
@@ -234,6 +233,7 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                 document.getElementById("markdownTextContent").innerText = "";
                 this.summary = "";
                 this.categoryId = "";
+                this.newTag = "";
                 this.tags = [];
             },
             create(){
@@ -244,16 +244,18 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                     tagNames:this.tags,
                     summary:this.summary
                 }
-                axios.post("/api/admin/post/create",data).then(res => {
-                    console.log(res);
+                i$.post({
+                    href:"v1/admin/post",
+                    body:data
+                },(res) => {
+                    i$.toast.info("创建成功");
                     this.clearNewPost();
-                }).catch(err => {
-                    console.log(err);
                 });
             },
             update(){
-                const id = this.getValueFromUrl("id");
+                const id = this.postId;
                 if(id == null || id == ""){
+                    i$.toast.warn("更新文章，id 不能为空！");
                     return;
                 }
 
@@ -265,13 +267,12 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                     summary:this.summary,
                     id:id
                 }
-                axios.post("/api/admin/post/update",data).then(res => {
-                    this.clearNewPost();
-                    const id = this.getValueFromUrl("id");
-                    window.open("/admin/page/post/review/"+id);
-                    this.getUpdatePostInfo(id);
-                }).catch(err => {
-                    console.log(err);
+                i$.put({
+                    href:"v1/admin/post/"+id,
+                    body:data
+                },(res) => {
+                    i$.toast.info("更新成功");
+                    refreshMid("/admin/post/manage","fra");
                 });
             },
             createTemp(){
@@ -282,10 +283,12 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                     tagNames:this.tags,
                     summary:this.summary
                 }
-                axios.post("/api/admin/post/create/temp",data).then(res => {
+                i$.post({
+                    href:"v1/admin/post/temp",
+                    body:data
+                },(res) => {
+                    i$.toast.info("创建成功");
                     this.clearNewPost();
-                }).catch(err => {
-                    console.log(err);
                 });
             },
             addTag(){
@@ -299,14 +302,16 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                 if(this.newCategory.name == ""){
                     return;
                 }
-                axios.post("/api/admin/category/create",this.newCategory).then(res => {
+                i$.post({
+                    href : "v1/admin/category",
+                    body : this.newCategory
+                },(res) => {
                     this.newCategory.name = "";
                     this.newCategory.description = "";
-                    this.initPageData();
                     UIkit.modal(document.getElementById("modal-create-category")).hide();
                     this.initPageData();
-                }).catch(err => {
-                    console.log(err);
+                },(msg)=>{
+                    i$.toast.warn(msg);
                 });
             },
             removeTag(name){
@@ -326,51 +331,45 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                 this.categoryId = e.target.value;
             },
             getUpdatePostInfo(id){
-                axios.get("/api/admin/post/get/by/id",{
-                    params:{
-                        id:id
+                i$.get("v1/admin/post/"+id,(res) => {
+                    console.log(res);
+                    let markdownText = res.originContent;
+                    if(markdownText == null ){
+                        markdownText = ""; 
                     }
-                }).then(res => {
-                    if(res.data.code == 8101){
-                        //this.markdownText = res.data.data.originContent;
-                        let markdownText = res.data.data.originContent;
-                        if(markdownText == null ){
-                            markdownText = ""; 
-                        }
-                        
-                        this.title = res.data.data.title;
-                        
-                        document.getElementById("markdownTextContent").innerText = markdownText;
+                    
+                    this.title = res.title;
+                    
+                    document.getElementById("markdownTextContent").innerText = markdownText;
 
-                        this.summary = res.data.data.summary;
-                        const tags = res.data.data.properties.tags;
-                        for(i in tags){
-                            this.tags.push(tags[i].name);
-                        }
-                        const category = res.data.data.properties.category;
-                        const categorySelect = document.getElementById("category-select");
-                        const options = categorySelect.options;
-
-                        for(i in options){
-                            if(options[i].value == category.id){
-                                categorySelect.options[i].selected = true;
-                            }
-                        }
-                        this.categoryId = category.id;
-
+                    this.summary = res.summary;
+                    const tags = res.properties.tags;
+                    for(i in tags){
+                        this.tags.push(tags[i].name);
                     }
+                    const category = res.properties.category;
+                    const categorySelect = document.getElementById("category-select");
+                    const options = categorySelect.options;
+
+                    for(i in options){
+                        if(options[i].value == category.id){
+                            categorySelect.options[i].selected = true;
+                        }
+                    }
+                    this.categoryId = category.id;
                     this.isUpdate = true;
-                }).catch(err => {
-                    console.log(err);
+
                 });
+                if(app_params && app_params.edit_post_id){
+                    this.postId = app_params.edit_post_id;
+                    app_params.edit_post_id = null;
+                }
             }
         },
         created(){
             this.initPageData();
-
-            const id = this.getValueFromUrl("id");
-            if(id != null){
-                this.getUpdatePostInfo(id);
+            if(app_params && app_params.edit_post_id){
+                this.getUpdatePostInfo(app_params.edit_post_id);
             }
             
         },
