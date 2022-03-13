@@ -15,6 +15,11 @@ public interface IThemeService {
     void active(String themeId);
 
     /**
+     * 重置主题
+     */
+    void reset();
+
+    /**
      * 获取主题列表
      */
     Map<String,String> listThemes();

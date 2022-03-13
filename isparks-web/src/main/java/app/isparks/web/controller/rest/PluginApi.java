@@ -39,7 +39,7 @@ public class PluginApi extends BasicApi{
         return build(plugins);
     }
 
-    @PatchMapping("plugin/{id}/start")
+    @PatchMapping("plugin/start/{id}")
     @ApiOperation("Start a plugin | 启动一个插件")
     @Log(description = "启动一个插件",types = {LogType.MODIFY})
     public Result startPlugin(@PathVariable("id") String id){
@@ -48,7 +48,7 @@ public class PluginApi extends BasicApi{
         return success();
     }
 
-    @PatchMapping("plugin/{id}")
+    @PatchMapping("plugin/stop/{id}")
     @ApiOperation("Stop plugin by id | 停用插件")
     @Log(description = "停用插件",types = {LogType.MODIFY})
     public Result removePlugin(@PathVariable("id") String id){

@@ -24,13 +24,21 @@ public class ThemeApi extends BasicApi{
         this.themeService = themeService;
     }
 
-    @GetMapping("theme")
+    @GetMapping("themes")
     @ApiOperation("Get all themes | 获取所有主题")
     public Result listThemes(){
         return build(themeService.listThemes());
     }
 
-    @PutMapping("theme/{themeId}")
+    @PutMapping("theme/reset")
+    @ApiOperation("reset theme | 重置主题主题")
+    @Log(description = "重置主题",types = {LogType.MODIFY})
+    public Result reset(){
+        themeService.reset();
+        return success();
+    }
+
+    @PatchMapping("theme/{themeId}")
     @ApiOperation("Update current theme | 更新主题")
     @Log(description = "更新主题",types = {LogType.MODIFY})
     public Result update(@PathVariable(value = "themeId",required = false)String themeId){

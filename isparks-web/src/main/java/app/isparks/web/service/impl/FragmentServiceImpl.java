@@ -28,7 +28,6 @@ public class FragmentServiceImpl implements IFragmentService {
         if(fragment == null){
             return "";
         }
-
         return resolveThymeleaf(fragment.getPath(),fragment.getFragment());
     }
 

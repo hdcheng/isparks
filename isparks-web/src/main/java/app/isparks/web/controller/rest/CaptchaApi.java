@@ -26,7 +26,7 @@ import java.io.OutputStream;
  */
 @Api("验证码接口")
 @RestController("v1_captcha")
-@RequestMapping("v1")
+@RequestMapping("v1/captcha")
 public class CaptchaApi extends BasicApi{
 
     private Logger log = LoggerFactory.getLogger(CaptchaApi.class);
@@ -38,7 +38,7 @@ public class CaptchaApi extends BasicApi{
     }
 
     @ApiOperation("获取验证码图片")
-    @GetMapping("captcha/image")
+    @GetMapping("image")
     public void captchaImage(HttpServletRequest request, HttpServletResponse response){
         try(OutputStream os = response.getOutputStream()) {
             response.setDateHeader("Expires", 0);
@@ -56,7 +56,7 @@ public class CaptchaApi extends BasicApi{
     }
 
     @ApiOperation("验证验证码")
-    @GetMapping("captcha/image/{code}")
+    @GetMapping("image/{code}")
     public Result captchaCheck(@PathVariable("code") String code, HttpServletRequest request){
         String ip = IpUtils.obtainIp(request);
         return build(captchaService.checkCaptcha(ip,code,true));

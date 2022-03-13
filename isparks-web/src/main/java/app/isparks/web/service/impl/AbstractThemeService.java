@@ -65,6 +65,12 @@ public abstract class AbstractThemeService extends BaseService implements ITheme
 
     }
 
+    @Override
+    public synchronized void reset() {
+        this.ACTIVE_THEME_ID = "";
+        updateThemeConfig("");
+    }
+
     /**
      * 获取当前的主题 id
      */

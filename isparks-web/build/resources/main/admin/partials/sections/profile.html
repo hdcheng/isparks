@@ -340,12 +340,16 @@ app = new Vue({
     },
     methods:{
         initPage(){
-            axios.get("/api/admin/user/get/login/info").then(res => {
-                console.log(res);
-                this.user = res.data.data;
-                this.newUser = JSON.parse(JSON.stringify(res.data.data));
-            }).catch(err => {
-                console.log(err);
+            // axios.get("/api/admin/user/get/login/info").then(res => {
+            //     console.log(res);
+            //     this.user = res.data.data;
+            //     this.newUser = JSON.parse(JSON.stringify(res.data.data));
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+            i$.get("v1/admin/user/login",(res) => {
+                this.user = res;
+                this.newUser = JSON.parse(JSON.stringify(res));
             });
         },
         hideAll(index){
@@ -387,12 +391,9 @@ app = new Vue({
                 avatar : user.avatar == newUser.avatar ? null : newUser.avatar,
             }
 
-            axios.post("/api/admin/user/update/info",newUserInfo).then(res => {
-                if(res.data.code == 8101){
-                    this.initPage();
-                }
-            }).catch(err => {
-                console.log(err);
+            i$.patch({
+                href:"v1/admin/user/"+user.id,
+                body:newUserInfo
             });
         },
         updatePwd(){
@@ -406,32 +407,26 @@ app = new Vue({
                 return;
             }
 
-            axios.get("/api/admin/user/update/pwd",{
+            i$.patch({
+                href:"v1/admin/user/pwd",
                 params:{
                     userName:this.user.userName,
                     oldPwd:this.oldPwd,
                     newPwd:this.newPwd
                 }
-            }).then(res => {
-                if(res.data.code == 8101){
-                    if(Utils.auth.removeToken()){
-                        window.location.href = "/admin/login";
-                    }
+            },(res) => {
+                // TODO:清除 token，更换方法
+                if(Utils.auth.removeToken()){
+                    window.location.href = "/admin/login";
                 }
-            }).catch(err => {
-                console.log(err);
             });
         },
         logout(){ // 注销登录
             const userName = Utils.auth.getInfoFromToken("user");
-            axios.get("/api/admin/logout",{
-                params:{user:userName}
-            }).then(res => {
+            i$.get("v1/admin/logout/"+userName,(res)=> {
                 if(Utils.auth.removeToken()){
                     window.location.href = "/admin/login";
                 }
-            }).catch(err => {
-                console.log(err);
             });
         }
     },

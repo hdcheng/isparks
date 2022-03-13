@@ -194,6 +194,7 @@ app = new Vue({
             },(res)=>{
                 this.initPage();
                 this.journal.content = '';
+                i$.toast.info("随笔发布成功！");
             });
         },
         loadPanelData(){

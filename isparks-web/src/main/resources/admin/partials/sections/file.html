@@ -151,10 +151,6 @@ app = new Vue({
                 this.totalPage = res.totalPage;
                 this.totalData = res.totalData;
             });
-            // if(this.page > 1){
-            //     this.page = this.page - 1;
-            //     this.initPageData();
-            // }
         },
         next(){
             i$.next_page("api/admin/file/page",(res) => {
@@ -163,10 +159,6 @@ app = new Vue({
                 this.totalPage = res.totalPage;
                 this.totalData = res.totalData;
             });
-            // if(this.page < this.totalPage){
-            //     this.page = this.page + 1 ;
-            //     this.initPageData();
-            // }
         },
         skip(page){
             i$.page({
@@ -192,7 +184,7 @@ UIkit.upload('.js-upload', {
     multiple: true,
     name:'file',
     params:{
-        "authorization":Utils.auth.getToken()
+        "authorization":i$.auth.getToken()
     },
     error: function () {
         console.log('error', arguments);

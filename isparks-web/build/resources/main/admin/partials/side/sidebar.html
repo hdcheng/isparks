@@ -21,19 +21,19 @@
     }
 </style>
 <div class="app-brand">
-    <a onclick="updateContent('/admin/dash','fra')" style="width: 100%;height: 100%;padding:10px"><img style="width: 100%;height: 100%;" th:src="${logo == '' ? '/static/images/logo.png': logo}"></a>
+    <a onclick="refreshMid('/admin/dash','fra')" style="width: 100%;height: 100%;padding:10px"><img style="width: 100%;height: 100%;" th:src="${logo == '' ? '/static/images/logo.png': logo}"></a>
 </div>    
 <div class="sidebar-wrapper">
     <div class="sidebar-unit" th:each="button : ${buttons}" th:title = "${button.name}">
-        <a onclick="updateContent('/admin/dash','fra')" th:onclick="updateContent([[${button.link}]],'fra')" th:utext = "${button.html != null && button.html != '' ? button.html : button.svg }"></a>
+        <a onclick="refreshMid('/admin/dash','fra')" th:onclick="refreshMid([[${button.link}]],'fra')" th:utext = "${button.html != null && button.html != '' ? button.html : button.svg }"></a>
     </div>
 </div>
 <div class="sidebar-bottom">
     <div class="sidebar-unit">
-        <a onclick="updateContent('/admin/profile','fra')"><span uk-icon="user" ></span></a>
+        <a onclick="refreshMid('/admin/profile','fra')"><span uk-icon="user" ></span></a>
     </div>
     <div class="sidebar-unit">
-        <a  onclick="updateContent('/admin/settings','fra')" ><span uk-icon="nut" ></span></a>
+        <a  onclick="refreshMid('/admin/settings','fra')" ><span uk-icon="nut" ></span></a>
     </div>
 </div>
 <script>

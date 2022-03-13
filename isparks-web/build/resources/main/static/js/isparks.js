@@ -1,21 +1,25 @@
+// deno-fmt-ignore-file
+// deno-lint-ignore-file
+// This code was bundled using `deno bundle` and it's not recommended to edit it manually
+
 class HTTPError extends Error {
-    constructor(response1, request, options2){
-        const code1 = response1.status || response1.status === 0 ? response1.status : "";
-        const title = response1.statusText || "";
-        const status = `${code1} ${title}`.trim();
+    constructor(response, request, options){
+        const code = response.status || response.status === 0 ? response.status : "";
+        const title = response.statusText || "";
+        const status = `${code} ${title}`.trim();
         const reason = status ? `status code ${status}` : "an unknown error";
         super(`Request failed with ${reason}`);
         this.name = "HTTPError";
-        this.response = response1;
+        this.response = response;
         this.request = request;
-        this.options = options2;
+        this.options = options;
     }
 }
 class TimeoutError extends Error {
-    constructor(request1){
+    constructor(request){
         super("Request timed out");
         this.name = "TimeoutError";
-        this.request = request1;
+        this.request = request;
     }
 }
 const isObject = (value)=>value !== null && typeof value === "object"
@@ -26,12 +30,9 @@ const validateAndMerge = (...sources)=>{
             throw new TypeError("The `options` argument must be an object");
         }
     }
-    return deepMerge({
-    }, ...sources);
+    return deepMerge({}, ...sources);
 };
-const mergeHeaders = (source1 = {
-}, source2 = {
-})=>{
+const mergeHeaders = (source1 = {}, source2 = {})=>{
     const result = new globalThis.Headers(source1);
     const isHeadersInstance = source2 instanceof globalThis.Headers;
     const source = new globalThis.Headers(source2);
@@ -45,10 +46,8 @@ const mergeHeaders = (source1 = {
     return result;
 };
 const deepMerge = (...sources)=>{
-    let returnValue = {
-    };
-    let headers = {
-    };
+    let returnValue = {};
+    let headers = {};
     for (const source of sources){
         if (Array.isArray(source)) {
             if (!Array.isArray(returnValue)) {
@@ -126,8 +125,7 @@ const defaultRetryOptions = {
     afterStatusCodes: retryAfterStatusCodes,
     maxRetryAfter: Number.POSITIVE_INFINITY
 };
-const normalizeRetryOptions = (retry = {
-})=>{
+const normalizeRetryOptions = (retry = {})=>{
     if (typeof retry === "number") {
         return {
             ...defaultRetryOptions,
@@ -146,14 +144,14 @@ const normalizeRetryOptions = (retry = {
         afterStatusCodes: retryAfterStatusCodes
     };
 };
-const timeout = async (request2, abortController, options1)=>new Promise((resolve, reject)=>{
+const timeout = async (request, abortController, options)=>new Promise((resolve, reject)=>{
         const timeoutID = setTimeout(()=>{
             if (abortController) {
                 abortController.abort();
             }
-            reject(new TimeoutError(request2));
-        }, options1.timeout);
-        void options1.fetch(request2).then(resolve).catch(reject).then(()=>{
+            reject(new TimeoutError(request));
+        }, options.timeout);
+        void options.fetch(request).then(resolve).catch(reject).then(()=>{
             clearTimeout(timeoutID);
         });
     })
@@ -163,26 +161,25 @@ const delay = async (ms)=>new Promise((resolve)=>{
     })
 ;
 class Ky {
-    constructor(input1, options1 = {
-    }){
+    constructor(input, options = {}){
         var _a, _b;
         this._retryCount = 0;
-        this._input = input1;
+        this._input = input;
         this._options = {
             credentials: this._input.credentials || "same-origin",
-            ...options1,
-            headers: mergeHeaders(this._input.headers, options1.headers),
+            ...options,
+            headers: mergeHeaders(this._input.headers, options.headers),
             hooks: deepMerge({
                 beforeRequest: [],
                 beforeRetry: [],
                 afterResponse: []
-            }, options1.hooks),
-            method: normalizeRequestMethod((_a = options1.method) !== null && _a !== void 0 ? _a : this._input.method),
-            prefixUrl: String(options1.prefixUrl || ""),
-            retry: normalizeRetryOptions(options1.retry),
-            throwHttpErrors: options1.throwHttpErrors !== false,
-            timeout: typeof options1.timeout === "undefined" ? 10000 : options1.timeout,
-            fetch: (_b = options1.fetch) !== null && _b !== void 0 ? _b : globalThis.fetch.bind(globalThis)
+            }, options.hooks),
+            method: normalizeRequestMethod((_a = options.method) !== null && _a !== void 0 ? _a : this._input.method),
+            prefixUrl: String(options.prefixUrl || ""),
+            retry: normalizeRetryOptions(options.retry),
+            throwHttpErrors: options.throwHttpErrors !== false,
+            timeout: typeof options.timeout === "undefined" ? 10000 : options.timeout,
+            fetch: (_b = options.fetch) !== null && _b !== void 0 ? _b : globalThis.fetch.bind(globalThis)
         };
         if (typeof this._input !== "string" && !(this._input instanceof URL || this._input instanceof globalThis.Request)) {
             throw new TypeError("`input` must be a string, URL, or Request");
@@ -230,16 +227,16 @@ class Ky {
                 throw new RangeError(`The \`timeout\` option cannot be greater than ${2147483647}`);
             }
             await Promise.resolve();
-            let response1 = await ky2._fetch();
+            let response = await ky2._fetch();
             for (const hook of ky2._options.hooks.afterResponse){
-                const modifiedResponse = await hook(ky2.request, ky2._options, ky2._decorateResponse(response1.clone()));
+                const modifiedResponse = await hook(ky2.request, ky2._options, ky2._decorateResponse(response.clone()));
                 if (modifiedResponse instanceof globalThis.Response) {
-                    response1 = modifiedResponse;
+                    response = modifiedResponse;
                 }
             }
-            ky2._decorateResponse(response1);
-            if (!response1.ok && ky2._options.throwHttpErrors) {
-                throw new HTTPError(response1, ky2.request, ky2._options);
+            ky2._decorateResponse(response);
+            if (!response.ok && ky2._options.throwHttpErrors) {
+                throw new HTTPError(response, ky2.request, ky2._options);
             }
             if (ky2._options.onDownloadProgress) {
                 if (typeof ky2._options.onDownloadProgress !== "function") {
@@ -248,25 +245,25 @@ class Ky {
                 if (!supportsStreams) {
                     throw new Error("Streams are not supported in your environment. `ReadableStream` is missing.");
                 }
-                return ky2._stream(response1.clone(), ky2._options.onDownloadProgress);
+                return ky2._stream(response.clone(), ky2._options.onDownloadProgress);
             }
-            return response1;
+            return response;
         };
         const isRetriableMethod = ky2._options.retry.methods.includes(ky2.request.method.toLowerCase());
         const result = isRetriableMethod ? ky2._retry(fn) : fn();
         for (const [type, mimeType] of Object.entries(responseTypes)){
             result[type] = async ()=>{
                 ky2.request.headers.set("accept", ky2.request.headers.get("accept") || mimeType);
-                const response1 = (await result).clone();
+                const response = (await result).clone();
                 if (type === "json") {
-                    if (response1.status === 204) {
+                    if (response.status === 204) {
                         return "";
                     }
                     if (options.parseJson) {
-                        return options.parseJson(await response1.text());
+                        return options.parseJson(await response.text());
                     }
                 }
-                return response1[type]();
+                return response[type]();
             };
         }
         return result;
@@ -295,7 +292,6 @@ class Ky {
                     return 0;
                 }
             }
-            const BACKOFF_FACTOR = 0.3;
             return 0.3 * 2 ** (this._retryCount - 1) * 1000;
         }
         return 0;
@@ -384,10 +380,10 @@ class Ky {
     }
 }
 const createInstance = (defaults)=>{
-    const ky2 = (input2, options3)=>Ky.create(input2, validateAndMerge(defaults, options3))
+    const ky2 = (input, options)=>Ky.create(input, validateAndMerge(defaults, options))
     ;
     for (const method of requestMethods){
-        ky2[method] = (input2, options3)=>Ky.create(input2, validateAndMerge(defaults, options3, {
+        ky2[method] = (input, options)=>Ky.create(input, validateAndMerge(defaults, options, {
                 method
             }))
         ;
@@ -401,75 +397,69 @@ const createInstance = (defaults)=>{
 };
 const ky = createInstance();
 let http = {
-    post: function(href, body, headers = {
-    }) {
+    post: function(href, body, headers = {}) {
         const api = ky.create({
             headers: headers
         });
         return api.post(href, {
             body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
+        }).then((response)=>{
+            if (String(response.headers.get("Content-Type")).indexOf("application/json") >= 0) {
+                return response.json();
             } else {
-                return response2;
+                return response;
             }
         });
     },
-    put: function(href, body, headers = {
-    }) {
+    put: function(href, body, headers = {}) {
         const api = ky.create({
             headers: headers
         });
         return api.put(href, {
             body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
+        }).then((response)=>{
+            if (String(response.headers.get("Content-Type")).indexOf("application/json") >= 0) {
+                return response.json();
             } else {
-                return response2;
+                return response;
             }
         });
     },
-    patch: function(href, body, headers = {
-    }) {
+    patch: function(href, body, headers = {}) {
         const api = ky.create({
             headers: headers
         });
         return api.patch(href, {
             body: body
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
+        }).then((response)=>{
+            if (String(response.headers.get("Content-Type")).indexOf("application/json") >= 0) {
+                return response.json();
             } else {
-                return response2;
+                return response;
             }
         });
     },
-    get: function(href, headers = {
-    }) {
+    get: function(href, headers = {}) {
         const api = ky.create({
             headers: headers
         });
-        return api.get(href).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
+        return api.get(href).then((response)=>{
+            if (String(response.headers.get("Content-Type")).indexOf("application/json") >= 0) {
+                return response.json();
             } else {
-                return response2;
+                return response;
             }
         });
     },
-    delete: function(href, headers = {
-    }) {
+    delete: function(href, headers = {}) {
         const api = ky.create({
             headers: headers
         });
-        return api.delete(href, {
-        }).then((response2)=>{
-            if (response2.headers.get("Content-Type") == "application/json") {
-                return response2.json();
+        return api.delete(href, {}).then((response)=>{
+            if (String(response.headers.get("Content-Type")).indexOf("application/json") >= 0) {
+                return response.json();
             } else {
-                return response2;
+                return response;
             }
         });
     }
@@ -531,6 +521,508 @@ const cache = {
 let config = {
     prefixUrl: "http://127.0.0.1:8174/"
 };
+const animator = {
+    fadeOut: function(e, oncomplete, time) {
+        if (typeof e === "string") e = document.getElementById(e);
+        if (!time) time = 500;
+        let ease = Math.sqrt;
+        let start = new Date().getTime();
+        animate();
+        function animate() {
+            let elapsed = new Date().getTime() - start;
+            let fraction = elapsed / time;
+            if (fraction < 1) {
+                var opacity = 1 - ease(fraction);
+                e.style.opacity = String(opacity);
+                setTimeout(animate, Math.min(25, time - elapsed));
+            } else {
+                e.style.opacity = "0";
+                if (oncomplete) oncomplete(e);
+            }
+        }
+    },
+    shake: function(e, oncomplete, distance, time, direction) {
+        if (typeof e === "string") {
+            e = document.getElementById(e);
+        }
+        if (!time) {
+            time = 500;
+        }
+        if (!distance) {
+            distance = 5;
+        }
+        let orginalStyle = e.style.cssText;
+        e.style.position = "relative";
+        let start = new Date().getTime();
+        animate();
+        function animate() {
+            let now = new Date().getTime();
+            let elapsed = now - start;
+            let fraction = elapsed / time;
+            if (fraction < 1) {
+                let x = distance * Math.sin(fraction * 4 * Math.PI);
+                if (direction && direction === 'y') {
+                    e.style.bottom = x + "px";
+                } else {
+                    e.style.left = x + "px";
+                }
+                setTimeout(animate, Math.min(25, time - elapsed));
+            } else {
+                e.style.cssText = orginalStyle;
+                if (oncomplete) oncomplete(e);
+            }
+        }
+    }
+};
+const toast = {
+    attributes: {
+        display_delay: 3,
+        remove_delay: 5,
+        background: '#101924',
+        color: '#FFFFFF',
+        wrapper_position: "top_right",
+        positions: [
+            'center',
+            'top',
+            'bottom',
+            'center_right',
+            'center_left',
+            'top_right',
+            'top_left',
+            'bottom_right',
+            'bottom_left'
+        ],
+        zIndex: "99",
+        parent_id: null,
+        shadow: "rgba(0,0,0,.5) 0 0 1em",
+        wrapper_padding: "1em"
+    },
+    listener: function() {
+        this.cache.job_id = setInterval(()=>{}, 500);
+    },
+    get_element: function(key) {
+        return document.getElementById(key);
+    },
+    remove_toast: function(key) {
+        let toast1 = document.getElementById(key);
+        if (toast1) {
+            animator.fadeOut(toast1, ()=>{
+                setTimeout(()=>{
+                    toast1.style.display = "none";
+                    setTimeout(()=>{
+                        let wrapper = toast1.parentElement;
+                        if (wrapper) {
+                            wrapper.removeChild(toast1);
+                            this.clear_wrapper(wrapper);
+                        }
+                    }, this.attributes.remove_delay * 1000);
+                }, 300);
+            }, 300);
+        }
+    },
+    clear_wrapper: function(wrapper) {
+        if (wrapper.children.length == 0) {
+            wrapper.parentElement.removeChild(wrapper);
+        }
+    },
+    get_wrapper: function(options) {
+        if (!options) {
+            return;
+        }
+        let wrapper_position = this.attributes.wrapper_position;
+        if (options.position) {
+            for(let i in this.attributes.positions){
+                if (this.attributes.positions[i] === options.position.toLowerCase() || this.attributes.positions[i] === options.position.toLowerCase().replace("-", "_")) {
+                    wrapper_position = this.attributes.positions[i];
+                    break;
+                }
+            }
+        }
+        let wrapper_id = "toast_wrapper_" + wrapper_position;
+        let parent = options.parent || this.attributes.parent_id && document.getElementById(this.attributes.parent_id) || document.body;
+        let wrapper;
+        let children = parent.children;
+        for(let i in children){
+            if (typeof children[i] === "object" && children[i].getAttribute("id") === wrapper_id) {
+                wrapper = children[i];
+                break;
+            }
+        }
+        if (!wrapper) {
+            wrapper = window.document.createElement("dev");
+            wrapper.setAttribute("id", wrapper_id);
+            wrapper.style.zIndex = options.zIndex || this.attributes.zIndex;
+            wrapper.style.position = "absolute";
+            wrapper.style.top = "0";
+            wrapper.style.bottom = "0";
+            wrapper.style.right = "0";
+            wrapper.style.left = "0";
+            wrapper.style.pointerEvents = "none";
+            wrapper.style.display = "flex";
+            wrapper.style.flexDirection = "column";
+            wrapper.style.padding = options.padding || this.attributes.wrapper_padding;
+            if (wrapper_position == "center") {
+                wrapper.style.justifyContent = "center";
+                wrapper.style.alignItems = "center";
+            } else if (wrapper_position === "center-right") {
+                wrapper.style.justifyContent = "center";
+                wrapper.style.alignItems = "flex-end";
+            } else if (wrapper_position === "center_left") {
+                wrapper.style.justifyContent = "center";
+                wrapper.style.alignItems = "flex-start";
+            } else if (wrapper_position === "bottom") {
+                wrapper.style.justifyContent = "flex-end";
+                wrapper.style.alignItems = "center";
+            } else if (wrapper_position === "bottom_right") {
+                wrapper.style.justifyContent = "flex-end";
+                wrapper.style.alignItems = "flex-end";
+            } else if (wrapper_position === "bottom_left") {
+                wrapper.style.justifyContent = "flex-end";
+                wrapper.style.alignItems = "flex-start";
+            } else if (wrapper_position === "top") {
+                wrapper.style.justifyContent = "flex-start";
+                wrapper.style.alignItems = "center";
+            } else if (wrapper_position === "top_right") {
+                wrapper.style.justifyContent = "flex-start";
+                wrapper.style.alignItems = "flex-end";
+            } else if (wrapper_position === "top_left") {
+                wrapper.style.justifyContent = "flex-start";
+                wrapper.style.alignItems = "flex-start";
+            }
+            wrapper.style.maxWidth = "100%";
+            wrapper.style.overflow = "hidden";
+            parent.appendChild(wrapper);
+        }
+        return wrapper;
+    },
+    show: function(msg, options) {
+        if (!options) {
+            options = {};
+        }
+        if (options.delay == 0) {
+            return;
+        }
+        let wrapper = this.get_wrapper(options);
+        let timestamp = new Date().getTime() + Math.random().toString(8);
+        let key = "toast_" + timestamp;
+        if (this.get_element(key)) {
+            console.log("弹窗太频繁");
+            return;
+        }
+        let toast2 = window.document.createElement("dev");
+        toast2.setAttribute("id", key);
+        toast2.style.minWidth = "5em";
+        toast2.style.backgroundColor = options.background || this.attributes.background;
+        toast2.style.borderRadius = "10px";
+        toast2.style.padding = "1em";
+        toast2.style.margin = ".3em";
+        toast2.style.webkitAnimation = "popup 0.2s ease-in-out";
+        toast2.style.animation = "popup 0.2s ease-in-out";
+        toast2.style.boxShadow = options.shadow || this.attributes.shadow;
+        let toast_p = window.document.createElement("p");
+        toast_p.style.color = options.color || this.attributes.color;
+        toast_p.setAttribute("id", "toast_p" + timestamp);
+        toast_p.style.width = "100%";
+        toast_p.style.margin = "0%";
+        toast_p.style.display = "inline";
+        toast_p.style.fontFamily = "Arial";
+        toast_p.style.display = "inline-block";
+        toast_p.style.textAlign = "center";
+        toast_p.style.lineHeight = "100%";
+        let text = window.document.createTextNode(msg);
+        toast_p.appendChild(text);
+        toast2.appendChild(toast_p);
+        let toast_remove = window.document.createElement("span");
+        toast_remove.innerText = "x";
+        toast_remove.style.color = options.color || this.attributes.color;
+        toast_remove.style.margin = '0 0 0 1em';
+        toast_remove.style.cursor = 'pointer';
+        toast_remove.style.pointerEvents = "auto";
+        toast_remove.onclick = ()=>{
+            this.remove_toast(key);
+        };
+        toast_p.appendChild(toast_remove);
+        wrapper.appendChild(toast2);
+        toast2.style.transition = "all 0.2s ease-in";
+        toast2.style.display = "block";
+        if (!options.delay || options.delay > 0) {
+            setTimeout(()=>{
+                this.remove_toast(key);
+            }, (options.delay || this.attributes.display_delay) * 1000);
+        }
+    },
+    info: function(msg, options) {
+        if (!options) {
+            options = {};
+        }
+        this.show(msg, options);
+    },
+    warn: function(msg, options) {
+        if (!options) {
+            options = {};
+        }
+        options.background = "#99CCCC";
+        this.show(msg, options);
+    },
+    error: function(msg, options) {
+        if (!options) {
+            options = {};
+        }
+        options.background = "#FF9999";
+        this.show(msg, options);
+    }
+};
+const loadJSLine = function(arr, callback) {
+    const jsLine = arr || [];
+    const fn = callback || function() {};
+    let nextPro = new Promise(function(resolve, reject) {
+        resolve(true);
+    });
+    const len = jsLine.length;
+    if (len <= 0) {
+        return;
+    }
+    for(var i = 0; i < len - 1; ++i){
+        const url = jsLine[i];
+        nextPro = nextPro.then((res)=>{
+            return new Promise(function(resolve, reject) {
+                loadJS(url, function() {
+                    resolve(true);
+                });
+            });
+        });
+    }
+    nextPro.then((res)=>{
+        loadJS(jsLine[len - 1], function() {
+            fn();
+        });
+    });
+};
+function loadJS(url, callback, configure) {
+    const script = document.createElement('script'), fn = callback || function() {};
+    const configFn = configure || function() {};
+    script.type = 'text/javascript';
+    if (script.readyState) {
+        script.onreadystatechange = function() {
+            if (script.readyState == 'loaded' || script.readyState == 'complete') {
+                script.onreadystatechange = null;
+                fn();
+            }
+        };
+    } else {
+        script.onload = function() {
+            fn();
+        };
+    }
+    script.src = url;
+    script.async = true;
+    configFn(script);
+    document.head.appendChild(script);
+}
+const updateContent = function(parent, html1) {
+    if (!parent) {
+        return;
+    }
+    parent.innerHTML = html1;
+    reloadScript(parent);
+};
+const reloadScript = function(parent1) {
+    let scripts = parent1.getElementsByTagName("script");
+    for(let i = 0; i < scripts.length; i++){
+        let script = scripts[i];
+        let parent = script.parentElement;
+        let script_content = script.innerText;
+        script.parentElement.removeChild(script);
+        runScript(parent, script_content);
+    }
+    function runScript(parent, script) {
+        let script_dom = document.createElement("script");
+        script_dom.type = "text/javascript";
+        script_dom.text = script;
+        parent.appendChild(script_dom);
+    }
+};
+const html = {
+    loadJSLine: loadJSLine,
+    loadJS: loadJS,
+    updateContent: updateContent
+};
+const kit = {
+    cookies: {
+        get (name) {
+            if (document.cookie.length > 0) {
+                let start = document.cookie.indexOf(name + "=");
+                if (start != -1) {
+                    start = start + name.length + 1;
+                    let end = document.cookie.indexOf(";", start);
+                    if (end == -1) {
+                        end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(start, end));
+                }
+            }
+        },
+        set (name, value, expiresTime) {
+            expiresTime = expiresTime || 8 * 60 * 60 * 1000;
+            const expires = new Date();
+            expires.setTime(expires.getTime() + expiresTime);
+            document.cookie = name + "=" + escape(value) + (expires == null ? "" : ";expires=" + expires.toGMTString());
+        },
+        delete (name) {
+            var exp = new Date();
+            exp.setTime(exp.getTime(-1));
+            var cval = this.get(name);
+            if (cval != null) {
+                document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+            }
+        }
+    },
+    client: {
+        fingerprint () {
+            if (this.isHeadless()) {
+                return "";
+            }
+            return md5(JSON.stringify(this.info()));
+        },
+        info () {
+            return {
+                os: this.os(),
+                browser: this.browser(),
+                ip: this.ip(),
+                screen: this.screen(),
+                lan: this.language(),
+                canf: this.canvasFingerprint(),
+                timeZone: this.timeZone()
+            };
+        },
+        browser () {
+            const userAgent = navigator.userAgent;
+            let browser = "Unknown";
+            if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+                browser = 'Opera';
+            } else if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
+                browser = 'IE';
+            } else if (userAgent.indexOf("Edge") > -1) {
+                browser = 'Edge';
+            } else if (userAgent.indexOf("Firefox") > -1) {
+                browser = 'Firefox';
+            } else if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1) {
+                browser = 'Safari';
+            } else if (userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Safari") > -1) {
+                browser = 'Chrome';
+            } else if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                browser = 'IE>=11';
+            }
+            return browser + " on " + this.os();
+        },
+        language () {
+            let result = navigator.language + " in ";
+            const ls = navigator.languages;
+            result += "[ ";
+            for(var i in navigator.languages){
+                result += ls[i] + " ";
+            }
+            result += "]";
+            return result;
+        },
+        cookieEnabled () {
+            return navigator.cookieEnabled;
+        },
+        isHeadless () {
+            if (/HeadlessChrome/.test(window.navigator.userAgent)) {
+                console.log("Chrome headless detected");
+                return true;
+            }
+            if (navigator.languages == "") {
+                console.log("Chrome headless detected");
+                return true;
+            }
+            return false;
+        },
+        ip () {
+            let ip = localStorage.getItem("ip");
+            if (ip != null) {
+                return ip;
+            }
+            const url = "http://httpbin.org/get";
+            let res = null;
+            const request = new XMLHttpRequest();
+            request.open('GET', url, false);
+            request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;");
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    res = JSON.parse(request.responseText);
+                }
+            };
+            request.send();
+            if (res != null) {
+                ip = res.origin;
+                localStorage.setItem("ip", ip);
+                return ip;
+            } else {
+                return "unknown";
+            }
+        },
+        os () {
+            const userAgent = navigator.userAgent.toLowerCase();
+            let name = 'Unknown';
+            let version = 'Unknown';
+            if (userAgent.indexOf('win') > -1) {
+                name = 'Windows';
+                if (userAgent.indexOf('windows nt 5.0') > -1) {
+                    version = '2000';
+                } else if (userAgent.indexOf('windows nt 5.1') > -1 || userAgent.indexOf('windows nt 5.2') > -1) {
+                    version = 'XP';
+                } else if (userAgent.indexOf('windows nt 6.0') > -1) {
+                    version = 'Vista';
+                } else if (userAgent.indexOf('windows nt 6.1') > -1 || userAgent.indexOf('windows 7') > -1) {
+                    version = '7';
+                } else if (userAgent.indexOf('windows nt 6.2') > -1 || userAgent.indexOf('windows 8') > -1) {
+                    version = '8';
+                } else if (userAgent.indexOf('windows nt 6.3') > -1) {
+                    version = '8.1';
+                } else if (userAgent.indexOf('windows nt 6.2') > -1 || userAgent.indexOf('windows nt 10.0') > -1) {
+                    version = '10';
+                } else {
+                    version = 'Unknown';
+                }
+            } else if (userAgent.indexOf('iphone') > -1) {
+                name = 'Iphone';
+            } else if (userAgent.indexOf('mac') > -1) {
+                name = 'Mac';
+            } else if (userAgent.indexOf('x11') > -1 || userAgent.indexOf('unix') > -1 || userAgent.indexOf('sunname') > -1 || userAgent.indexOf('bsd') > -1) {
+                name = 'Unix';
+            } else if (userAgent.indexOf('linux') > -1) {
+                if (userAgent.indexOf('android') > -1) {
+                    name = 'Android';
+                } else {
+                    name = 'Linux';
+                }
+            } else {
+                name = 'Unknown';
+            }
+            return name + "(" + version + ")";
+        },
+        screen () {
+            return window.screen.width + " x " + window.screen.height + " x " + window.screen.colorDepth;
+        },
+        canvasFingerprint () {
+            const canvas = document.createElement('canvas');
+            canvas.style.display = "none";
+            document.body.appendChild(canvas);
+            const context = canvas.getContext("2d");
+            context.font = "18pt Arial";
+            context.textBaseline = "top";
+            context.fillText("ISparks.", 2, 2);
+            const b64 = canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
+            return md5(b64);
+        },
+        timeZone () {
+            const tz = new Date().getTimezoneOffset() / 60;
+            return tz;
+        }
+    }
+};
 const cookies = {
     get: function(name) {
         if (document.cookie.length > 0) {
@@ -565,23 +1057,12 @@ const cookies = {
         return navigator.cookieEnabled;
     }
 };
-class Result {
-    code;
-    msg;
-    data;
-    constructor(code2, data, msg){
-        this.code = code2;
-        this.data = data;
-        this.msg = msg;
-    }
-}
 var ResultType;
 (function(ResultType1) {
     ResultType1[ResultType1["SUCCESS"] = 0] = "SUCCESS";
     ResultType1[ResultType1["FAIL"] = 1] = "FAIL";
     ResultType1[ResultType1["ERROR"] = 2] = "ERROR";
-})(ResultType || (ResultType = {
-}));
+})(ResultType || (ResultType = {}));
 const AUTH_KEY = "authorization";
 const DEFAULT_TOKEN_CACHE = 1000 * 60 * 60 * 24 * 7;
 const auth = {
@@ -602,15 +1083,14 @@ const auth = {
         }
     },
     getClaims: function() {
-        const jwt = this.getToken();
-        if (jwt) {
-            let parts = jwt.split(".");
+        const jwt1 = this.getToken();
+        if (jwt1) {
+            let parts = jwt1.split(".");
             let payload = parts[1];
             payload = payload.replace(/-/g, '+').replace(/_/g, '/');
             return JSON.parse(window.atob(payload));
         } else {
-            return {
-            };
+            return {};
         }
     },
     removeToken: function() {
@@ -623,59 +1103,62 @@ const isparks = {
     init: function() {
         console.log("Isparks For Everyone! GitHub -> https://github.com/hdcheng/isparks 📖");
     },
-    default_fail: function(res, msg1 = '') {
+    default_fail: function(msg, result) {
         console.log(line);
         console.log(new Date() + " request fail :");
-        console.log(msg1 || "");
-        console.log(res);
+        if (msg) {
+            console.log(msg);
+        }
+        if (result && result.data) {
+            console.log(result.data);
+        }
     },
     default_error: function(err) {
         console.log(line);
         console.log(new Date() + " request error :");
         console.log(err);
     },
-    default_success: function(res, msg1) {
+    default_success: function(res, msg) {
         console.log(line);
         console.log(new Date() + " request success :");
-        console.log(msg1 || '');
-        console.log(res);
+        if (msg) {
+            console.log(msg);
+        }
+        if (res) {
+            console.log(res);
+        }
     },
     request: function() {
         console.log("Not initialized yet!");
     },
-    get: function() {
-    },
-    post: function() {
-    },
-    delete: function() {
-    },
-    put: function() {
-    },
-    patch: function() {
-    },
-    page: function() {
-    },
-    next_page: function() {
-    },
-    pre_page: function() {
-    },
+    get: function() {},
+    post: function() {},
+    delete: function() {},
+    put: function() {},
+    patch: function() {},
+    page: function() {},
+    next_page: function() {},
+    pre_page: function() {},
     cache: cache,
     cookies: cookies,
     auth: auth,
     image: image,
-    http: http
+    http: http,
+    toast: toast,
+    animator: animator,
+    html: html,
+    kit: kit
 };
 function resolveResult(result, success = isparks.default_success, fail = isparks.default_fail, error = isparks.default_error) {
     if (result.code) {
         if (result.code == 8101 && success) {
-            success(result.data, result.msg);
-            return;
+            success(result.data, result.msg, result);
         } else if (result.code == 8102 && fail) {
-            fail(result.data, result.msg);
-            return;
+            fail(result.msg, result);
+        } else if (result.code == 8104 && fail) {
+            fail(result.msg, result);
         } else if (result.code == 8103 && error) {
             error(result);
-            return;
         }
     } else if (result.status == 200) {
         if (success) {
@@ -749,6 +1232,7 @@ const is_request = function(api, success, fail, error) {
             break;
         case "POST":
             http.post(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
+                page_info_storage(api, res);
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
@@ -767,12 +1251,14 @@ const is_request = function(api, success, fail, error) {
             }).catch((err)=>{
                 resolveError(err, error);
             });
+            break;
         case "PATCH":
             http.patch(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
             });
+            break;
     }
 };
 const resolve_url_params = function(api) {
@@ -800,11 +1286,11 @@ const resolve_url_params = function(api) {
 };
 const page_info_storage = function(api, res) {
     if (res.code == 8101 && res.data.page) {
-        let title1 = get_key_from_href(api.href, api.title);
-        localStorage.setItem(title1 + "[page]", res.data.page + "");
-        localStorage.setItem(title1 + "[total_page]", res.data.totalPage + "");
-        localStorage.setItem(title1 + "[total_data]", res.data.totalData + "");
-        localStorage.setItem(title1 + "[size]", res.data.size + "");
+        let title = get_key_from_href(api.href, api.title);
+        localStorage.setItem(title + "[page]", typeof res.data.page === 'number' ? res.data.page + "" : "1");
+        localStorage.setItem(title + "[total_page]", typeof res.data.totalPage === 'number' ? res.data.totalPage + "" : "1");
+        localStorage.setItem(title + "[total_data]", typeof res.data.totalData === 'number' ? res.data.totalData + "" : "0");
+        localStorage.setItem(title + "[size]", typeof res.data.size === 'number' ? res.data.size + "" : "10");
     }
 };
 const is_request_page = function(api, success, fail, error, page, size) {
@@ -819,27 +1305,27 @@ const is_request_page = function(api, success, fail, error, page, size) {
         if (api.params && api.params.size) {
             page = api.params.size;
         }
-        let title1 = get_key_from_href(api.href, api.title);
+        let title = get_key_from_href(api.href, api.title);
         if (!page || page && page <= 0) {
-            let cache_page = localStorage.getItem(title1 + "[page]") || 1;
+            let cache_page = localStorage.getItem(title + "[page]") || 1;
             page = Number(cache_page);
         } else {
-            let total_page = localStorage.getItem(title1 + "[total_page]");
+            let total_page = localStorage.getItem(title + "[total_page]");
             if (Number(total_page) < page) {
                 page = Number(total_page);
             }
         }
-        localStorage.setItem(title1 + "[page]", page + "");
+        localStorage.setItem(title + "[page]", page + "");
         if (!size || size && size <= 0) {
-            let cache_size = localStorage.getItem(title1 + "[size]") || 10;
+            let cache_size = localStorage.getItem(title + "[size]") || 10;
             size = Number(cache_size);
         } else {
-            let total_data = localStorage.getItem(title1 + "[total_data]");
+            let total_data = localStorage.getItem(title + "[total_data]");
             if (Number(total_data) < size) {
                 size = Number(total_data);
             }
         }
-        localStorage.setItem(title1 + "[size]", size + "");
+        localStorage.setItem(title + "[size]", size + "");
         if (api.params) {
             api.params.page = page;
             api.params.size = size;
@@ -855,23 +1341,23 @@ const is_request_page = function(api, success, fail, error, page, size) {
 const is_request_page_next = function(api, success, fail, error) {
     api = url_support(api);
     if (api) {
-        let title1 = get_key_from_href(api.href, api.title);
-        let page = localStorage.getItem(title1 + "[page]") || 0;
-        let size = localStorage.getItem(title1 + "[size]") || 10;
+        let title = get_key_from_href(api.href, api.title);
+        let page = localStorage.getItem(title + "[page]") || 0;
+        let size = localStorage.getItem(title + "[size]") || 10;
         is_request_page(api, success, fail, error, Number(page) + 1, Number(size));
     }
 };
 const is_request_page_pre = function(api, success, fail, error) {
     api = url_support(api);
     if (api) {
-        let title1 = get_key_from_href(api.href, api.title);
-        let page = localStorage.getItem(title1 + "[page]") || 2;
-        let size = localStorage.getItem(title1 + "[size]") || 10;
+        let title = get_key_from_href(api.href, api.title);
+        let page = localStorage.getItem(title + "[page]") || 2;
+        let size = localStorage.getItem(title + "[size]") || 10;
         let pageNumber = Number(page);
         is_request_page(api, success, fail, error, pageNumber > 1 ? pageNumber - 1 : 1, Number(size));
     }
 };
-const get_key_from_href = function(href, title1) {
+const get_key_from_href = function(href, title) {
     if (!href) {
         return "null";
     }
@@ -884,8 +1370,8 @@ const get_key_from_href = function(href, title1) {
     if (temp_href.indexOf("?") > 0) {
         temp_href = temp_href.substring(0, temp_href.indexOf("?"));
     }
-    if (title1 && typeof title1 === "string") {
-        return title1 + ":" + temp_href.replace(/\/|:|\./g, '');
+    if (title && typeof title === "string") {
+        return title + ":" + temp_href.replace(/\/|:|\./g, '');
     } else {
         return temp_href.replace(/\/|:|\./g, '');
     }

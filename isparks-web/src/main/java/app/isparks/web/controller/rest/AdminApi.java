@@ -5,14 +5,20 @@ import app.isparks.core.exception.AuthException;
 import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.LoginParam;
+import app.isparks.core.pojo.param.UserParam;
 import app.isparks.core.service.IAdminService;
 import app.isparks.core.service.ICaptchaService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.IpUtils;
 import app.isparks.core.web.support.Result;
+import app.isparks.core.web.support.ResultUtils;
 import app.isparks.service.impl.AdminServiceImpl;
 import app.isparks.service.impl.CaptchaServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
+import app.isparks.web.pojo.dto.FragmentDTO;
+import app.isparks.web.pojo.param.AuthParam;
+import app.isparks.web.service.IFragmentService;
+import app.isparks.web.service.impl.FragmentServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +40,12 @@ public class AdminApi extends BasicApi{
 
     private ICaptchaService captchaService;
 
-    public AdminApi(AdminServiceImpl adminService, UserServiceImpl userService, CaptchaServiceImpl captchaService) {
+    private IFragmentService fragmentService;
+
+    public AdminApi(AdminServiceImpl adminService, UserServiceImpl userService, CaptchaServiceImpl captchaService, FragmentServiceImpl fragmentService) {
         this.adminService = adminService;this.userService = userService;
         this.captchaService = captchaService;
+        this.fragmentService = fragmentService;
     }
 
     @GetMapping("authenticate")
@@ -49,9 +58,10 @@ public class AdminApi extends BasicApi{
                         HttpServletRequest request){
         String ip = IpUtils.obtainIp(request);
 
-        if(!captchaService.checkCaptcha(ip,code,true)){
-            return fail("验证码错误");
-        }
+//        if(!captchaService.checkCaptcha(ip,code,true)){
+//            return fail("验证码错误");
+//        }
+
         TimeUnit timeUnit = TimeUnit.HOURS;
         long time ;
         if(remember == null || !remember){
@@ -68,8 +78,8 @@ public class AdminApi extends BasicApi{
     @PostMapping("authenticate")
     @ApiOperation(value = "Verify token | 认证token有效性")
     @Log(description = "Token验证",types = {LogType.LOGIN})
-    public Result verifyToken(@RequestBody String token){
-        return build(userService.verifyJwtToken(token));
+    public Result verifyToken(@RequestBody AuthParam param){
+        return build(userService.verifyJwtToken(param.getToken()));
     }
 
     @GetMapping("logout/{username}")
@@ -79,4 +89,10 @@ public class AdminApi extends BasicApi{
         return build(adminService.logout(username));
     }
 
+
+    @ApiOperation(value = "",notes = "")
+    @RequestMapping(value = "fragment",method = {RequestMethod.POST})
+    public Result fragment(@RequestBody FragmentDTO fragment){
+        return ResultUtils.success().withData(fragmentService.fragment(fragment));
+    }
 }

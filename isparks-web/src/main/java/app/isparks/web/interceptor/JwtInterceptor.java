@@ -1,6 +1,7 @@
 package app.isparks.web.interceptor;
 
 import app.isparks.core.config.ISparksConstant;
+import app.isparks.core.pojo.enums.ResultType;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.JsonUtils;
 import app.isparks.core.util.StringUtils;
@@ -27,6 +28,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
+    private final String prefix = "Bearer ";
 
     private IUserService userService;
 
@@ -40,7 +42,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if (true)return true;
+        if(true){return true;}
 
         String uri = request.getRequestURI();
 
@@ -56,13 +58,17 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
         if(!isAsyncRequest(request)){
             response.sendRedirect("/admin/login");
+            return false;
         }
 
-        Result result = ResultUtils.fail("Permission failed");
+        Result result = ResultUtils.build(ResultType.PERMISSION_FAILED).withMsg(ResultType.PERMISSION_FAILED.getMsg());
 
         response.setCharacterEncoding("utf-8");
-        response.setContentType("application/json; charset=utf-8");
-
+        response.setContentType("application/json;charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods","GET,POST,OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers","*");
+        response.setHeader("Access-Control-Allow-Credentials","false");
         write(response, JsonUtils.toJson(result));
 
         return false;
@@ -93,6 +99,10 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 token = values[0];
             }
         }
+        if(!StringUtils.isEmpty(token) && token.startsWith(prefix)){
+            token = token.replace(prefix,"");
+        }
+
         return token;
     }
 

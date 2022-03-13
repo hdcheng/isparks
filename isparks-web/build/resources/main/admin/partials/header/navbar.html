@@ -5,10 +5,10 @@
             <ul class="uk-navbar-nav">
                 <!-- 导航 start -->
                 <li th:each="menu : ${menus}" >
-                    <a th:text="${menu.name}" th:onclick="updateContent([[${menu.link}]],'fra')">父目录</a>
+                    <a th:text="${menu.name}" th:onclick="refreshMid([[${menu.link}]],'fra')">父目录</a>
                     <div th:if="${not #lists.isEmpty(menu.subdirectory)}" class="uk-navbar-dropdown">
                         <ul class="uk-nav uk-navbar-dropdown-nav">
-                            <li  th:each="subMenu : ${menu.subdirectory}"><a th:onclick="updateContent([[${subMenu.link}]],'fra')" th:text="${subMenu.name}">子目录</a></li>
+                            <li  th:each="subMenu : ${menu.subdirectory}"><a th:onclick="refreshMid([[${subMenu.link}]],'fra')" th:text="${subMenu.name}">子目录</a></li>
                         </ul>
                     </div>
                 </li>
@@ -31,8 +31,8 @@
                             <ul class="uk-nav uk-navbar-dropdown-nav">
                                 <!-- 小屏幕导航开始 -->
                                 <li th:each="menu : ${menus}">
-                                    <a th:onclick="updateContent([[${menu.link}]],'fra')" th:text="${menu.name}" >父目录</a>
-                                    <a th:if="${not #lists.isEmpty(menu.subdirectory)}" th:each="subMenu : ${menu.subdirectory}" th:onclick="updateContent([[${subMenu.link}]],'fra')" th:text="${menu.name + '-' + subMenu.name}">子目录</a>
+                                    <a th:if="${#lists.isEmpty(menu.subdirectory)}" th:onclick="refreshMid([[${menu.link}]],'fra')" th:text="${menu.name}" >父目录</a>
+                                    <a th:if="${not #lists.isEmpty(menu.subdirectory)}" th:each="subMenu : ${menu.subdirectory}" th:onclick="refreshMid([[${subMenu.link}]],'fra')" th:text="${subMenu.name}">子目录</a>
                                 </li>
                                 <!-- 小屏幕导航结束 -->
                             </ul>

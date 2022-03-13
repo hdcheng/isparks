@@ -139,13 +139,6 @@
         </div>
     </div>
     <!-- 主题设置结束 -->
-    <!-- <div class="uk-margin">
-        <div class="uk-inline">
-            <a class="uk-form-icon uk-form-icon-flip" href="#" uk-icon="icon: link"></a>
-            <input class="uk-input" type="text">
-        </div>
-    </div> -->
-
 </div>
 <script>   
 app = new Vue({
@@ -164,60 +157,47 @@ app = new Vue({
             themeids:[]
         },
         buttons:{
-            webEditText:"编辑111"
-
+            webEditText:"编辑"
         }
     },
     methods:{
         refresh(){
-
-            axios.get("/api/sys/get/web/settings").then(res => {
-                const data = res.data.data;
-                this.webSettings.name = data.name;
-                this.webSettings.domain = data.domain;
-                this.webSettings.copy = data.copy;
-                this.webSettings.logText = data.logText;
-                this.webSettings.logo = data.logo;
-                this.webSettings.description = data.description;
-                this.webSettings.themeId = data.themeId;
-            }).catch(res => {
-                console.log(res);
+            i$.get("v1/admin/web/settings",(res)=>{
+                this.webSettings.name = res.name;
+                this.webSettings.domain = res.domain;
+                this.webSettings.copy = res.copy;
+                this.webSettings.logText = res.logText;
+                this.webSettings.logo = res.logo;
+                this.webSettings.description = res.description;
+                this.webSettings.themeId = res.themeId;
             });
-            axios.get("/api/admin/theme/list").then(res => {
-                const data = res.data.data;
-                for(let key in data){
-                    this.themeSettings.themeids.push({'themeId':key,'path':data[key]});
-                }
 
-            }).catch(res => {
-                console.log(res);
+            i$.get("v1/admin/themes",(res)=>{
+                for(let key in res){
+                    this.themeSettings.themeids.push({'themeId':key,'path':res[key]});
+                }
             });
 
         },
         updateWebSettings(){
-            //update/web/settings
-            axios.post("/api/sys/update/web/settings",this.webSettings).then(res => {
-                if(res.data.code == 8101){
-                    location.reload();
-                }else{
-                    console.log(res.data.msg);
-                }
-            }).catch(err => {
-                console.log(err);
+            i$.patch({
+                href:"v1/admin/web/settings",
+                body:this.webSettings
+            },(res) => {
+                location.reload();
             });
-
         },
         updateTheme(){
-            axios.get("/api/admin/theme/update",{
-                params:{themeId:this.webSettings.themeId}
-            }).then(res => {
-                if(res.data.code == 8101){
-                    console.log("更新主题成功！");
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-            console.log("更新成："+this.webSettings.themeId);
+            if(this.webSettings.themeId){
+                i$.patch("v1/admin/theme/"+this.webSettings.themeId,(res)=>{
+                    i$.toast.info("更新主题成功");
+                });
+            }else{
+                i$.put("v1/admin/theme/reset",(res)=>{
+                    i$.toast.info("重置主题成功");
+                });
+            }
+            
         }
     },
     created(){

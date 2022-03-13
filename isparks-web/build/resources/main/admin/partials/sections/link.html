@@ -196,14 +196,6 @@ app = new Vue({
             this.newLink.type = 4;
         },
         saveLink(){
-            // let url = "/api/admin/link/save";
-            // axios.post(url,this.newLink).then(res => {
-            //     this.initPageData();
-            //     UIkit.modal(document.getElementById("createModel")).hide();
-            //     this.clearNewLink();
-            // }).catch(err => {
-            //     console.log(err);
-            // });
             i$.post({
                 href:"v1/admin/link",
                 body:this.newLink
@@ -237,21 +229,6 @@ app = new Vue({
             }
         },
         loadOffSiteLink(){ // 加载站外链接
-            // let url = "/api/admin/link/page/by/type";
-            // axios.get(url,{
-            //     params:{
-            //         type:4,
-            //         page:this.offsiteLink.page,
-            //         size:this.offsiteLink.size
-            //     }
-            // }).then(res => {
-            //     if(res.status == 200){
-            //         this.offsiteLink.links = res.data.data.data;
-            //         this.offsiteLink.page = res.data.data.page;
-            //         this.offsiteLink.totalData = res.data.data.totalData;
-            //         this.offsiteLink.totalPage = res.data.data.totalPage;
-            //     }
-            // }).catch(err => {console.log(err);});
             i$.page({
                 href:"v1/admin/link/page?type=4",
                 title:"4"
@@ -275,32 +252,11 @@ app = new Vue({
             });
         },
         deleteById(id){
-            // if(id == "" || id == null ){
-            //     return;
-            // }
-            // axios.get("/api/admin/link/delete",{
-            //     params:{
-            //         id:id
-            //     }
-            // }).then(res => {
-            //     this.initPageData();
-            // }).catch(err => {
-            //     console.log(err);
-            // });
             i$.delete("v1/admin/link/"+id,(res)=> {
                 this.initPageData();
             });
         },
         updateById(id){
-            // if(id == "" || id == null ){
-            //     return;
-            // }
-            // axios.post("/api/admin/link/update",this.updateLink).then(res => {
-            //     this.initPageData();
-            //     UIkit.modal(document.getElementById("updateModel")).hide();
-            // }).catch(err => {
-            //     console.log(err);
-            // });
             i$.put({
                 href:"v1/admin/link",
                 body:this.updateLink

@@ -212,10 +212,6 @@
                     this.focusInputId = e.target.id;
                 },
                 sysInit(){ // 系统初始化
-                    // if(document.getElementById('installProgress').value < 100){
-                    //     UIkit.notification("输入的数据不全", "danger");
-                    //     return;
-                    // }
                     const url = "/api/admin/install";
                     const request = new XMLHttpRequest();
                     request.open('POST', url, true);

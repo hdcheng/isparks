@@ -78,6 +78,7 @@
     padding: .8rem;
     overflow-y: auto;
     overflow-x: hidden;
+    position: relative;
 }
 .is-main>.is-main-bottom{
     height:2.3rem;
@@ -130,15 +131,47 @@
     let page = [[${page}]];
     let content = [[${content}]];
     let app ;
-    function updateContent(path,fragment){
+    window.onload = function(){
+        const jsLine = ["/static/js/md5.min.js","/static/js/vue.min.js"];
+        i$.html.loadJSLine(jsLine , () => {
+
+            pageLoaded();
+
+        });
+    }
+    function pageLoaded(){
+        refreshMid(page,content);
+        config.prefixUrl = "http://127.0.0.1:8174/"
+        
+        if(typeof sidbarLoaded === 'function'){
+            sidbarLoaded();
+        }
+
+        document.querySelectorAll("[is-loading]").forEach((item,i,obj)=>{
+            item.removeAttribute("is-loading");
+        })
+        i$.toast.attributes.wrapper_padding = "100px 1em 0 0";
+    }
+    function refreshMid(path,fragment){
         if(path == "#"){
             return;
         }
         loadContent(document.getElementById("is-mid"),path,fragment);
     }
-    function pageLoaded(config){
-        updateContent(page,content);
-        config.prefixUrl = "http://127.0.0.1:8174/"
+    function loadContent(parent,path,fragment){
+        if(path == "#" || !parent || !page ){
+            return;
+        }
+        i$.post({
+            href : "v1/admin/fragment",
+            body : {"path":path,"fragment":fragment}
+        },(data)=>{
+            i$.html.updateContent(parent,data);
+        },(msg,res)=>{
+            i$.toast.error("没有权限");
+            window.location.href = "/admin/login";
+        });
+        
     }
 </script>
 </html>

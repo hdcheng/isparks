@@ -10,7 +10,8 @@ public enum ResultType implements IEnum<Integer>{
 
     SUCCESS(8101, "success"),
     FAIL(8102, "fail"),
-    ERROR(8103, "error");
+    ERROR(8103, "error"),
+    PERMISSION_FAILED(8104, "Permission failed");
 
     ResultType(Integer code, String msg) {
         this.code = code;

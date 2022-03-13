@@ -68,12 +68,9 @@ app = new Vue({
     },
     methods:{
         initPage(){
-            let url = "/api/admin/plugin/all";
-            axios.get(url).then(res => {
+            i$.get("v1/admin/plugin" , (res) => {
                 console.log(res);
-                if(res.status == 200){
-                  this.plugins = res.data.data;
-                }
+                this.plugins = res;
             });
         },
         showPluginManagerModal(id){
@@ -86,8 +83,8 @@ app = new Vue({
                 if(id == plugins[i].id){
                     this.modalInfo.pluginName = plugins[i].id;
                     this.modalInfo.pluginVersion = plugins[i].version;
-                    this.modalInfo.pluginProvider = plugins[i].provider;
-                    this.modalInfo.className = plugins[i].className;
+                    this.modalInfo.pluginProvider = plugins[i].author;
+                    this.modalInfo.className = plugins[i].state;
                     break;
                 }
                 return;
@@ -95,32 +92,32 @@ app = new Vue({
             UIkit.modal(document.getElementById('plugin-manager-modal')).show();
         },
         stopPlugin(id){
-
-            if(id == null || id == ""){
+            if(!id){
                 return;
             }
-
-            let url = "/api/admin/plugin/stop?id="+id;
-            axios.get(url);
-
+            i$.patch("v1/admin/plugin/stop/"+id,(res,msg) => {
+                i$.toast.info(msg);
+                this.initPage();
+            });
         },
         startPlugin(id){
 
-            if(id == null || id == ""){
+            if(!id){
                 return;
             }
-
-            let url = "/api/admin/plugin/start?id="+id;
-            axios.get(url);
+            i$.patch("v1/admin/plugin/start/"+id,(res,msg) => {
+                i$.toast.info(msg);
+                this.initPage();
+            });
         },
         deletePlugin(id){
-
-            if(id == null || id == ""){
+            if(!id){
                 return;
             }
-
-            let url = "/api/admin/plugin/delete?id="+id;
-            axios.get(url);
+            i$.delete("v1/admin/plugin/"+id,(res,msg) => {
+                i$.toast.info(msg);
+                this.initPage();
+            });
         }
     },
     created(){
