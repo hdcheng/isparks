@@ -3,7 +3,7 @@ package app.isparks.dao.repository.impl;
 import app.isparks.core.exception.RepositoryException;
 import app.isparks.core.pojo.entity.User;
 import app.isparks.dao.mybatis.mapper.UserMapper;
-import app.isparks.dao.repository.AbstractUserCurd;
+import app.isparks.dao.repository.UserCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/8/12
  */
 @Repository
-public class UserCurdImpl extends AbstractUserCurd {
+public class UserCurdImpl extends UserCurd {
 
     private UserMapper userMapper;
 

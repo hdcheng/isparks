@@ -4,7 +4,7 @@ import app.isparks.core.exception.PluginException;
 import app.isparks.core.util.IdUtils;
 import app.isparks.core.util.StringUtils;
 
-public abstract class AbstractEnhancer<O> implements IEnhancer<O>, IDecorator<O> {
+public abstract class AbstractEnhancer<O> implements IServiceEnhancer<O>, IDecorator<O> {
 
     private String id;
 

@@ -95,4 +95,5 @@ public class AdminApi extends BasicApi{
     public Result fragment(@RequestBody FragmentDTO fragment){
         return ResultUtils.success().withData(fragmentService.fragment(fragment));
     }
+
 }

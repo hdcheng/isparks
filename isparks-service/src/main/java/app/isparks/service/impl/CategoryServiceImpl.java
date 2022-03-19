@@ -10,8 +10,8 @@ import app.isparks.core.pojo.param.CategoryParam;
 import app.isparks.core.service.ICategoryService;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.StringUtils;
-import app.isparks.dao.repository.AbstractCategoryCurd;
-import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
+import app.isparks.dao.repository.CategoryCurd;
+import app.isparks.dao.repository.PostCategoryRLCurd;
 import app.isparks.dao.repository.impl.CategoryCurdImpl;
 import app.isparks.dao.repository.impl.PostCategoryRLCurdImpl;
 import app.isparks.service.plugin.AbstractEnhancerService;
@@ -41,9 +41,9 @@ public class CategoryServiceImpl extends AbstractEnhancerService<Category, Categ
     // DO TO DTO
     private final BeanCopier DTO_COPIER = BeanCopier.create(Category.class,CategoryDTO.class,false);
 
-    private AbstractCategoryCurd categoryCurd;
+    private CategoryCurd categoryCurd;
 
-    private AbstractPostCategoryRLCurd pcRLCurd;
+    private PostCategoryRLCurd pcRLCurd;
 
     public CategoryServiceImpl(CategoryCurdImpl categoryCurd, PostCategoryRLCurdImpl pcRLCurd){
         super(categoryCurd);

@@ -48,5 +48,6 @@ dependencies {
     implementation project(":isparks-core")
     implementation project(":isparks-plugin")
     implementation project(":isparks-service")
+    implementation project(":isparks-addons")
 }
 

@@ -7,10 +7,11 @@
     <link th:href="@{/static/css/uikit.min.css}" rel="stylesheet"/>
 </head>
 <script>
-    if(localStorage.getItem("isparks") == "true"){
+    const key = "isparks";
+    if(localStorage.getItem(key) == "true"){
         window.location.href = "/admin";
     }else{
-        const url = "/api/sys/installed";
+        const url = "/v1/admin/installed";
         const request = new XMLHttpRequest();
         request.open('GET', url, false); // 同步
         request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 
@@ -212,7 +213,7 @@
                     this.focusInputId = e.target.id;
                 },
                 sysInit(){ // 系统初始化
-                    const url = "/api/admin/install";
+                    const url = "/v1/admin/init";
                     const request = new XMLHttpRequest();
                     request.open('POST', url, true);
                     request.setRequestHeader("Content-type", "application/json");

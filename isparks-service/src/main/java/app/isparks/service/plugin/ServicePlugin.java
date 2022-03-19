@@ -9,7 +9,7 @@ import app.isparks.plugin.service.IServicePlugin;
 public class ServicePlugin implements IServicePlugin {
 
     @Override
-    public <T,D extends BaseDTO> boolean decorateServiceEnhancer(Class<T> tClass, AbstractEnhancer<D> enhancer) {
+    public <T,D extends BaseDTO> boolean addEnhancer(Class<T> tClass, AbstractEnhancer<D> enhancer) {
         if(tClass == null || enhancer == null){
             return false;
         }
@@ -22,7 +22,7 @@ public class ServicePlugin implements IServicePlugin {
     }
 
     @Override
-    public <T , D extends BaseDTO> boolean unloadServiceEnhancer(Class<T> tClass, AbstractEnhancer<D> enhancer) {
+    public <T , D extends BaseDTO> boolean removeEnhancer(Class<T> tClass, AbstractEnhancer<D> enhancer) {
         if(tClass == null || enhancer == null){
             return false;
         }

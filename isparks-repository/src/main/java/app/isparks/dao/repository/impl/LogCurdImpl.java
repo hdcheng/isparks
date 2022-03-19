@@ -4,7 +4,7 @@ import app.isparks.core.pojo.entity.Log;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.mybatis.mapper.LogMapper;
-import app.isparks.dao.repository.AbstractLogCurd;
+import app.isparks.dao.repository.LogCurd;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Repository;
@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2020/8/12
  */
 @Repository
-public class LogCurdImpl extends AbstractLogCurd {
+public class LogCurdImpl extends LogCurd {
 
     private LogMapper logMapper;
 

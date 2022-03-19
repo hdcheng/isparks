@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>手册</title>
+<meta th:replace="partials/head :: meta"/>
+<link th:replace="partials/head :: link"/>
+<style th:replace = "partials/head :: style"></style>
+<style>
+    .is-content{
+        max-height: 100%;overflow-y: auto;width: 18%;padding-top: 2em;
+        width: 82%;
+    }
+    .is-list{
+        max-height: 100%;overflow-y: auto;width: 18%;padding-top: 2em;
+        width: 18%;
+    }
+</style>
+</head>
+<body uk-height-viewport style="overflow: hidden;">
+    <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
+    <div id="content" class="uk-container-expand" style="position: absolute;top:80px;bottom: 0;width: 100%;display: flex;" >
+        <div class="is-list" >
+            <ul class="uk-nav uk-nav-default">
+                <li class="uk-active"><a href="#">Active</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+                <li><a href="#">Item</a></li>
+            </ul>
+        </div>
+        <div class="is-content" >
+            <div style="border: 1px solid red;">
+                sd
+            </div>
+        </div>
+    </div>
+</body>
+<script th:inline="javascript">
+
+</script>
+<script th:replace="partials/script :: fra"></script>
+<script src="../static/plugins/marked/marked.min.js" th:src="@{/static/plugins/marked/marked.min.js}" type="text/javascript"></script>
+<script src="../static/plugins/highlight/highlight.pack.js" th:src="@{/static/plugins/highlight/highlight.pack.js}" type="text/javascript"></script>
+</html>

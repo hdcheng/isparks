@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Post;
 import app.isparks.dao.mybatis.mapper.PostMapper;
-import app.isparks.dao.repository.AbstractPostCurd;
+import app.isparks.dao.repository.PostCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/8/11
  */
 @Repository
-public class PostCurdImpl extends AbstractPostCurd {
+public class PostCurdImpl extends PostCurd {
 
     private PostMapper postMapper;
 

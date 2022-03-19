@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Attachment;
 import app.isparks.dao.mybatis.mapper.AttachmentMapper;
-import app.isparks.dao.repository.AbstractAttachmentCurd;
+import app.isparks.dao.repository.AttachmentCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2020/9/29
  */
 @Repository
-public class AttachmentCurdImpl extends AbstractAttachmentCurd {
+public class AttachmentCurdImpl extends AttachmentCurd {
 
     private AttachmentMapper attachmentMapper;
 

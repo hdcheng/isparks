@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import app.isparks.core.pojo.entity.Comment;
 import org.springframework.stereotype.Repository;
 import app.isparks.dao.mybatis.mapper.CommentMapper;
-import app.isparks.dao.repository.AbstractCommentCurd;
+import app.isparks.dao.repository.CommentCurd;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CommentCurdImpl extends AbstractCommentCurd {
+public class CommentCurdImpl extends CommentCurd {
 
     private Logger log = LoggerFactory.getLogger(CommentCurdImpl.class);
 

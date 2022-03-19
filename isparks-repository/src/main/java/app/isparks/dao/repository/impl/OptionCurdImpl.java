@@ -3,13 +3,13 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Option;
 import app.isparks.dao.mybatis.mapper.OptionMapper;
-import app.isparks.dao.repository.AbstractOptionCurd;
+import app.isparks.dao.repository.OptionCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public class OptionCurdImpl extends AbstractOptionCurd {
+public class OptionCurdImpl extends OptionCurd {
 
     private OptionMapper mapper;
 

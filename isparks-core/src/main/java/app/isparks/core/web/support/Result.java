@@ -1,16 +1,18 @@
 package app.isparks.core.web.support;
 
 
-
 /**
  * rest api result
  *
  * @author chenghd
  * @date 2020/7/22
  */
-public class Result<T> {
+public class Result<T>  {
+
     private String msg;
+
     private int code;
+
     private T data;
 
     public Result(int code) {

@@ -4,7 +4,7 @@ import app.isparks.core.pojo.dto.TagDTO;
 import app.isparks.core.pojo.entity.Tag;
 import app.isparks.core.util.BeanUtils;
 import app.isparks.dao.mybatis.mapper.TagMapper;
-import app.isparks.dao.repository.AbstractTagCurd;
+import app.isparks.dao.repository.TagCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Optional;
  * @date 2020/8/12
  */
 @Repository
-public class TagCurdImpl extends AbstractTagCurd {
+public class TagCurdImpl extends TagCurd {
 
     private TagMapper mapper;
 

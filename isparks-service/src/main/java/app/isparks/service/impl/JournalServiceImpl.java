@@ -8,7 +8,7 @@ import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.param.JournalParam;
 import app.isparks.core.service.IJournalService;
-import app.isparks.dao.repository.AbstractJournalCurd;
+import app.isparks.dao.repository.JournalCurd;
 import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,9 +23,9 @@ public class JournalServiceImpl extends AbstractService<Journal> implements IJou
 
     private final JournalConverter CONVERTER = ConverterFactory.get(JournalConverter.class);
 
-    private AbstractJournalCurd journalCurd;
+    private JournalCurd journalCurd;
 
-    public JournalServiceImpl(AbstractJournalCurd journalCurd) {
+    public JournalServiceImpl(JournalCurd journalCurd) {
         super(journalCurd);
         this.journalCurd = journalCurd;
     }

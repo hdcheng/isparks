@@ -12,14 +12,7 @@ import java.util.Objects;
  * @author chenghd
  * @date 2020/7/22
  */
-public class BaseEntity implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * 主键ID
-     */
-    private String id;
+public class BaseEntity extends MetaEntity {
 
     /**
      * unix time
@@ -39,15 +32,9 @@ public class BaseEntity implements Serializable {
 
     // constructor
     public BaseEntity() { }
-    public BaseEntity(String id) { this.id = id; }
+    public BaseEntity(String id) { super(id); }
 
     // getter and setter
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
     public Long getCreateTime() {
         return createTime;
     }
@@ -81,11 +68,11 @@ public class BaseEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BaseEntity that = (BaseEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(createTime, that.createTime);
+        return Objects.equals(getId(), that.getId()) && Objects.equals(createTime, that.createTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createTime);
+        return Objects.hash(getId(), createTime);
     }
 }

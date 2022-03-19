@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Category;
 import app.isparks.dao.mybatis.mapper.CategoryMapper;
-import app.isparks.dao.repository.AbstractCategoryCurd;
+import app.isparks.dao.repository.CategoryCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2020/8/12
  */
 @Repository
-public class CategoryCurdImpl extends AbstractCategoryCurd {
+public class CategoryCurdImpl extends CategoryCurd {
 
 
     private CategoryMapper categoryMapper;

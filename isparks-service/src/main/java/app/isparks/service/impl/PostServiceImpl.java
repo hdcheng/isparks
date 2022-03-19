@@ -19,9 +19,9 @@ import app.isparks.core.service.ITagService;
 import app.isparks.core.util.DateUtils;
 import app.isparks.core.util.IdUtils;
 import app.isparks.core.util.StringUtils;
-import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
-import app.isparks.dao.repository.AbstractPostCurd;
-import app.isparks.dao.repository.AbstractPostTagRLCurd;
+import app.isparks.dao.repository.PostCategoryRLCurd;
+import app.isparks.dao.repository.PostCurd;
+import app.isparks.dao.repository.PostTagRLCurd;
 import app.isparks.dao.repository.impl.PostCurdImpl;
 import app.isparks.service.plugin.AbstractEnhancerService;
 import org.springframework.stereotype.Service;
@@ -40,11 +40,11 @@ public class PostServiceImpl extends AbstractEnhancerService<Post,PostDTO> imple
 
     private static final String TEMP_LINK_KEY_PREFIX = "TEMP-POST-KEY-";
 
-    private AbstractPostCurd postCurd;
+    private PostCurd postCurd;
 
-    private AbstractPostCategoryRLCurd pcRLCurd;
+    private PostCategoryRLCurd pcRLCurd;
 
-    private AbstractPostTagRLCurd ptRLCurd;
+    private PostTagRLCurd ptRLCurd;
 
     private ITagService tagService;
 
@@ -52,7 +52,7 @@ public class PostServiceImpl extends AbstractEnhancerService<Post,PostDTO> imple
 
     private ICacheService cacheService;
 
-    public PostServiceImpl(PostCurdImpl postCurd, AbstractPostCategoryRLCurd pcRLCurd, AbstractPostTagRLCurd ptRLCurd, TagServiceImpl tagService, CacheServiceImpl cacheService, CategoryServiceImpl categoryService){
+    public PostServiceImpl(PostCurdImpl postCurd, PostCategoryRLCurd pcRLCurd, PostTagRLCurd ptRLCurd, TagServiceImpl tagService, CacheServiceImpl cacheService, CategoryServiceImpl categoryService){
         super(postCurd);
         this.postCurd = postCurd;
 
@@ -183,8 +183,6 @@ public class PostServiceImpl extends AbstractEnhancerService<Post,PostDTO> imple
         Post post = postCurd.delete(id);
 
         pcRLCurd.deleteByPost(id);
-
-        ptRLCurd.deleteByPost(id);
 
         return Optional.of(converter(post));
     }

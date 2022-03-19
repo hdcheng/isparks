@@ -42,7 +42,7 @@ public class SysApi extends BasicApi{
     @GetMapping("installed")
     @ApiOperation("The system is installed | 系统是否已经安装过")
     public Result isInstalled(){
-        return build(sysService.isInstalled());
+        return success().withData(sysService.isInstalled());
     }
 
     @GetMapping("web/settings")

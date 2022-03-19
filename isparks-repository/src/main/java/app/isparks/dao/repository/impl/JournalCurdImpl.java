@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Journal;
 import app.isparks.dao.mybatis.mapper.JournalMapper;
-import app.isparks.dao.repository.AbstractJournalCurd;
+import app.isparks.dao.repository.JournalCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2020/8/16
  */
 @Repository
-public class JournalCurdImpl extends AbstractJournalCurd {
+public class JournalCurdImpl extends JournalCurd {
 
     private JournalMapper journalMapper;
 

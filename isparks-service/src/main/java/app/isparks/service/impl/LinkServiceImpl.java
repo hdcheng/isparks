@@ -12,11 +12,10 @@ import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.pojo.param.LinkParam;
 import app.isparks.core.service.ILinkService;
 import app.isparks.core.util.StringUtils;
-import app.isparks.dao.repository.AbstractLinkCurd;
+import app.isparks.dao.repository.LinkCurd;
 import app.isparks.dao.repository.impl.LinkCurdImpl;
 import app.isparks.service.base.AbstractService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class LinkServiceImpl extends AbstractService<Link> implements ILinkServi
 
     private LinkConverter CONVERTER = ConverterFactory.get(LinkConverter.class);
 
-    private AbstractLinkCurd linkCurd;
+    private LinkCurd linkCurd;
 
     public LinkServiceImpl(LinkCurdImpl linkCurd){
         super(linkCurd);

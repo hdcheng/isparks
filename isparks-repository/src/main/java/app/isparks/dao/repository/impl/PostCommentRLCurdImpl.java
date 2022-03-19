@@ -6,7 +6,7 @@ import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.util.HtmlUtils;
 import app.isparks.dao.mybatis.mapper.PostCommentRLMapper;
-import app.isparks.dao.repository.AbstractPostCommentRLCurd;
+import app.isparks.dao.repository.PostCommentRLCurd;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PostCommentRLCurdImpl extends AbstractPostCommentRLCurd {
+public class PostCommentRLCurdImpl extends PostCommentRLCurd {
 
     private Logger log = LoggerFactory.getLogger(PostCommentRLCurdImpl.class);
 

@@ -6,7 +6,7 @@
 <link th:replace="partials/head :: link"/>
 <style th:replace = "partials/head :: style"></style>
 </head>
-<body is-loading>
+<body >
 <style>
     .link-wrapper{
         overflow: hidden !important;
@@ -48,17 +48,17 @@
     }
 </style>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
-<div id="content" class="uk-container " style="margin-top: 2rem;" >
+<div id="content"  v-cloak class="uk-container " style="margin-top: 2rem;" >
     <div class="uk-flex uk-flex-center uk-flex-row@l uk-flex-column@m uk-flex-wrap"  style="width:100%;">
         <!-- 友链 开始 -->
-        <a class="link-wrapper"  th:each="link : ${PageData.data}" th:href="${link.url}" target="_blank">
+        <a class="link-wrapper" v-for="link in links" target="_blank">
             <div class="link-box">
                 <div style="width: 100px;height: 100px;margin:.5rem;display: flex;text-align: center;line-height: 100px;border: .5px solid #61616138;border-radius: 10px;" >
-                    <div th:utext ="${link.logo}" style="margin: auto;width: 100%;height: 100%;overflow: hidden;padding: .5rem;display: flex;justify-content: center;align-items: center;"></div>
+                    <div  style="margin: auto;width: 100%;height: 100%;overflow: hidden;padding: .5rem;display: flex;justify-content: center;align-items: center;" v-text="link.logo">logo</div>
                 </div>
                 <div style="width: 200px;height: 100px;padding:.5rem;display: flex;flex-direction: column;justify-content: center;align-items: start;">
-                    <div class="text-decorate" style="margin: 0;width: 100%;font-size: large;" th:text="${link.name}"></div>
-                    <div class="text-decorate" style="margin: 0;width: 100%;font-size: small;" th:text="${link.url}"></div>
+                    <div class="text-decorate" v-text="link.name">name</div>
+                    <div class="text-decorate" v-text="link.url">url</div>
                 </div>
             </div>
         </a>
@@ -68,9 +68,27 @@
 </div>
 <footer th:replace = "partials/footer :: fra"></footer>
 </body>
-<script  th:inline="javascript">
-    const data = [[${PageData}]];
-    console.log(data);
+<script >
+    window.onload = function(){
+       Vue.createApp({
+           data(){
+               return {
+                   links:[]
+               }
+           },
+           methods:{
+                formatDate(mis){
+                    return i$.kit.date.format(mis);
+                }
+           },
+           created(){
+                i$.get("/api/meet/links",(res) => {
+                    console.log(res);
+                    this.links = res;
+                });
+           }
+       }).mount("#content");
+   }
 </script>
 <script th:replace="partials/script :: fra"></script>
 </html>

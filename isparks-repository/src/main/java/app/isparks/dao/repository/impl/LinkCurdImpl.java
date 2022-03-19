@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.Link;
 import app.isparks.dao.mybatis.mapper.LinkMapper;
-import app.isparks.dao.repository.AbstractLinkCurd;
+import app.isparks.dao.repository.LinkCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @date： 2021/3/13
  */
 @Repository
-public class LinkCurdImpl extends AbstractLinkCurd {
+public class LinkCurdImpl extends LinkCurd {
 
     private LinkMapper linkMapper;
 

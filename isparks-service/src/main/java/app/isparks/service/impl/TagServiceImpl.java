@@ -8,10 +8,8 @@ import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.pojo.param.TagParam;
 import app.isparks.core.service.ITagService;
-import app.isparks.core.util.thread.LocalThreadUtils;
-import app.isparks.dao.repository.AbstractPostTagRLCurd;
-import app.isparks.dao.repository.AbstractTagCurd;
-import app.isparks.core.service.support.BaseService;
+import app.isparks.dao.repository.PostTagRLCurd;
+import app.isparks.dao.repository.TagCurd;
 import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +30,11 @@ public class TagServiceImpl extends AbstractService<Tag> implements ITagService 
 
     private TagConverter CONVERTER = ConverterFactory.get(TagConverter.class);
 
-    private AbstractTagCurd tagCurd;
+    private TagCurd tagCurd;
 
-    private AbstractPostTagRLCurd ptRLCurd;
+    private PostTagRLCurd ptRLCurd;
 
-    public TagServiceImpl(AbstractTagCurd tagCurd,AbstractPostTagRLCurd ptRLCurd){
+    public TagServiceImpl(TagCurd tagCurd, PostTagRLCurd ptRLCurd){
         super(tagCurd);
         this.tagCurd = tagCurd;
 

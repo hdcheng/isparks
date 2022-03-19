@@ -8,7 +8,7 @@ import app.isparks.core.pojo.enums.*;
 import app.isparks.core.pojo.param.OptionParam;
 import app.isparks.core.service.IOptionService;
 import app.isparks.core.util.*;
-import app.isparks.dao.repository.AbstractOptionCurd;
+import app.isparks.dao.repository.OptionCurd;
 import app.isparks.dao.repository.impl.OptionCurdImpl;
 import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
     private OptionConverter optionConverter = ConverterFactory.get(OptionConverter.class);
 
-    private AbstractOptionCurd optionCurd;
+    private OptionCurd optionCurd;
 
     public OptionServiceImpl(OptionCurdImpl optionCurd){
         super(optionCurd);

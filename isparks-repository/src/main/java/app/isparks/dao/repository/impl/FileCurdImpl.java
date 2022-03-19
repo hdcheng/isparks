@@ -2,7 +2,7 @@ package app.isparks.dao.repository.impl;
 
 import app.isparks.core.pojo.entity.FFile;
 import app.isparks.dao.mybatis.mapper.FileMapper;
-import app.isparks.dao.repository.AbstractFileCurd;
+import app.isparks.dao.repository.FileCurd;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2020/9/29
  */
 @Repository
-public class FileCurdImpl extends AbstractFileCurd {
+public class FileCurdImpl extends FileCurd {
 
     private FileMapper fileMapper;
 

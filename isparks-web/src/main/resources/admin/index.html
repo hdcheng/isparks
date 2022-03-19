@@ -8,7 +8,7 @@
     <script>
         const key = "isparks";
         if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
-            const url = "/api/sys/installed";
+            const url = "/v1/admin/installed";
             const request = new XMLHttpRequest();
             request.open('GET', url, false); // 同步
             request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 

@@ -1,5 +1,6 @@
 package app.isparks.web;
 
+import app.addons.AddonBoot;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.framework.ISparksApplication;
 import app.isparks.plugin.PluginBoot;
@@ -32,7 +33,8 @@ public class Application {
                 .instance()
                 .register("service",new ServiceBoot(args))
                 .register("plugin",new PluginBoot(args))
-                .register("web",new WebBoot(args));
+                .register("web",new WebBoot(args))
+                .register("addons",new AddonBoot());
 
         // start spring boot
         applicationContext = SpringApplication.run(Application.class, args);

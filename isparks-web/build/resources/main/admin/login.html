@@ -10,7 +10,7 @@
 <script>
 const key = "isparks";
 if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
-    const url = "/api/sys/installed";
+    const url = "/v1/admin/installed";
     const request = new XMLHttpRequest();
     request.open('GET', url, false); // 同步
     request.setRequestHeader("Content-Type","application/x-www-form-urlencoded;"); 
@@ -92,7 +92,7 @@ if(localStorage.getItem(key) == null || localStorage.getItem(key) != "true"){
 <script>
 const password_placeholder = "*********";
 window.onload = function(){
-    const jsLine = ["/static/js/utils.js","/static/js/md5.min.js","/static/js/vue.min.js"];
+    const jsLine = ["/static/js/md5.min.js","/static/js/vue.min.js"];
     i$.html.loadJSLine(jsLine,function(){
         buildApp();
     });

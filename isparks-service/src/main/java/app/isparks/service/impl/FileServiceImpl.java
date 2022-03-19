@@ -19,7 +19,7 @@ import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.core.service.IFileService;
-import app.isparks.dao.repository.AbstractFileCurd;
+import app.isparks.dao.repository.FileCurd;
 import app.isparks.service.base.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +44,9 @@ public class FileServiceImpl extends AbstractService<FFile> implements IFileServ
 
     private volatile FileHandler handler;
 
-    private AbstractFileCurd fileCurd;
+    private FileCurd fileCurd;
 
-    public FileServiceImpl(AbstractFileCurd fileCurd){
+    public FileServiceImpl(FileCurd fileCurd){
         super(fileCurd);
         this.fileCurd = fileCurd;
     }

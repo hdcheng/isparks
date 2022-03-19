@@ -6,7 +6,7 @@
 <link th:replace="partials/head :: link"/>
 <style th:replace = "partials/head :: style"></style>
 </head>
-<body is-loading>
+<body>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
 <div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
     <article class="uk-article">
@@ -16,10 +16,7 @@
 <footer th:replace = "partials/footer :: fra"></footer>
 </body>
 <script th:inline="javascript">
-    const data = [[${PageData}]];
-    function pageLoaded(config){
-        document.getElementById("mdContent").innerHTML = marked(data||"")
-    }
+
 </script>
 <script th:replace="partials/script :: fra"></script>
 <script src="../static/plugins/marked/marked.min.js" th:src="@{/static/plugins/marked/marked.min.js}" type="text/javascript"></script>

@@ -11,20 +11,20 @@
     }
 </style>
 </head>
-<body is-loading>
+<body>
 <div th:insert = "partials/header :: nav" style="background-color: black;"></div>
-<div id="content" class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
+<div id="content" v-cloak class="uk-container uk-container-xsmall" style="margin-top: 2rem;" >
     <ul uk-accordion = "multiple: true">
-        <li th:each="archive,index : ${PageData.archives}" class="uk-open">
+        <li v-for="archive in archives"  class="uk-open">
             <a class="uk-accordion-title" href="#">
-                <span th:text="${archive.date }"></span>
-                <span th:text="${' ('+ #lists.size(archive.posts) + ')'}" >2020 (10)</span>
+                <span >日期</span>
+                <span  v-text="archive.date + ' (' + archive.posts.length + ')'">2020 (10)</span>
             </a>
-            <div class="uk-accordion-content">
-                <p th:each="post : ${archive.posts}">
-                    <span style="background: cadetblue;color: aliceblue;padding:0 .6em;border-radius: 2em;" th:text="${#dates.month(new java.util.Date(post.createTime))+'月'}"></span> 
-                    <span th:text="${#dates.format(new java.util.Date(post.createTime),'MM-dd')}"></span>
-                    <a th:href="'/post/'+${post.id}" th:text = "${post.title}" th:onclick="visit([[${post.id}]])"></a>
+            <div v-for="post in archive.posts" class="uk-accordion-content">
+                <p >
+                    <span style="background: cadetblue;color: aliceblue;padding:0 .6em;border-radius: 2em;" v-text="formatDate(post.createTime,'M月')">3月</span> 
+                    <span v-text="' '+ formatDate(post.createTime,'MM-dd')">03-11</span>
+                    <a :href="'/page/post?id=' + post.id" v-text="' '+ post.title">标题</a>
                 </p>
             </div>
         </li>
@@ -32,20 +32,27 @@
 </div>
 <footer th:replace = "partials/footer :: fra"></footer>
 </body>
-<script th:inline="javascript">
-function visit(id){
-    if(id != null && id != ""){
-        axios.get("/api/plugin/post/visit",{
-            params:{
-                id : id,
-                visits : 1
-            }
-        }).then(res => {
-            console.log(res);
-            window.location.href = "/post/" + id;
-        });
-    }
-}
+<script >
+    window.onload = function(){
+       Vue.createApp({
+           data(){
+               return {
+                   archives:[]
+               }
+           },
+           methods:{
+                formatDate(mis,format){
+                    return i$.kit.date.format(mis,format);
+                }
+           },
+           created(){
+                i$.request("/api/meet/archive",(res) => {
+                    console.log(res);
+                    this.archives = res;
+                });
+           }
+       }).mount("#content");
+   }
 </script>
 <script th:replace="partials/script :: fra"></script>
 </html>

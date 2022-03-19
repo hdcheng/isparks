@@ -1,14 +1,13 @@
 package app.isparks.dao.repository.impl;
 
-import app.isparks.core.pojo.entity.Comment;
 import app.isparks.core.pojo.entity.Post;
 import app.isparks.core.pojo.entity.relation.PostCategoryRL;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.mybatis.mapper.PostCategoryRLMapper;
-import app.isparks.dao.repository.AbstractCategoryCurd;
-import app.isparks.dao.repository.AbstractPostCategoryRLCurd;
-import app.isparks.dao.repository.AbstractPostCurd;
+import app.isparks.dao.repository.CategoryCurd;
+import app.isparks.dao.repository.PostCategoryRLCurd;
+import app.isparks.dao.repository.PostCurd;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
@@ -18,22 +17,21 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author chenghd
  * @date 2020/8/13
  */
 @Repository
-public class PostCategoryRLCurdImpl extends AbstractPostCategoryRLCurd {
+public class PostCategoryRLCurdImpl extends PostCategoryRLCurd {
 
     private Logger log = LoggerFactory.getLogger(PostCategoryRLCurdImpl.class);
 
     @Autowired
-    private AbstractCategoryCurd categoryCurd;
+    private CategoryCurd categoryCurd;
 
     @Autowired
-    private AbstractPostCurd postCurd;
+    private PostCurd postCurd;
 
     private PostCategoryRLMapper mapper;
 

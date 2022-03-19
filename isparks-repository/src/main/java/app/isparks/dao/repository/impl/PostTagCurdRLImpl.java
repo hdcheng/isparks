@@ -4,9 +4,9 @@ import app.isparks.core.pojo.entity.relation.PostTagRL;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import app.isparks.dao.mybatis.mapper.PostTagRLMapper;
-import app.isparks.dao.repository.AbstractPostCurd;
-import app.isparks.dao.repository.AbstractPostTagRLCurd;
-import app.isparks.dao.repository.AbstractTagCurd;
+import app.isparks.dao.repository.PostCurd;
+import app.isparks.dao.repository.PostTagRLCurd;
+import app.isparks.dao.repository.TagCurd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +20,15 @@ import java.util.List;
  * @date 2020/8/20
  */
 @Repository
-public class PostTagCurdRLImpl extends AbstractPostTagRLCurd {
+public class PostTagCurdRLImpl extends PostTagRLCurd {
 
     private Logger log = LoggerFactory.getLogger(PostTagCurdRLImpl.class);
 
     @Autowired
-    private AbstractPostCurd postCurd;
+    private PostCurd postCurd;
 
     @Autowired
-    private AbstractTagCurd tagCurd;
+    private TagCurd tagCurd;
 
     private PostTagRLMapper mapper;
 

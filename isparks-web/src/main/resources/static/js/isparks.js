@@ -1020,6 +1020,57 @@ const kit = {
             const tz = new Date().getTimezoneOffset() / 60;
             return tz;
         }
+    },
+    date: {
+        format: function(mis, format) {
+            if (!mis || typeof mis !== "number") {
+                return "";
+            }
+            if (!format) {
+                format = "yyyy-MM-dd HH:mm:ss";
+            }
+            let date = new Date(mis);
+            if (format.indexOf("yyyy") >= 0) {
+                format = format.replace("yyyy", date.getFullYear());
+            }
+            if (format.indexOf("MM") >= 0) {
+                let MM = date.getMonth() + 1;
+                format = format.replace("MM", MM < 10 ? "0" + MM : MM);
+            } else if (format.indexOf("M") >= 0) {
+                format = format.replace("M", date.getMonth() + 1);
+            }
+            if (format.indexOf("dd") >= 0) {
+                let dd = date.getDate();
+                format = format.replace("dd", dd < 10 ? "0" + dd : dd);
+            } else if (format.indexOf("d") >= 0) {
+                format = format.replace("d", date.getDate());
+            }
+            if (format.indexOf("HH") >= 0) {
+                let HH = date.getHours();
+                format = format.replace("HH", HH < 10 ? "0" + HH : HH);
+            } else if (format.indexOf("H") >= 0) {
+                format = format.replace("H", date.getHours());
+            }
+            if (format.indexOf("hh") >= 0) {
+                let hh = date.getHours() - 12;
+                format = format.replace("hh", hh < 10 ? "0" + hh : hh);
+            } else if (format.indexOf("h") >= 0) {
+                format = format.replace("h", date.getHours() - 12);
+            }
+            if (format.indexOf("mm") >= 0) {
+                let mm = date.getMinutes();
+                format = format.replace("mm", mm < 10 ? "0" + mm : mm);
+            } else if (format.indexOf("m") >= 0) {
+                format = format.replace("m", date.getMinutes());
+            }
+            if (format.indexOf("ss") >= 0) {
+                let ss = date.getSeconds();
+                format = format.replace("ss", ss < 10 ? "0" + ss : ss);
+            } else if (format.indexOf("s") >= 0) {
+                format = format.replace("s", date.getSeconds());
+            }
+            return format;
+        }
     }
 };
 const cookies = {

@@ -1,12 +1,16 @@
 package app.isparks.web;
 
 import app.isparks.core.framework.IBoot;
+import app.isparks.plugin.PluginManager;
+import app.isparks.web.controller.plugin.RequestPlugin;
 import app.isparks.web.service.IThemeService;
 import app.isparks.core.util.IOCUtils;
 
 public class WebBoot implements IBoot {
 
     public WebBoot(String ... args){
+
+        PluginManager.singleton().setRequestPlugin(new RequestPlugin());
 
     }
 

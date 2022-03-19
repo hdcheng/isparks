@@ -1,9 +1,7 @@
 package app.isparks.service.impl;
 
-import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.enums.EntityType;
-import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
 import org.slf4j.Logger;
@@ -16,12 +14,11 @@ import org.springframework.stereotype.Service;
 import app.isparks.core.pojo.param.CommentParam;
 import app.isparks.core.service.ICommentService;
 import app.isparks.service.base.AbstractService;
-import app.isparks.dao.repository.AbstractCommentCurd;
+import app.isparks.dao.repository.CommentCurd;
 import app.isparks.core.pojo.converter.CommentConverter;
 import app.isparks.core.pojo.converter.ConverterFactory;
 import app.isparks.core.pojo.entity.relation.PostCommentRL;
-import org.springframework.beans.factory.annotation.Autowired;
-import app.isparks.dao.repository.AbstractPostCommentRLCurd;
+import app.isparks.dao.repository.PostCommentRLCurd;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -33,11 +30,11 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
 
     private CommentConverter commentConverter = ConverterFactory.get(CommentConverter.class);
 
-    private AbstractPostCommentRLCurd pcRLCurd;
+    private PostCommentRLCurd pcRLCurd;
 
-    private AbstractCommentCurd commentCurd;
+    private CommentCurd commentCurd;
 
-    public CommentServiceImpl(AbstractCommentCurd commentCurd,AbstractPostCommentRLCurd pcRLCurd,PostServiceImpl postService) {
+    public CommentServiceImpl(CommentCurd commentCurd, PostCommentRLCurd pcRLCurd, PostServiceImpl postService) {
         super(commentCurd);
         this.commentCurd = commentCurd;
 

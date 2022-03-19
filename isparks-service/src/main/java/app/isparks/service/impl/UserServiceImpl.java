@@ -14,7 +14,7 @@ import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.MD5Utils;
 import app.isparks.core.util.StringUtils;
 import app.isparks.core.util.thread.LocalThreadUtils;
-import app.isparks.dao.repository.AbstractUserCurd;
+import app.isparks.dao.repository.UserCurd;
 import app.isparks.dao.repository.impl.UserCurdImpl;
 import app.isparks.service.base.AbstractService;
 import app.isparks.service.security.jwt.JwtHandler;
@@ -40,7 +40,7 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
 
     private final static String THREAD_USER_KEY = "thread-user-key-" + System.currentTimeMillis();
 
-    private AbstractUserCurd userCurd;
+    private UserCurd userCurd;
 
     private static String DEFAULT_PASSWORD = "123456";
 
