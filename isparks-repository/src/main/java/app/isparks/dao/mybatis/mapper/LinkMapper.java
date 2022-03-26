@@ -1,6 +1,5 @@
 package app.isparks.dao.mybatis.mapper;
 
-import app.isparks.core.pojo.entity.FFile;
 import app.isparks.core.pojo.entity.Link;
 import org.apache.ibatis.annotations.Mapper;
 

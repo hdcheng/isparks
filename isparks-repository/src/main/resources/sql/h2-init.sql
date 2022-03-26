@@ -192,11 +192,18 @@ CREATE TABLE option (
 DROP TABLE IF EXISTS relation;
 CREATE TABLE relation (
   id VARCHAR PRIMARY KEY,
-  status int4,
-  create_time BIGINT,
-  modify_time BIGINT,
   from_entity VARCHAR,
   from_id VARCHAR,
   to_entity VARCHAR,
   to_id VARCHAR
+);
+
+-- ----------------------------
+-- Table structure for Relation
+-- ----------------------------
+DROP TABLE IF EXISTS `dictionary`;
+CREATE TABLE `dictionary` (
+  "name" varchar(255) ,
+  "value" int4 NOT NULL,
+  PRIMARY KEY ("value")
 );

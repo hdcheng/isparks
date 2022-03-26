@@ -7,6 +7,7 @@ import app.isparks.service.impl.AbstractCacheService;
 import app.isparks.service.impl.CacheServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import app.isparks.web.interceptor.JwtInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -22,6 +23,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
+
+    @Value("${isparks.jwt.open:true}")
+    private Boolean JWT_OPEN = true;
 
     private AbstractCacheService cacheService;
 
@@ -64,7 +68,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 "/admin/login", "/admin/install","/api/admin/install",
                 "/api/sys/installed"};
 
-        registry.addInterceptor(new JwtInterceptor(userService))
+        registry.addInterceptor(new JwtInterceptor(userService,JWT_OPEN))
                 .addPathPatterns(jwtPath)
                 .excludePathPatterns(jwtExcludePath);
     }
@@ -88,6 +92,5 @@ public class WebConfig extends WebMvcConfigurationSupport {
                     .addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
     }
-
 
 }

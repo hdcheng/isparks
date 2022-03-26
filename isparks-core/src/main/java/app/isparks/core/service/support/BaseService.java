@@ -55,7 +55,5 @@ public abstract class BaseService  {
         LocalThreadUtils.setMessage(msg);
         return msg;
     }
-
-
-
+    
 }

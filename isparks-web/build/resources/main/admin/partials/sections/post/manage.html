@@ -5,6 +5,21 @@
 </style>
 
 <div id="post-manage-page" v-cloak>
+    <div class="uk-placeholder">
+        <form>
+            <div class="uk-margin">
+                <label class="uk-form-label" for="form-stacked-select">文章类型</label>
+                <div class="uk-form-controls">
+                    <select class="uk-select" id="form-stacked-select">
+                        <option>所有</option>
+                        <option>文档</option>
+                        <option>博客</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        
+    </div>
     <div class="uk-margin-medium-top" >
         <ul class="uk-flex-center uk-child-width-auto@l uk-child-width-1-1@m" uk-tab style="margin:0px">
             <li class="uk-active"><a href="#" @click="pageValid">所有 <span uk-icon="list"></span></a></li>
@@ -31,7 +46,7 @@
                 </ul>
             </div>
         </div>
-        <ul class="uk-pagination" uk-scrollspy="cls: uk-animation-slide-bottom; target:.uk-pagination;delay: 300;">
+        <ul v-if="totalPage > 1" class="uk-pagination" uk-scrollspy="cls: uk-animation-slide-bottom; target:.uk-pagination;delay: 300;">
             <li><a href="#" @click="pre"><span class="uk-margin-small-right" uk-pagination-previous ></span>上一页</a></li>
             <li class="uk-margin-auto-left"><a href="#" @click="next">下一页<span class="uk-margin-small-left" uk-pagination-next></span></a></li>
         </ul>

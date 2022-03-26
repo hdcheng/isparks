@@ -1,6 +1,7 @@
 package app.isparks.core.pojo.enums;
 
 
+import app.isparks.core.pojo.entity.FFile;
 
 public enum EntityType {
     POST(app.isparks.core.pojo.entity.Post.class),
@@ -8,7 +9,7 @@ public enum EntityType {
     ATTACHMENT(app.isparks.core.pojo.entity.Attachment.class),
     CATEGORY(app.isparks.core.pojo.entity.Category.class),
     COMMENT(app.isparks.core.pojo.entity.Comment.class),
-    FFILE(app.isparks.core.pojo.entity.FFile.class),
+    FFILE(FFile.class),
     LINK(app.isparks.core.pojo.entity.Link.class),
     LOG(app.isparks.core.pojo.entity.Log.class),
     OPTION(app.isparks.core.pojo.entity.Option.class),
@@ -20,5 +21,9 @@ public enum EntityType {
     }
 
     private Class<?> aClass;
+
+    public Class<?> typeClass(){
+        return aClass;
+    }
 
 }

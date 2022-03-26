@@ -12,6 +12,8 @@ public class WebBoot implements IBoot {
 
         PluginManager.singleton().setRequestPlugin(new RequestPlugin());
 
+        System.out.println();
+
     }
 
     @Override

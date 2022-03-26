@@ -3,7 +3,6 @@ package app.isparks.core.file.header;
 
 import app.isparks.core.file.type.FileLocationType;
 import app.isparks.core.file.type.FileType;
-import app.isparks.core.pojo.entity.FFile;
 
 /**
  * 本地文件

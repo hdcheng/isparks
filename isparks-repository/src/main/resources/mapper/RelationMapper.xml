@@ -2,4 +2,171 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="app.isparks.dao.mybatis.mapper.RelationMapper">
 
+    <sql id="table">
+        relation
+    </sql>
+
+    <sql id="selectAll">
+        SELECT id,from_entity,from_id,to_entity,to_id
+        FROM
+        <include refid="table"/>
+    </sql>
+
+    <resultMap id="resultMap" type="app.isparks.core.pojo.entity.Relation">
+        <result property="fromId" column="from_id"/>
+        <result property="fromEntity" column="from_entity" typeHandler="app.isparks.dao.mybatis.handler.EntityTypeHandler"/>
+        <result property="toId" column="to_id"/>
+        <result property="toEntity" column="to_entity" typeHandler="app.isparks.dao.mybatis.handler.EntityTypeHandler"/>
+    </resultMap>
+
+    <insert id="insert">
+        INSERT INTO
+        <include refid="table"/>
+        (
+            from_entity,from_id,to_entity,to_id,id
+        )
+        VALUES
+        (
+            #{fromEntity},#{fromId},#{toEntity},#{toId},#{id}
+        )
+    </insert>
+
+    <delete id="deleteByFromType">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE
+        from_entity = #{fromType}
+    </delete>
+
+    <delete id="deleteByFromIds">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE
+            from_id in
+        <foreach collection="fromIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByToType">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE
+            to_entity = #{toType}
+    </delete>
+
+    <delete id="deleteByToIds">
+        DELETE FROM
+        <include refid="table"/>
+        WHERE
+            to_id in
+        <foreach collection="toIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countByTypes" resultType="java.lang.Long">
+        SELECT count(1) FROM
+        <include refid="table"/>
+        WHERE
+            from_entity = #{fromType}
+        AND
+            to_entity = #{toType}
+    </select>
+
+    <select id="countByFromType" resultType="java.lang.Long">
+        SELECT count(1) FROM
+        <include refid="table"/>
+        WHERE
+            from_entity = #{fromType}
+    </select>
+
+    <select id="countByToType" resultType="java.lang.Long">
+        SELECT count(1) FROM
+        <include refid="table"/>
+        WHERE
+            to_entity = #{toType}
+    </select>
+
+    <select id="selectToIdsByFromType" resultType="java.lang.String">
+        SELECT to_id FROM
+        <include refid="table"/>
+        WHERE
+            from_entity = #{fromType}
+    </select>
+
+    <select id="selectFromIdsByToType" resultType="java.lang.String">
+        SELECT from_id FROM
+        <include refid="table"/>
+        WHERE
+            to_entity = #{toType}
+    </select>
+
+    <select id="selectToIdsByFromIds" resultType="java.lang.String" parameterType="list">
+        SELECT to_id FROM
+        <include refid="table"/>
+        WHERE
+            from_id in
+        <foreach collection="fromIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectToIdsByFromIdsAndToType" resultType="java.lang.String">
+        SELECT to_id FROM
+        <include refid="table"/>
+        WHERE
+            from_id in
+        <foreach collection="fromIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND
+            to_entity = #{toType}
+    </select>
+
+    <select id="selectToByFromIdsAndToType" resultMap="resultMap">
+        <include refid="selectAll"/>
+        WHERE
+            from_id in
+        <foreach collection="fromIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND
+            to_entity = #{toType}
+    </select>
+
+    <select id="selectFromIdsByToIds" resultType="java.lang.String" parameterType="list">
+        SELECT from_id FROM
+        <include refid="table"/>
+        WHERE
+            to_id in
+        <foreach collection="toIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="selectFromIdsByToIdsAndFromType" resultType="java.lang.String">
+        SELECT from_id FROM
+        <include refid="table"/>
+        WHERE
+            to_id in
+        <foreach collection="toIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND
+            from_entity = #{fromType}
+    </select>
+
+    <select id="selectFromByToIdsAndFromType" resultMap="resultMap">
+        <include refid="selectAll"/>
+        WHERE
+            to_id in
+        <foreach collection="toIds" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND
+            from_entity = #{fromType}
+    </select>
+
 </mapper>

@@ -165,7 +165,8 @@ public class CategoryServiceImpl extends AbstractEnhancerService<Category, Categ
      * @param category
      * @return
      */
-    protected CategoryDTO toDTO(Category category){
+    @Override
+    public CategoryDTO toDTO(Category category){
 
         CategoryDTO dto = CONVERTER.map(category);
 

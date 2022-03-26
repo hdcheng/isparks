@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        <ul class="uk-pagination uk-flex-center" uk-margin>
+        <ul v-if="totalPage > 1" class="uk-pagination uk-flex-center" uk-margin>
             <li><a href="#" @click="pre"><span uk-pagination-previous></span></a></li>
 
             <li v-for="i of totalPage" :class="page == i ? 'uk-active' : ''"><span v-if="page == i">{{i}}</span><a href="#" v-if="page != i" @click="skip(i)">{{i}}</a></li>

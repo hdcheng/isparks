@@ -1,0 +1,5 @@
+isparks:
+  # jwt 配置
+  jwt:
+    # 是否开启 jwt 权限验证
+    open: true

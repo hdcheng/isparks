@@ -200,3 +200,14 @@ CREATE TABLE relation (
   to_entity VARCHAR,
   to_id VARCHAR
 );
+
+-- ----------------------------
+-- Table structure for Relation
+-- ----------------------------
+DROP TABLE IF EXISTS `dictionary`;
+CREATE TABLE `dictionary` (
+  "name" varchar(255) NOT NULL,
+  "value" int4 NOT NULL,
+  PRIMARY KEY ("value"),
+  UNIQUE ("name")
+);

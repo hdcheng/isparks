@@ -9,6 +9,7 @@ import app.isparks.core.web.support.Result;
 import app.isparks.core.web.support.ResultUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.Cookie;
@@ -28,21 +29,27 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private Logger log = LoggerFactory.getLogger(JwtInterceptor.class);
 
+    private boolean open = true;
+
     private final String prefix = "Bearer ";
 
     private IUserService userService;
 
     private JwtInterceptor(){}
 
-    public JwtInterceptor(IUserService userService){
+    public JwtInterceptor(IUserService userService,boolean open){
+        this(userService);
+        this.open = open;
+    }
 
+    public JwtInterceptor(IUserService userService){
         this.userService = userService;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        if(true){return true;}
+        if(!open){return true;}
 
         String uri = request.getRequestURI();
 

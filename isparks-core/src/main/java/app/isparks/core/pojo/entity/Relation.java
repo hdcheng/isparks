@@ -1,10 +1,9 @@
 package app.isparks.core.pojo.entity;
 
 
-import app.isparks.core.pojo.base.MetaEntity;
 import app.isparks.core.pojo.enums.EntityType;
 
-public class Relation extends MetaEntity {
+public class Relation{
 
     private EntityType fromEntity;
 
