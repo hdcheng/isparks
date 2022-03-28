@@ -76,4 +76,11 @@ public class CommentApi extends BasicApi{
         return build(commentService.updateToInvalid(commentId));
     }
 
+    @DeleteMapping("comment/delete/{id}")
+    @ApiOperation("Delete comment to invalid status | 删除评论")
+    @Log(description = "未审核评论",types = {LogType.MODIFY})
+    public Result delete(@PathVariable("id") String commentId){
+        return build(commentService.delete(commentId));
+    }
+
 }

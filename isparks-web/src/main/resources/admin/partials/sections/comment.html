@@ -74,7 +74,7 @@ app = new Vue({
     },
     methods:{
         initPageData(){
-            i$.page("api/admin/comment/page/all",(res) =>{
+            i$.page("v1/admin/comment/page",(res) =>{
                 this.comments = res.data;
                 this.page = res.page;
                 this.totalPage = res.totalPage;
@@ -102,35 +102,35 @@ app = new Vue({
                     date.getDate().toString() + ":" + date.getMinutes().toString() ;
         },
         valid(id){
-            i$.request("api/admin/comment/valid?id="+id,(res)=>{
+            i$.patch("v1/admin/comment/valid/"+id,(res)=>{
                 this.initPageData();
             });
         },
         invalid(id){
-            i$.request("api/admin/comment/invalid?id="+id,(res)=>{
+            i$.patch("v1/admin/comment/invalid/"+id,(res)=>{
                 this.initPageData();
             });
         },
         deleteById(id){
-            i$.request("api/admin/comment/delete?id="+id,(res)=>{
+            i$.delete("v1/admin/comment/delete/"+id,(res)=>{
                 this.initPageData();
             });
         },
         pre(){
-            i$.pre_page("api/admin/comment/page/all",(res) =>{
+            i$.pre_page("v1/admin/comment/page",(res) =>{
                 this.comments = res.data;
                 this.page = res.page;
             });
         },
         next(){
-            i$.next_page("api/admin/comment/page/all",(res) =>{
+            i$.next_page("v1/admin/comment/page",(res) =>{
                 this.comments = res.data;
                 this.page = res.page;
             });
         },
         skip(page){
             i$.page({
-                href:"api/admin/comment/page/all",
+                href:"v1/admin/comment/page",
                 params:{
                     page:page
                 }

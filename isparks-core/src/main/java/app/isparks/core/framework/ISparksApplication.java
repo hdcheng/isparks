@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,7 +18,7 @@ public class ISparksApplication implements IBoot{
 
     private static Logger log = LoggerFactory.getLogger(ISparksApplication.class);
 
-    private static Map<String,IBoot> boots = new ConcurrentHashMap<>();
+    private static Map<String,IBoot> boots = new LinkedHashMap<>();
 
     private volatile static ISparksApplication application = null;
 

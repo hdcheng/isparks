@@ -20,7 +20,7 @@ public abstract class AbstractThemeService extends BaseService implements ITheme
     private final static String FILE_PREFIX = "file:";
 
     // 主题文件路径
-    private final static String THEME_FILE_PATH = ISparksProperties.CUSTOMIZE_THEME_FILE_PATH + ISparksConstant.PATH_SEPARATOR;
+    private final static String THEME_FILE_PATH = ISparksProperties.THEME_FILE_PATH + ISparksConstant.PATH_SEPARATOR;
 
     private final static String WEB_TEMPLATE_CLASSPATH = WebConstant.WEB_TEMPLATE_CLASSPATH + ISparksConstant.URL_SEPARATOR;
 
@@ -84,7 +84,11 @@ public abstract class AbstractThemeService extends BaseService implements ITheme
 
     @Override
     public final Map<String, String> listThemes() {
-        File[] files = new File(ISparksProperties.CUSTOMIZE_THEME_FILE_PATH).listFiles();
+        File themePath = new File(ISparksProperties.THEME_FILE_PATH);
+        if(!themePath.exists()){
+            themePath.mkdir();
+        }
+        File[] files = themePath.listFiles();
         Map<String,String> customizeThemes = new HashMap<>();
 
         for(File file : files){

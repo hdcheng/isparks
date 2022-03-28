@@ -58,8 +58,13 @@ public class ISparksProperties {
     public static String MARKDOWN_FILE_PATH = RESOURCES_FILE_PATH + ISparksConstant.PATH_SEPARATOR + ISparksConstant.MARKDOWN_DIR_NAME;
 
     /**
-     * 自定义主题文件路径
+     * 主题文件路径
      */
-    public static String CUSTOMIZE_THEME_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.THEME_DIR_NAME;
+    public static String THEME_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.THEME_DIR_NAME;
+
+    /**
+     * 主题静态文件路径
+     */
+    public static String THEME_STATIC_FILE_PATH = USER_HOME + ISparksConstant.PATH_SEPARATOR + ISparksConstant.THEME_STATIC_DIR_NAME;
 
 }

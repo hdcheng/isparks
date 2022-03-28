@@ -396,7 +396,7 @@ const createInstance = (defaults)=>{
     return ky2;
 };
 const ky = createInstance();
-let http = {
+const http = {
     post: function(href, body, headers = {}) {
         const api = ky.create({
             headers: headers
@@ -518,7 +518,7 @@ const cache = {
     }
 };
 let config = {
-    prefixUrl: "http://127.0.0.1:8174/"
+    prefixUrl: ''
 };
 const animator = {
     fadeOut: function(e, oncomplete, time) {
@@ -1152,6 +1152,10 @@ const line = "==============================";
 const isparks = {
     init: function() {
         console.log("Isparks For Everyone! GitHub -> https://github.com/hdcheng/isparks 📖");
+        let url = window.document.location.href;
+        let pos = url.indexOf(window.document.location.pathname);
+        let prefix = url.substring(0, pos);
+        config.prefixUrl = prefix;
     },
     default_fail: function(msg, result) {
         console.log(line);
@@ -1268,7 +1272,10 @@ const is_request = function(api, success, fail, error) {
         api.method = "GET";
     }
     if (config.prefixUrl && api.href.indexOf(config.prefixUrl) != 0) {
-        api.href = config.prefixUrl + api.href;
+        if (api.href.startsWith("/")) {
+            api.href = api.href.substring(1);
+        }
+        api.href = config.prefixUrl + "/" + api.href;
     }
     resolve_url_params(api);
     switch(api.method.toUpperCase()){
@@ -1340,7 +1347,7 @@ const page_info_storage = function(api, res) {
         localStorage.setItem(title + "[page]", typeof res.data.page === 'number' ? res.data.page + "" : "1");
         localStorage.setItem(title + "[total_page]", typeof res.data.totalPage === 'number' ? res.data.totalPage + "" : "1");
         localStorage.setItem(title + "[total_data]", typeof res.data.totalData === 'number' ? res.data.totalData + "" : "0");
-        localStorage.setItem(title + "[size]", typeof res.data.size === 'number' ? res.data.size + "" : "10");
+        localStorage.setItem(title + "[size]", typeof api.params.size === 'number' ? api.params.size + "" : "10");
     }
 };
 const is_request_page = function(api, success, fail, error, page, size) {
@@ -1356,7 +1363,7 @@ const is_request_page = function(api, success, fail, error, page, size) {
             page = api.params.page;
         }
         if (api.params && api.params.size) {
-            page = api.params.size;
+            size = api.params.size;
         }
         let title = get_key_from_href(api.href, api.title);
         if (!page || page && page <= 0) {

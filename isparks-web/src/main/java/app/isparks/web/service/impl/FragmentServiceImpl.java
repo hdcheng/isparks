@@ -36,10 +36,10 @@ public class FragmentServiceImpl implements IFragmentService {
             path = path.replace("/admin/plugin", WebConstant.PLUGIN_TEMPLATE_PATH_NAME + "/sections");
         }
         else if(path.startsWith("/admin")){
-            path = path.replace("/admin","partials/sections/");
+            path = path.replace("/admin","partials/sections");
         }
 
-        StringBuilder html = new StringBuilder("");
+        StringBuilder html = new StringBuilder();
         try {
             Context context = new Context();
             if(StringUtils.isEmpty(fragment)){

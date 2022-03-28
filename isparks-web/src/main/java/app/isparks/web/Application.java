@@ -45,7 +45,6 @@ public class Application {
 
         System.out.println("home path:"+ ISparksProperties.USER_HOME);
 
-        System.out.println("123");
     }
 
 }

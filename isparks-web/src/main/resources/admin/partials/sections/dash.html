@@ -186,7 +186,7 @@ app = new Vue({
                 return;
             }
             i$.request({
-                href:"api/admin/journal/create",
+                href:"v1/admin/journal",
                 method:"POST",
                 body:{
                     content:content
@@ -198,7 +198,7 @@ app = new Vue({
             });
         },
         loadPanelData(){
-            i$.request("api/admin/page/dash",(res) => {
+            i$.request("v1/admin/page/dash",(res) => {
                 this.dataPanel = res.panel;
                 this.dateCount.installTime = res.installTime ? res.installTime : new Date().getTime();
                 this.startCountDate();

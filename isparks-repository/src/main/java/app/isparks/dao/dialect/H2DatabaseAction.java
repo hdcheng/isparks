@@ -5,7 +5,7 @@ import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.dao.dialect.DBAction;
 import app.isparks.core.exception.RepositoryException;
-import app.isparks.core.file.util.FileUtils;
+import app.isparks.core.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

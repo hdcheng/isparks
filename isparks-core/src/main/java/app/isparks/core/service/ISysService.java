@@ -75,5 +75,4 @@ public interface ISysService {
      */
     boolean existTable(String tableName);
 
-
 }

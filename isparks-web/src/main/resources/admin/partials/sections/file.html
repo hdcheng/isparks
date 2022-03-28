@@ -95,13 +95,13 @@ app = new Vue({
         removedFiles:[],
         files:[],
         page:1,
-        size:5,
         totalPage:0,
         totalData:0
     },
     methods:{
         initPageData(){
             i$.page("v1/admin/file/page",(res) => {
+                console.log(res);
                 this.files = res.data;
                 this.page = res.page;
                 this.totalPage = res.totalPage;
@@ -149,7 +149,7 @@ app = new Vue({
             }
         },
         pre(){
-            i$.pre_page("api/admin/file/page",(res) => {
+            i$.pre_page("v1/admin/file/page",(res) => {
                 this.files = res.data;
                 this.page = res.page;
                 this.totalPage = res.totalPage;
@@ -157,7 +157,7 @@ app = new Vue({
             });
         },
         next(){
-            i$.next_page("api/admin/file/page",(res) => {
+            i$.next_page("v1/admin/file/page",(res) => {
                 this.files = res.data;
                 this.page = res.page;
                 this.totalPage = res.totalPage;
@@ -166,7 +166,7 @@ app = new Vue({
         },
         skip(page){
             i$.page({
-                href:"api/admin/file/page",
+                href:"v1/admin/file/page",
                 page:page
             },(res) => {
                 this.files = res.data;
@@ -184,7 +184,7 @@ app = new Vue({
 var bar = document.getElementById('js-progressbar');
 UIkit.upload('.js-upload', {
 
-    url: '/api/admin/file/upload',
+    url: '/v1/admin/file/upload',
     multiple: true,
     name:'file',
     params:{

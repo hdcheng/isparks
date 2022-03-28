@@ -37,3 +37,4 @@ hs_err_pid*
 /isparks-addons/build/*
 /TODO.md
 
+/isparks-web/build/

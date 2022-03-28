@@ -1,6 +1,6 @@
 group = 'app.isparks'
 version = '0.0.1'
-description '持久层'
+description '持久层模块'
 
 dependencies {
     // spring

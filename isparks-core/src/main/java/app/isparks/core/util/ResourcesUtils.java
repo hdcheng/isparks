@@ -8,10 +8,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * 资源工具包
@@ -80,23 +77,6 @@ public class ResourcesUtils {
     }
 
     /**
-     * 读取文本文件内容
-     */
-    public static String readFileContent(File file){
-        if (file == null || !file.exists() || !file.isFile()) {
-            return "";
-        }
-        String result = "";
-        try {
-            result = FileUtils.readFileToString(file,CHARSET);
-        }catch (IOException e){
-            log.error("文件读取异常",e);
-        }finally {
-            return result;
-        }
-    }
-
-    /**
      * 读取系统Resource下的文件
      */
     public static String readResources(String fileName){
@@ -111,22 +91,25 @@ public class ResourcesUtils {
         }
     }
 
+    /**
+     * 复制内部资源文件
+     * @param path e.g. web/index/html
+     */
+    public static void copyResource(String path , File target , boolean cover) throws IOException{
+        copyResource(ResourcesUtils.class.getClassLoader(),path,target,cover);
+    }
 
     /**
-     * 读取 sql 文件
+     * @param cover 是否覆盖
      */
-    public static String readSqlResources(String filename){
-        if(StringUtils.isEmpty(filename)){
-            return "";
+    public static void copyResource(ClassLoader classLoader ,String path, File target,boolean cover) throws IOException{
+        if(!cover && target.exists()){
+            log.warn("file {} has exists",path);
+            return;
         }
-
-        filename = filename.toLowerCase();
-
-        if(!filename.endsWith(".sql")){
-            filename = filename + ".sql";
+        try (InputStream is= classLoader.getResourceAsStream(path)){
+            FileUtils.copyInputStreamToFile(is,target);
         }
-
-        return readResources(SQL_FILE_DIR + File.separator + filename);
     }
 
     /**
@@ -135,5 +118,6 @@ public class ResourcesUtils {
     public static String parseFilePathToURI(String filePath){
         return new File(filePath).toURI().getPath();
     }
+
 
 }

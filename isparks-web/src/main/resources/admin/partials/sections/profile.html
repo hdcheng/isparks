@@ -340,13 +340,6 @@ app = new Vue({
     },
     methods:{
         initPage(){
-            // axios.get("/api/admin/user/get/login/info").then(res => {
-            //     console.log(res);
-            //     this.user = res.data.data;
-            //     this.newUser = JSON.parse(JSON.stringify(res.data.data));
-            // }).catch(err => {
-            //     console.log(err);
-            // });
             i$.get("v1/admin/user/login",(res) => {
                 this.user = res;
                 this.newUser = JSON.parse(JSON.stringify(res));

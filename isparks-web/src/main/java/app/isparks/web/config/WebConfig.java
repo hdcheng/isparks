@@ -1,19 +1,20 @@
 package app.isparks.web.config;
 
 import app.isparks.core.config.ISparksProperties;
-import app.isparks.core.file.util.FileUtils;
+import app.isparks.core.util.FileUtils;
 import app.isparks.core.service.IUserService;
 import app.isparks.service.impl.AbstractCacheService;
 import app.isparks.service.impl.CacheServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import app.isparks.web.interceptor.JwtInterceptor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.io.File;
 
 /**
  * mvc 配置
@@ -80,9 +81,10 @@ public class WebConfig extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         String homeStaticDir = FileUtils.parseToUrl(ISparksProperties.RESOURCES_FILE_PATH);
+        String themeStaticDir = FileUtils.parseToUrl(ISparksProperties.THEME_STATIC_FILE_PATH);
 
         registry.addResourceHandler(WebProperties.STATIC_REQUEST_MAP)
-                .addResourceLocations("classpath:/static/",homeStaticDir);
+                .addResourceLocations("classpath:/static/",homeStaticDir,themeStaticDir);
 
         //api doc 是否展示
         if (WebProperties.docAvailable) {

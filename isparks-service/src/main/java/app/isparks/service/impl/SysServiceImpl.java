@@ -5,6 +5,7 @@ import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.dao.dialect.DBAction;
 import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.exception.SystemException;
+import app.isparks.core.pojo.entity.Option;
 import app.isparks.core.pojo.enums.IEnum;
 import app.isparks.core.pojo.enums.PropertyEnum;
 import app.isparks.core.pojo.enums.SystemProperties;
@@ -274,7 +275,6 @@ public class SysServiceImpl extends BaseService implements ISysService {
         Optional<ResultSet> result = DBConfig.getDatabase().getDBAction().trySQL("SELECT count(1) FROM " + tableName + ";");
         return result.isPresent();
     }
-
 
     /**
      * 从配置文件中获取值，如果没有则使用默认值

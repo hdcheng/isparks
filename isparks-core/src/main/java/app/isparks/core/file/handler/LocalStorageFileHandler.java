@@ -7,7 +7,7 @@ import app.isparks.core.exception.FileOperationException;
 import app.isparks.core.file.UploadResult;
 import app.isparks.core.file.header.FileHeader;
 import app.isparks.core.file.type.FileType;
-import app.isparks.core.file.util.FileUtils;
+import app.isparks.core.util.FileUtils;
 
 import java.io.File;
 import java.io.InputStream;

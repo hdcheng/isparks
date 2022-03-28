@@ -3,7 +3,6 @@ package app.isparks.core.pojo.converter;
 import app.isparks.core.pojo.entity.Option;
 import app.isparks.core.pojo.param.OptionParam;
 import org.mapstruct.Mapper;
-import org.mapstruct.NullValuePropertyMappingStrategy;
 
 /**
  * @author： chenghd
@@ -13,6 +12,5 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface OptionConverter {
 
     Option map(OptionParam param);
-
 
 }

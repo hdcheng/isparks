@@ -10,7 +10,7 @@ import app.isparks.core.file.header.FileHeader;
 import app.isparks.core.file.type.FileType;
 import app.isparks.core.file.type.MediaType;
 import app.isparks.core.file.util.FileTypeUtils;
-import app.isparks.core.file.util.FileUtils;
+import app.isparks.core.util.FileUtils;
 import app.isparks.core.pojo.converter.ConverterFactory;
 import app.isparks.core.pojo.converter.FileConverter;
 import app.isparks.core.pojo.dto.FileDTO;

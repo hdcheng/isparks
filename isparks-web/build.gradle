@@ -6,6 +6,7 @@ plugins {
 
 group = 'app.isparks'
 version = '0.0.1'
+description 'WEB层模块'
 
 dependencies {
 

@@ -2,6 +2,10 @@ plugins {
     id 'java'
 }
 
+group = 'app.isparks'
+version = '0.0.1'
+description '核心模块'
+
 dependencies {
     // spring
     compile "org.springframework:spring-core:$springVersion"

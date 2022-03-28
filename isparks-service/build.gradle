@@ -1,5 +1,7 @@
 group = 'app.isparks'
 version = '0.0.1'
+description '业务逻辑层模块'
+
 dependencies {
 
     // jwt

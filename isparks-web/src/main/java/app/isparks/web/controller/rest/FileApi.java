@@ -66,7 +66,11 @@ public class FileApi extends BasicApi{
     @ApiOperation("Get all valid files | 获取所有 valid 状态的文件")
     public Result pageValid(@RequestParam( value = "page" , defaultValue = "1") int page,
                             @RequestParam(value = "size",defaultValue = "10") int size){
-        return build(fileService.pageValidFile(page,size));
+
+        PageData<FileDTO> dtos = fileService.pageValidFile(page,size);
+        parseResourceLocationToLinks(dtos);
+
+        return build(dtos);
     }
 
     @GetMapping("file/page/type/{type}")

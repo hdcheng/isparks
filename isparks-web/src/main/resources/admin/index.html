@@ -16,7 +16,6 @@
 
                 if (request.readyState == 4 && request.status == 200) {
                     res = JSON.parse(request.responseText);
-                    console.log(res);
                     if(res.data){
                         localStorage.setItem(key,true);
                     }else{
@@ -139,13 +138,10 @@
         });
     }
     function pageLoaded(){
-        console.log(i$.cache.get("current_page"));
-        console.log(i$.cache.get("current_fragment"));
 
         let page = i$.cache.get("current_page") || "/admin/dash";
         let fragment = i$.cache.get("current_fragment") || "fra";
         refreshMid(page,fragment);
-        config.prefixUrl = "http://127.0.0.1:8174/"
         
         if(typeof sidbarLoaded === 'function'){
             sidbarLoaded();
