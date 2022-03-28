@@ -1,6 +1,6 @@
 group = 'app.isparks'
 version = '0.0.1'
-description '插件'
+description '附加模块'
 
 dependencies {
 
