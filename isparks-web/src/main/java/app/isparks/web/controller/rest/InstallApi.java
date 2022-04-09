@@ -84,7 +84,7 @@ public class InstallApi extends BasicApi{
 
         // 数据库数据
         String ip = RegexUtils.getFirstIPv4(params.getDbHostPort());
-        String port = params.getDbHostPort().substring(params.getDbHostPort().indexOf(":") + 1);
+        String port = RegexUtils.getFirstPort(params.getDbHostPort());
         config.put(DBConfig.DatabaseProperties.DATABASE_IP.getKey(), ip);
         config.put(DBConfig.DatabaseProperties.DATABASE_PORT.getKey(), port);
         config.put(DBConfig.DatabaseProperties.DATABASE_USERNAME.getKey(), params.getDbUsername());

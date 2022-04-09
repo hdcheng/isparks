@@ -1,5 +1,6 @@
 package app.isparks.service.impl;
 
+import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.exception.NoFoundException;
 import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
@@ -12,6 +13,7 @@ import app.isparks.core.util.BeanUtils;
 import app.isparks.core.util.ValidateUtils;
 import app.isparks.core.service.support.BaseService;
 import app.isparks.service.security.jwt.JwtHandler;
+import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -37,8 +39,6 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
     private ICacheService cacheService;
 
-    private long DEFAULT_TOKEN_CACHE_TIME = 1000 * 60 * 60 * 24;
-
     public AdminServiceImpl(UserServiceImpl userService,CacheServiceImpl cacheService) {
         notNull(userService,"user service implement class can not be null");
         notNull(userService,"cache service implement class can not be null");
@@ -48,48 +48,9 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
     }
 
     @Override
-    @Deprecated
-    public Optional<UserDTO> authenticate(LoginParam loginParam) {
-        notNull(loginParam, "login params must not be null");
-
-        String loginName = loginParam.getLoginName();
-        User user = ValidateUtils.isEmail(loginName) ?
-                userService.getByEmail(loginName).orElseThrow(() -> new NoFoundException("邮箱不存在")) :
-                userService.getByName(loginName).orElseThrow(() -> new NoFoundException("用户不存在"));
-
-        //验证
-        boolean b = userService.passwordMatch(user, loginParam.getPassword());
-        UserDTO userDTO = null;
-        if (b) {
-            //todo:audience记录客户端信息，比如ip，浏览器版本等，防止token被截取使用。
-            Map<String,Object> claims = new HashMap<>();
-
-            claims.put("user",user.getUserName());
-            claims.put("email",user.getEmail());
-
-            String token = "";
-
-            try {
-                token = JwtHandler.build().signJWT(claims,8,TimeUnit.HOURS);
-            }catch (JWTException e){
-                log.error("签发JWT异常",e);
-                return Optional.empty();
-            }
-            userDTO = BeanUtils.copyProperties(user, UserDTO.class).withToken(token);
-
-            String tokenId = JwtHandler.build().tryGetId(token);
-
-            //cacheStore.put(userDTO.getUserName(),tokenId);
-            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,DEFAULT_TOKEN_CACHE_TIME);
-        }
-        return Optional.ofNullable(userDTO);
-    }
-
-    @Override
     public Optional<UserDTO> authenticate(String loginName, String password , long time , TimeUnit timeUnit) {
         notEmpty(loginName,"login name must not be empty");
         notEmpty(password,"password must not be empty");
-        notNull(time,"time unit must not be null");
 
         User user = ValidateUtils.isEmail(loginName) ?
                 userService.getByEmail(loginName).orElseThrow(() -> new NoFoundException("邮箱不存在")) :
@@ -117,8 +78,19 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
 
             String tokenId = JwtHandler.build().tryGetId(token);
 
-            //cacheStore.put(userDTO.getUserName(),tokenId);
-            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,DEFAULT_TOKEN_CACHE_TIME);
+            // TOKEN 缓存时长
+            long TOKEN_CACHE_MILLIS;
+
+            switch (timeUnit){
+                case DAYS: TOKEN_CACHE_MILLIS =   time * 1000 * 60 * 60 * 24 ; break;
+                case HOURS:TOKEN_CACHE_MILLIS =   time * 1000 * 60 * 60 ; break;
+                case MINUTES:TOKEN_CACHE_MILLIS = time * 1000 * 60 ; break;
+                case SECONDS:TOKEN_CACHE_MILLIS = time * 1000 ; break;
+                case MICROSECONDS: TOKEN_CACHE_MILLIS = time ; break;
+                default: TOKEN_CACHE_MILLIS = 1000 * 60 * 8;
+            }
+
+            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,TOKEN_CACHE_MILLIS);
         }
         return Optional.ofNullable(userDTO);
     }

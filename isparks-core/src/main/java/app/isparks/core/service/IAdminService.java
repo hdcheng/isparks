@@ -15,12 +15,6 @@ import java.util.concurrent.TimeUnit;
 public interface IAdminService {
 
     /**
-     * 登录权限验证
-     */
-    @Deprecated
-    Optional<UserDTO> authenticate(LoginParam loginParam);
-
-    /**
      * 登录
      *
      * @param loginName 用户名

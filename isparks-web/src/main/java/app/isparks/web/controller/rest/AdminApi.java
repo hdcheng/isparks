@@ -62,12 +62,14 @@ public class AdminApi extends BasicApi{
             return fail("验证码错误");
         }
 
-        TimeUnit timeUnit = TimeUnit.HOURS;
+        TimeUnit timeUnit;
         long time ;
         if(remember == null || !remember){
             time = 8 ; // 缓存 8 小时密码
+            timeUnit = TimeUnit.HOURS;
         }else{
-            time = 24 * 30 ; // 缓存一个月的密码
+            time = 24  ; // 缓存一个月的密码
+            timeUnit = TimeUnit.DAYS;
         }
 
         UserDTO result = adminService.authenticate(username,password,time,timeUnit).orElseThrow(() -> new AuthException("登录失败", "密码错误"));
