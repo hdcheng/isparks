@@ -2,12 +2,12 @@ package app.isparks.dao.dialect.enums;
 
 import app.isparks.core.config.DBConfig;
 import app.isparks.core.dao.dialect.DBAction;
-import app.isparks.core.dao.dialect.DialectResolveInfo;
+import app.isparks.core.dao.dialect.DialectInfo;
 import app.isparks.core.dao.dialect.IDatabaseEnum;
 import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.exception.RepositoryException;
 import app.isparks.core.util.StringUtils;
-import app.isparks.core.dao.dialect.DefaultDialectResolveInfo;
+import app.isparks.core.dao.dialect.DefaultDialectInfo;
 import app.isparks.dao.dialect.H2DatabaseAction;
 import app.isparks.dao.dialect.PostgresqlAction;
 
@@ -27,9 +27,9 @@ public enum Database implements IDatabaseEnum {
                 throw new RepositoryException("数据库信息不全");
             }
 
-            DialectResolveInfo info = new DefaultDialectResolveInfo(driverClass(), DBConfig.getIp(), DBConfig.getPort(), DBConfig.getDBName(), DBConfig.getUserName(),null);
+            DialectInfo info = new DefaultDialectInfo(driverClass(), DBConfig.getIp(), DBConfig.getPort(), DBConfig.getDBName(), DBConfig.getUserName(),null);
 
-            action.resolve(info);
+            action.prepare(info);
 
             return action;
         }
@@ -40,12 +40,12 @@ public enum Database implements IDatabaseEnum {
         }
 
         @Override
-        public DBAction resolveDialect(DialectResolveInfo info) {
+        public DBAction resolveDialect(DialectInfo info) {
             DBAction action = Database.getDialectInstance(this);
             if(info == null){
-                info = new DefaultDialectResolveInfo(driverClass(),"127.0.0.1","8082","isparks","sa",null);
+                info = new DefaultDialectInfo(driverClass(),"127.0.0.1","8082","isparks","sa",null);
             }
-            action.resolve(info);
+            action.prepare(info);
             return action;
         }
     },
@@ -63,9 +63,9 @@ public enum Database implements IDatabaseEnum {
                 throw new RepositoryException("数据库信息不全");
             }
 
-            DialectResolveInfo info = new DefaultDialectResolveInfo(driverClass(), DBConfig.getIp(), DBConfig.getPort(), DBConfig.getDBName(), DBConfig.getUserName(), DBConfig.getPassword());
+            DialectInfo info = new DefaultDialectInfo(driverClass(), DBConfig.getIp(), DBConfig.getPort(), DBConfig.getDBName(), DBConfig.getUserName(), DBConfig.getPassword());
 
-            action.resolve(info);
+            action.prepare(info);
 
             return action;
         }
@@ -76,7 +76,7 @@ public enum Database implements IDatabaseEnum {
         }
 
         @Override
-        public DBAction resolveDialect(DialectResolveInfo info) {
+        public DBAction resolveDialect(DialectInfo info) {
             DBAction action = Database.getDialectInstance(this);
             if(info == null){
                 throw new InvalidValueException("resolve info must not be null.");
@@ -100,7 +100,7 @@ public enum Database implements IDatabaseEnum {
                 info.setDbName("isparks");
             }
 
-            action.resolve(info);
+            action.prepare(info);
             return action;
         }
     };

@@ -1,8 +1,7 @@
 package app.isparks.web.controller.rest;
 
 import app.isparks.core.config.DBConfig;
-import app.isparks.core.dao.dialect.IDatabaseEnum;
-import app.isparks.core.pojo.enums.IEnum;
+import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.pojo.enums.SystemProperties;
 import app.isparks.core.pojo.param.UserParam;
 import app.isparks.core.service.IOptionService;
@@ -58,11 +57,11 @@ public class InstallApi extends BasicApi{
            return fail("系统已经安装过，请不要重复安装系统。");
         }
 
-        // 初始化配置
-        initSettings(params);
-
         // 初始化数据库
         initDB(params);
+
+        // 初始化配置
+        initSettings(params);
 
         // 初始化用户数据
         initUser(params);
@@ -100,20 +99,15 @@ public class InstallApi extends BasicApi{
 
         if (!"H2".equals(params.getDatabase())){
 
-            IDatabaseEnum databaseEnum = IEnum.nameToEnum(IDatabaseEnum.class,params.getDatabase());
-            DBConfig.setDatabase(databaseEnum);
-            DBConfig.setDBPrefix(params.getDbNamePrefix());
-
-            // todo:检测 host:port 格式是否正确
-            String hostPort = params.getDbHostPort().trim();
             String ip = RegexUtils.getFirstIPv4(params.getDbHostPort());
-            String port = hostPort.substring(hostPort.indexOf(":")+1);
-            DBConfig.setIp(ip);
-            DBConfig.setPort(port);
-            DBConfig.setUserName(params.getDbUsername());
-            DBConfig.setPassword(params.getDbPassword());
+            String port = RegexUtils.getFirstPort(params.getDbHostPort());
 
-            sysService.switchDB();
+            if(sysService.updateDBInfo(params.getDatabase(),ip,port,params.getDbUsername(),params.getDbPassword())){
+                DBConfig.setDBPrefix(params.getDbNamePrefix());
+                sysService.switchDB();
+            }else{
+                throw new InvalidValueException("数据库类型" + params.getDatabase() + "不支持");
+            }
         }
 
         if(!optionService.connectable()){

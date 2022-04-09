@@ -51,11 +51,11 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
         if(!open){return true;}
 
-        String uri = request.getRequestURI();
-
-        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate") || uri.endsWith("/v1/admin/init") || uri.endsWith("/v1/admin/installed")) {
-            return true;
-        }
+//        String uri = request.getRequestURI();
+////
+////        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate") || uri.endsWith("/v1/admin/init") || uri.endsWith("/v1/admin/installed")) {
+////            return true;
+////        }
 
         String jwtToken = getTokenFromRequest(request);
 

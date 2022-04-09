@@ -22,14 +22,14 @@ public final class RegexUtils {
      * @param s
      * @return ipv4 string or ""
      */
-    private final static String IPV4_REGEXS = "((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)";
+    private final static String IPV4_REGEX = "((25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]?\\d)";
     public static String getFirstIPv4(String s){
 
         if(StringUtils.isEmpty(s)){
             return "";
         }
 
-        Matcher matcher = Pattern.compile(IPV4_REGEXS).matcher(s);
+        Matcher matcher = Pattern.compile(IPV4_REGEX).matcher(s);
 
         return matcher.find() ? matcher.group() : "";
     }
@@ -45,7 +45,7 @@ public final class RegexUtils {
             return "";
         }
 
-        Matcher matcher = Pattern.compile(IPV4_REGEXS).matcher(s);
+        Matcher matcher = Pattern.compile(IPV4_REGEX).matcher(s);
 
         String ip = "";
         while (matcher.find()){
@@ -67,13 +67,27 @@ public final class RegexUtils {
             return ips;
         }
 
-        Pattern pattern = Pattern.compile(IPV4_REGEXS);
+        Pattern pattern = Pattern.compile(IPV4_REGEX);
         Matcher matcher = pattern.matcher(s);
 
         while (matcher.find()){
             ips.add(matcher.group());
         }
         return ips;
+    }
+
+    /**
+     * 查找端口
+     */
+    private final static String PORT_REGEX = "(:[0-9]{1,6})";
+    public static String getFirstPort(String s){
+        if(StringUtils.isEmpty(s)){
+            return "";
+        }
+
+        Matcher matcher = Pattern.compile(PORT_REGEX).matcher(s);
+
+        return matcher.find() ? matcher.group().replace(":","") : "";
     }
 
 }

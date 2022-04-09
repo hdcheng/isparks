@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * 更新数据库连接池信息
@@ -19,11 +20,10 @@ public class HikariCPDataSourceFactory implements IDataSourceFactory {
 
     private DataSource dataSource;
 
+    private IDatabaseEnum databaseEnum;
 
     public HikariCPDataSourceFactory(DataSource dataSource) {
-
         this.dataSource = dataSource;
-
     }
 
     /**
@@ -34,12 +34,13 @@ public class HikariCPDataSourceFactory implements IDataSourceFactory {
      */
     @Override
     public void reload(String username, String password, String url, IDatabaseEnum database) {
-        HikariDataSourceInfo info =
-        new HikariDataSourceInfo().
+        HikariDataSourceInfo info = new HikariDataSourceInfo().
         withDriverClassName(database.driverClass()).
         withUserName(username).
         withPassword(password).
         withUrl(url);
+
+        this.databaseEnum = database;
 
         if(dataSource instanceof DefaultHikariDataSource){
             ((DefaultHikariDataSource) dataSource).updateDataSourceMap(HikariDataSourceBuilder.create(info));
@@ -61,5 +62,8 @@ public class HikariCPDataSourceFactory implements IDataSourceFactory {
 
     }
 
-
+    @Override
+    public Optional<IDatabaseEnum> databaseType() {
+        return Optional.ofNullable(databaseEnum);
+    }
 }

@@ -23,6 +23,12 @@ public interface ISysService {
     boolean initDB();
 
     /**
+     * 更新数据库配置
+     * @param dbType 数据库类型，如 H2、Postgresql
+     */
+    boolean updateDBInfo(String dbType , String ip, String port, String username, String password);
+
+    /**
      * 切换数据库
      */
     boolean switchDB();

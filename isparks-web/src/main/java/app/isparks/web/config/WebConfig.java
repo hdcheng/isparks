@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.io.File;
+import java.util.Date;
 
 /**
  * mvc 配置
@@ -65,9 +66,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         //拦截的地址
         String[] jwtPath = {"/*/admin/**", "/admin/**","/api/sys/**"};
         //不拦截的地址
-        String[] jwtExcludePath = {"/api/admin/authenticate",
-                "/admin/login", "/admin/install","/api/admin/install",
-                "/api/sys/installed"};
+        String[] jwtExcludePath = {"/admin/login", "/admin/install","/api/admin/install","/v1/admin/authenticate","/api/admin/authenticate","/v1/admin/init","/v1/admin/installed"};
 
         registry.addInterceptor(new JwtInterceptor(userService,JWT_OPEN))
                 .addPathPatterns(jwtPath)
@@ -84,7 +83,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         String themeStaticDir = FileUtils.parseToUrl(ISparksProperties.THEME_STATIC_FILE_PATH);
 
         registry.addResourceHandler(WebProperties.STATIC_REQUEST_MAP)
-                .addResourceLocations("classpath:/static/",homeStaticDir,themeStaticDir);
+                .addResourceLocations("classpath:/static/",homeStaticDir+"/",themeStaticDir+"/");
 
         //api doc 是否展示
         if (WebProperties.docAvailable) {
@@ -93,6 +92,10 @@ public class WebConfig extends WebMvcConfigurationSupport {
             registry.addResourceHandler("/webjars/**")
                     .addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Date().getTime());
     }
 
 }

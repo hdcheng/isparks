@@ -16,7 +16,7 @@ public interface IDatabaseEnum extends IEnum<Integer> {
 
     DBAction getDBAction();
 
-    DBAction resolveDialect(DialectResolveInfo info);
+    DBAction resolveDialect(DialectInfo info);
 
     String driverClass();
 

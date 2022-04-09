@@ -3,7 +3,7 @@ isparks:
   # api 文档可用否： disable（禁用）/able（可用）
   doc: able
   # 缓存
-  cache: true
+  cache: false
 
 server:
   port: 8174

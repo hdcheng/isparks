@@ -43,6 +43,7 @@
         border: .5px solid rgba(0,0,0,.3);
         padding: .5rem;
         overflow: auto;
+        font-size: larger;font-weight: bold;
     }
     .is-edit-content-right{
         width: 50%;
@@ -158,7 +159,7 @@
             <!-- md content modal -->
         </div>
         <div class="is-edit-content">
-            <textarea id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-model="markdownText">
+            <textarea id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-model="markdownText" >
             </textarea>
         </div>
     </div>
@@ -196,7 +197,6 @@
     <!-- 按钮结束 -->
 
 </div>
-
 <script>
 loadJS("/static/plugins/marked/marked.min.js",function(){
     app = new Vue({
@@ -340,7 +340,7 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                     
                     this.title = res.title;
                     
-                    document.getElementById("markdownTextContent").innerText = markdownText;
+                    this.markdownText = markdownText;
 
                     this.summary = res.summary;
                     const tags = res.properties.tags;

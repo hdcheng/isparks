@@ -1,8 +1,10 @@
 package app.isparks.dao;
 
 import app.isparks.core.config.DBConfig;
+import app.isparks.core.dao.dialect.IDatabaseEnum;
 import app.isparks.core.exception.SystemException;
 import app.isparks.core.framework.IBoot;
+import app.isparks.core.pojo.enums.IEnum;
 import app.isparks.core.service.ISysService;
 import app.isparks.core.util.IOCUtils;
 import app.isparks.dao.dialect.enums.Database;

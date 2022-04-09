@@ -58,9 +58,9 @@ public class AdminApi extends BasicApi{
                         HttpServletRequest request){
         String ip = IpUtils.obtainIp(request);
 
-//        if(!captchaService.checkCaptcha(ip,code,true)){
-//            return fail("验证码错误");
-//        }
+        if(!captchaService.checkCaptcha(ip,code,true)){
+            return fail("验证码错误");
+        }
 
         TimeUnit timeUnit = TimeUnit.HOURS;
         long time ;

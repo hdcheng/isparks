@@ -1,11 +1,9 @@
 package app.isparks.core.config;
 
 import app.isparks.core.dao.dialect.DBAction;
-import app.isparks.core.dao.dialect.DefaultDialectResolveInfo;
-import app.isparks.core.dao.dialect.DialectResolveInfo;
+import app.isparks.core.dao.dialect.DefaultDialectInfo;
 import app.isparks.core.dao.dialect.IDatabaseEnum;
 import app.isparks.core.pojo.enums.PropertyEnum;
-import app.isparks.core.pojo.enums.SystemProperties;
 import app.isparks.core.util.StringUtils;
 
 import java.util.Map;
@@ -73,11 +71,10 @@ public class DBConfig {
 
         String dbName = (StringUtils.isEmpty(dbPrefix) ? "i" : dbPrefix) + dbSuffix;
 
-        //DBAction action = database.getDBAction();
-        DefaultDialectResolveInfo info = new DefaultDialectResolveInfo(database.driverClass(),ip,port,dbName,userName,password);
+        DefaultDialectInfo info = new DefaultDialectInfo(database.driverClass(),ip,port,dbName,userName,password);
         DBAction action = database.resolveDialect(info);
 
-        DBConfig.url = action.getUrl();
+        DBConfig.url = action.url();
         DBConfig.driver = database.driverClass();
     }
 

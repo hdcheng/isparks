@@ -3,7 +3,6 @@ package app.isparks.dao.dialect;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.config.ISparksProperties;
-import app.isparks.core.dao.dialect.DBAction;
 import app.isparks.core.exception.RepositoryException;
 import app.isparks.core.util.FileUtils;
 import org.slf4j.Logger;
@@ -13,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @author chenghd
  * @date 2020/12/10
  */
-public class H2DatabaseAction extends DBAction {
+public class H2DatabaseAction extends AbstractAction {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -40,7 +39,7 @@ public class H2DatabaseAction extends DBAction {
     }
 
     @Override
-    public String getUrl() {
+    public String url() {
         return getTestUrl();
     }
 
@@ -53,7 +52,7 @@ public class H2DatabaseAction extends DBAction {
     public void update(String sql) {
         if(sql == null || "".equals(sql) ){return;}
         // 检测sql
-        runBatchSQL(sql);
+        executeBatchSQL(sql);
     }
 
     @Override

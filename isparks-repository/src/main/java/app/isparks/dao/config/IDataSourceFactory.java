@@ -4,6 +4,7 @@ import app.isparks.core.dao.dialect.IDatabaseEnum;
 import app.isparks.dao.config.hikari.HikariDataSourceInfo;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 /**
  * xxx.
@@ -13,6 +14,13 @@ import javax.sql.DataSource;
  */
 public interface IDataSourceFactory {
 
+    /**
+     * 重新加载数据库连接池
+     */
     void reload(String username, String password, String url, IDatabaseEnum database);
 
+    /**
+     * 获取当前链接的数据库类型
+     */
+    Optional<IDatabaseEnum> databaseType();
 }

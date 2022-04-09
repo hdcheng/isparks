@@ -92,7 +92,7 @@ public class OptionServiceImpl extends AbstractService<Option> implements IOptio
 
         Optional<Option> option = getOptionByKey(property.getKey());
 
-        V result = null;
+        V result;
 
         if (!option.isPresent()){
             result = ISparksUtils.stringParse(property.getValue(),valueType);

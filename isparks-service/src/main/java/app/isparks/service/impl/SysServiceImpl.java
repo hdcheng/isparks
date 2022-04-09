@@ -3,9 +3,8 @@ package app.isparks.service.impl;
 import app.isparks.core.config.DBConfig;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.dao.dialect.DBAction;
-import app.isparks.core.exception.InvalidValueException;
+import app.isparks.core.dao.dialect.IDatabaseEnum;
 import app.isparks.core.exception.SystemException;
-import app.isparks.core.pojo.entity.Option;
 import app.isparks.core.pojo.enums.IEnum;
 import app.isparks.core.pojo.enums.PropertyEnum;
 import app.isparks.core.pojo.enums.SystemProperties;
@@ -14,14 +13,15 @@ import app.isparks.core.service.IOptionService;
 import app.isparks.core.service.ISysService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.ISparksUtils;
+import app.isparks.core.util.StringUtils;
 import app.isparks.core.web.property.WebProperties;
+import app.isparks.dao.dialect.AbstractAction;
 import app.isparks.dao.config.IDataSourceFactory;
 import app.isparks.dao.config.hikari.HikariCPDataSourceFactory;
 import app.isparks.dao.dialect.enums.Database;
 import app.isparks.core.service.support.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -83,6 +83,23 @@ public class SysServiceImpl extends BaseService implements ISysService {
     }
 
     @Override
+    public boolean updateDBInfo(String dbType, String ip, String port, String username, String password) {
+        if(StringUtils.hasEmpty(dbType,ip,port,username,password)){
+            return false;
+        }
+
+        IDatabaseEnum databaseEnum = IEnum.nameToEnum(Database.class,dbType);
+
+        DBConfig.setDatabase(databaseEnum);
+        DBConfig.setIp(ip);
+        DBConfig.setPort(port);
+        DBConfig.setUserName(username);
+        DBConfig.setPassword(password);
+
+        return true;
+    }
+
+    @Override
     public boolean switchDB() {
         return switchDB(DBConfig.getDatabase().toString());
     }
@@ -93,26 +110,31 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
         Database newDB ,oldDB;
 
-        try {
-            newDB = IEnum.nameToEnum(Database.class,newDBType);
+        oldDB = (Database) dataSourceFactory.databaseType().orElse(Database.H2);
 
-            String oldDBType = optionService.getByPropertyOrDefault(SystemProperties.DATABASE_TYPE,String.class);
+        newDB = IEnum.nameToEnum(Database.class,newDBType);
 
-            oldDB = IEnum.nameToEnum(Database.class,oldDBType);
 
-        }catch (InvalidValueException e){
-            log.warn("数据库类型不支持",e);
-            return false;
-        }
-
+//        try {
+//
+//            String oldDBType = optionService.getByPropertyOrDefault(SystemProperties.DATABASE_TYPE,String.class);
+//
+//            oldDB = IEnum.nameToEnum(Database.class,oldDBType);
+//
+//        }catch (InvalidValueException e){
+//            log.warn("数据库类型不支持",e);
+//            return false;
+//        }
 
         if (oldDB == newDB){
             log.warn("数据库类型相同 不需要切换");
             return false;
         }
 
+        DBAction dbAction = newDB.getDBAction();
+
         // 数据库连接池切换链接
-        dataSourceFactory.reload(DBConfig.getUserName(), DBConfig.getPassword(), DBConfig.getUrl(), DBConfig.getDatabase());
+        dataSourceFactory.reload(DBConfig.getUserName(), DBConfig.getPassword() , dbAction.url() , newDB);
 
         // 是否要初始化数据库表格结构
         if(!optionService.connectable()){
@@ -182,7 +204,7 @@ public class SysServiceImpl extends BaseService implements ISysService {
             DBConfig.update(database,config);
         }
 
-        DBAction action = DBConfig.getDatabase().getDBAction();
+        AbstractAction action = (AbstractAction)DBConfig.getDatabase().getDBAction();
 
         if (action.exist()){
             if(!action.trySQL("SELECT COUNT(1) FROM option").isPresent()){
@@ -272,7 +294,8 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
     @Override
     public boolean existTable(String tableName) {
-        Optional<ResultSet> result = DBConfig.getDatabase().getDBAction().trySQL("SELECT count(1) FROM " + tableName + ";");
+        AbstractAction action = (AbstractAction)DBConfig.getDatabase().getDBAction();
+        Optional<ResultSet> result = action.trySQL("SELECT count(1) FROM " + tableName + ";");
         return result.isPresent();
     }
 
