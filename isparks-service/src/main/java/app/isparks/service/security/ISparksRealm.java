@@ -12,7 +12,7 @@ import org.apache.shiro.subject.PrincipalCollection;
  * @author chenghd
  * @date 2020/9/28
  */
-public abstract class FenceRealm extends AuthorizingRealm {
+public abstract class ISparksRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {

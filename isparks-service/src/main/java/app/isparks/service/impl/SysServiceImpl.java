@@ -27,6 +27,7 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -79,6 +80,8 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
         action.init();
 
+        log.info("init database tables successfully !");
+
         return true;
     }
 
@@ -114,18 +117,6 @@ public class SysServiceImpl extends BaseService implements ISysService {
 
         newDB = IEnum.nameToEnum(Database.class,newDBType);
 
-
-//        try {
-//
-//            String oldDBType = optionService.getByPropertyOrDefault(SystemProperties.DATABASE_TYPE,String.class);
-//
-//            oldDB = IEnum.nameToEnum(Database.class,oldDBType);
-//
-//        }catch (InvalidValueException e){
-//            log.warn("数据库类型不支持",e);
-//            return false;
-//        }
-
         if (oldDB == newDB){
             log.warn("数据库类型相同 不需要切换");
             return false;
@@ -136,8 +127,12 @@ public class SysServiceImpl extends BaseService implements ISysService {
         // 数据库连接池切换链接
         dataSourceFactory.reload(DBConfig.getUserName(), DBConfig.getPassword() , dbAction.url() , newDB);
 
-        // 是否要初始化数据库表格结构
-        if(!optionService.connectable()){
+        try {
+            // 检测数据
+            dbAction.executeSQL("SELECT COUNT(id) FROM option");
+        }catch (SQLException e){
+            log.warn("start to init database tables");
+            // 初始化表格结构
             initDB();
         }
 

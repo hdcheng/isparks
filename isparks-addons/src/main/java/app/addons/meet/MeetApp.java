@@ -48,8 +48,10 @@ public class MeetApp {
                 "manual.html","post.html","partials/footer.html","partials/head.html",
                 "partials/header.html","partials/script.html"};
 
+        String s = ResourcesUtils.readResources(MEET_PATH + ISparksConstant.URL_SEPARATOR + "about.html");
+
         for(String file : files){
-            ResourcesUtils.copyResource(MEET_PATH + File.separator + file,new File(THEME_PATH,file),false);
+            ResourcesUtils.copyResource(MEET_PATH + ISparksConstant.URL_SEPARATOR + file,new File(THEME_PATH,file),false);
         }
     }
 

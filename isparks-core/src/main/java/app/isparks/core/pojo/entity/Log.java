@@ -9,7 +9,7 @@ import app.isparks.core.pojo.base.BaseEntity;
 public class Log extends BaseEntity {
 
     /**
-     * log type/operation type see com.dbwos.fence.pojo.enums.LogType
+     * log type/operation type
      */
     private String types;
 

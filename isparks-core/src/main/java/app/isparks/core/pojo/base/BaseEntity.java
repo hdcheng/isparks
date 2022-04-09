@@ -24,10 +24,6 @@ public class BaseEntity extends MetaEntity {
      */
     private Long modifyTime;
 
-    /**
-     * status.
-     * see:com.fence.core.pojo.enums.DataStatus
-     */
     private Integer status;
 
     // constructor

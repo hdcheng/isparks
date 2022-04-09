@@ -7,7 +7,6 @@ import app.isparks.core.util.StringUtils;
 
 import java.sql.*;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Database action class.
@@ -104,8 +103,8 @@ public abstract class DBAction implements DDLAction, DMLAction{
 
     /**
      * 批量执行 sql
-     * @param sqls
-     * @throws SQLException
+     * @param sqls 需要执行的sql
+     * @throws SQLException sql 执行异常
      * @return  ResultSet
      */
     public abstract ResultSet executeSQL(List<String> sqls) throws SQLException;
@@ -137,7 +136,7 @@ public abstract class DBAction implements DDLAction, DMLAction{
      */
     public static final ResultSet executeSQL(List<String> sqls , String url , String username , String pwd) throws SQLException{
 
-        if(StringUtils.hasEmpty(url,url,pwd) || sqls == null || sqls.isEmpty()){
+        if(StringUtils.hasEmpty(url,username) || sqls == null || sqls.isEmpty()){
             throw new SQLException("database parameters is empty.");
         }
 

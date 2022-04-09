@@ -42,16 +42,16 @@ public class HandlerRestControllerExceptionAdvice {
      * 系统
      */
     @ExceptionHandler(value = ISparksException.class)
-    public Result fenceHandler(ISparksException e) {
-        log.error("FENCE系统异常");
-        return ResultUtils.error("Fence Exception:" + e.getMessage());
+    public Result handler(ISparksException e) {
+        log.error("ISparks系统异常");
+        return ResultUtils.error("ISparks系统异常 Exception:" + e.getMessage());
     }
 
     /**
      * 权限异常
      */
     @ExceptionHandler(value = AuthException.class)
-    public Result fenceAuthException(AuthException e) {
+    public Result authException(AuthException e) {
         return ResultUtils.error(e.getSubject() + ":" + e.getMsg());
     }
 
@@ -59,7 +59,7 @@ public class HandlerRestControllerExceptionAdvice {
      * 数据未找到
      */
     @ExceptionHandler(value = {NoFoundException.class, NoSuchElementException.class})
-    public Result fenceNoFoundException(Exception e) {
+    public Result noFoundException(Exception e) {
         if (e instanceof NoFoundException) {
             NoFoundException nfe = (NoFoundException) e;
             return ResultUtils.fail(nfe.getMsg());

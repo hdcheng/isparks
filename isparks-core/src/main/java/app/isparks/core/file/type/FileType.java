@@ -11,6 +11,8 @@ public enum FileType {
     JPG("jpg",MediaType.IMAGE),
     JPEG("jpeg",MediaType.IMAGE),
     PNG("png",MediaType.IMAGE),
+    WEBP("webp",MediaType.IMAGE),
+    GIF("gif",MediaType.IMAGE),
     PSD("psd",MediaType.UNKNOWN),
     ZIP("zip",MediaType.PACK),
     HTML("html",MediaType.TEXT),

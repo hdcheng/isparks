@@ -53,7 +53,7 @@ public class HikariDataSourceInfo {
 
     //设置默认值
     public HikariDataSourceInfo() {
-        this.poolName = "Fence-Hikari-Pool";
+        this.poolName = "isparks-Hikari-Pool";
         this.mininumIdle = 5;
         this.idleTimeout = 180000L;
         this.maximumPoolSize = 20;

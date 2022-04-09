@@ -80,14 +80,20 @@ public class ResourcesUtils {
      * 读取系统Resource下的文件
      */
     public static String readResources(String fileName){
-        String content = "";
-        try {
-            ClassPathResource resource= new ClassPathResource(fileName);
-            content =  FileUtils.readFileToString(resource.getFile(),CHARSET);
+        ClassPathResource resource= new ClassPathResource(fileName);
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))){
+            StringBuffer buf = new StringBuffer();
+
+            String line ;
+            while ( (line = reader.readLine()) != null ){
+                buf.append(line);
+            }
+
+            return buf.toString();
         }catch (IOException e){
             log.error("读取系统资源文件出错",e);
-        }finally {
-            return content;
+            return "";
         }
     }
 

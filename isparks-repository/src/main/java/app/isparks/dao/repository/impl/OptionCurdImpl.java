@@ -42,4 +42,5 @@ public class OptionCurdImpl extends OptionCurd {
     public List<Option> selectByCond(Option t) {
         return mapper.selectByCond(t);
     }
+
 }

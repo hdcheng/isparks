@@ -43,7 +43,7 @@ public class InitParam extends UserParam {
     private String DBPassword;
 
     /**
-     * 数据库名,如：fence
+     * 数据库名,如：isparks
      */
     private String DBName;
 
