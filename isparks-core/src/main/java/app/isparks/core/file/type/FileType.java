@@ -18,7 +18,8 @@ public enum FileType {
     HTML("html",MediaType.TEXT),
     TEXT("txt",MediaType.TEXT),
     PDF("pdf",MediaType.TEXT),
-    UNKNOWN("unknown",MediaType.UNKNOWN);
+    UNKNOWN("unknown",MediaType.UNKNOWN),
+    MP3("mp3",MediaType.AUDIO);
 
     FileType(String suffix,MediaType type){
         this.suffix = suffix;this.mediaType = type;
