@@ -29,5 +29,9 @@ public interface IAdminService {
      */
     boolean logout(String username);
 
-
+    /**
+     * 获取 key 对应的 jwt token
+     * key 可以是用户名 或 ip
+     */
+    Optional<String> authToken(String key);
 }

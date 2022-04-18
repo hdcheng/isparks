@@ -1,23 +1,21 @@
 package app.isparks.service.impl;
 
-import app.isparks.core.exception.InvalidValueException;
+import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.exception.NoFoundException;
 import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
-import app.isparks.core.pojo.param.LoginParam;
 import app.isparks.core.security.jwt.exception.JWTException;
 import app.isparks.core.service.IAdminService;
 import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
-import app.isparks.core.util.BeanUtils;
-import app.isparks.core.util.ValidateUtils;
+import app.isparks.core.util.*;
 import app.isparks.core.service.support.BaseService;
 import app.isparks.service.security.jwt.JwtHandler;
-import org.jose4j.jwt.consumer.InvalidJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 public class AdminServiceImpl extends BaseService implements IAdminService {
 
     private Logger log = LoggerFactory.getLogger(AdminServiceImpl.class);
+
+    private final static String AUTH_CACHE_KEY_PREFIX = ISparksConstant.AUTHORIZATION + ":";
 
     private IUserService userService;
 
@@ -90,7 +90,15 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
                 default: TOKEN_CACHE_MILLIS = 1000 * 60 * 8;
             }
 
-            cacheService.saveStringWithExpires(userDTO.getUserName(),tokenId,TOKEN_CACHE_MILLIS);
+            cacheService.saveStringWithExpires(ISparksConstant.AUTHORIZATION + userDTO.getUserName(),tokenId,TOKEN_CACHE_MILLIS);
+
+            // ip 跟 token 的 映射
+            HttpServletRequest request= HttpUtils.getHttpServletRequest();
+            String ip = IpUtils.obtainIp(request);
+            if(!StringUtils.isEmpty(ip)){
+                cacheService.saveStringWithExpires(AUTH_CACHE_KEY_PREFIX + userDTO.getUserName(),token,TOKEN_CACHE_MILLIS);
+                cacheService.saveStringWithExpires(AUTH_CACHE_KEY_PREFIX + ip,token,TOKEN_CACHE_MILLIS);
+            }
         }
         return Optional.ofNullable(userDTO);
     }
@@ -102,4 +110,12 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
         return cacheService.invalidate(username);
     }
 
+    @Override
+    public Optional<String> authToken(String key) {
+        if(key == null || key.isEmpty()){
+            return Optional.empty();
+        }
+        String token = cacheService.getString(AUTH_CACHE_KEY_PREFIX + key);
+        return (token == null || token.isEmpty())? Optional.empty() : Optional.ofNullable(token);
+    }
 }

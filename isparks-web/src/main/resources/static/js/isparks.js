@@ -1117,19 +1117,12 @@ const AUTH_KEY = "authorization";
 const DEFAULT_TOKEN_CACHE = 1000 * 60 * 60 * 24 * 7;
 const auth = {
     getToken: function() {
-        let token = cookies.get(AUTH_KEY);
-        if (!token) {
-            token = cache.get(AUTH_KEY);
-        }
+        let token = cache.get(AUTH_KEY);
         return token;
     },
     setToken: function(token) {
         if (token) {
-            if (cookies.cookieEnabled()) {
-                cookies.set(AUTH_KEY, token, DEFAULT_TOKEN_CACHE);
-            } else {
-                cache.set(AUTH_KEY, token, DEFAULT_TOKEN_CACHE);
-            }
+            cache.set(AUTH_KEY, token, DEFAULT_TOKEN_CACHE);
         }
     },
     getClaims: function() {
@@ -1144,7 +1137,6 @@ const auth = {
         }
     },
     removeToken: function() {
-        cookies.delete(AUTH_KEY);
         cache.delete(AUTH_KEY);
     }
 };
@@ -1342,7 +1334,7 @@ const resolve_url_params = function(api) {
     }
 };
 const page_info_storage = function(api, res) {
-    if (res.code == 8101 && res.data.page) {
+    if (res.code == 8101 && res.data && res.data.page) {
         let title = get_key_from_href(api.href, api.title);
         localStorage.setItem(title + "[page]", typeof res.data.page === 'number' ? res.data.page + "" : "1");
         localStorage.setItem(title + "[total_page]", typeof res.data.totalPage === 'number' ? res.data.totalPage + "" : "1");

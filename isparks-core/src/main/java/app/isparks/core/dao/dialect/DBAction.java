@@ -114,7 +114,7 @@ public abstract class DBAction implements DDLAction, DMLAction{
      */
     public static final ResultSet executeSQL(String sql , String url , String username , String pwd) throws SQLException{
 
-        if(StringUtils.hasEmpty(sql,url,url,pwd)){
+        if(StringUtils.hasEmpty(sql,url,url)){
             throw new SQLException("database parameters is empty.");
         }
 

@@ -1,5 +1,6 @@
 package app.isparks.service.impl;
 
+import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.exception.AuthException;
 import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.pojo.converter.ConverterFactory;
@@ -187,8 +188,7 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
                 LocalThreadUtils.addValue(THREAD_USER_KEY,user);
 
                 if(!StringUtils.isEmpty(user)){
-                    //String tokenId = (String) cacheStore.get(user).orElse("");
-                    String tokenId = cacheService.getString(user);
+                    String tokenId = cacheService.getString(ISparksConstant.AUTHORIZATION + user);
                     if(tokenId.equals(claims.get("jti"))){
                         return true;
                     }

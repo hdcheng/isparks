@@ -1,9 +1,11 @@
 package app.isparks.web.config;
 
 import app.isparks.core.config.ISparksProperties;
+import app.isparks.core.service.IAdminService;
 import app.isparks.core.util.FileUtils;
 import app.isparks.core.service.IUserService;
 import app.isparks.service.impl.AbstractCacheService;
+import app.isparks.service.impl.AdminServiceImpl;
 import app.isparks.service.impl.CacheServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import app.isparks.web.interceptor.JwtInterceptor;
@@ -33,8 +35,11 @@ public class WebConfig extends WebMvcConfigurationSupport {
 
     private IUserService userService;
 
-    public WebConfig(UserServiceImpl userService, CacheServiceImpl cacheService){
+    private IAdminService adminService;
+
+    public WebConfig(UserServiceImpl userService, AdminServiceImpl adminService, CacheServiceImpl cacheService){
         this.userService = userService;
+        this.adminService = adminService;
         this.cacheService = cacheService;
     }
 
@@ -68,7 +73,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         //不拦截的地址
         String[] jwtExcludePath = {"/admin/login", "/admin/install","/api/admin/install","/v1/admin/authenticate","/api/admin/authenticate","/v1/admin/init","/v1/admin/installed"};
 
-        registry.addInterceptor(new JwtInterceptor(userService,JWT_OPEN))
+        registry.addInterceptor(new JwtInterceptor(userService,adminService,JWT_OPEN))
                 .addPathPatterns(jwtPath)
                 .excludePathPatterns(jwtExcludePath);
     }
@@ -93,9 +98,4 @@ public class WebConfig extends WebMvcConfigurationSupport {
                     .addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
     }
-
-    public static void main(String[] args) {
-        System.out.println(new Date().getTime());
-    }
-
 }

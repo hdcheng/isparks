@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -111,8 +112,8 @@ public class Jose4jImpl extends AJwt {
             JwtClaims claims = jwtConsumer.processToClaims(token);
             return claims.getClaimsMap();
         }catch (InvalidJwtException e){
-            //throw new JWTAuthException().withReason(handleException(e));
-            return new HashMap<>();
+            log.warn("Get jwt-token claims exception",e.getMessage());
+            return Collections.EMPTY_MAP;
         }
     }
 
@@ -190,6 +191,8 @@ public class Jose4jImpl extends AJwt {
                 jwtClaims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + expire * 60 * 1000));break;
             case HOURS:
                 jwtClaims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + expire * 3600 * 1000));break;
+            case DAYS:
+                jwtClaims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + expire * 3600 * 1000 * 24));break;
             default:
                 jwtClaims.setExpirationTime(NumericDate.fromMilliseconds(System.currentTimeMillis() + 30000));break; // 默认30秒
         }

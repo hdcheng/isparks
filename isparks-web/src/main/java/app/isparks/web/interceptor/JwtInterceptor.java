@@ -2,7 +2,9 @@ package app.isparks.web.interceptor;
 
 import app.isparks.core.config.ISparksConstant;
 import app.isparks.core.pojo.enums.ResultType;
+import app.isparks.core.service.IAdminService;
 import app.isparks.core.service.IUserService;
+import app.isparks.core.util.IpUtils;
 import app.isparks.core.util.JsonUtils;
 import app.isparks.core.util.StringUtils;
 import app.isparks.core.web.support.Result;
@@ -35,27 +37,24 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     private IUserService userService;
 
+    private IAdminService adminService;
+
     private JwtInterceptor(){}
 
-    public JwtInterceptor(IUserService userService,boolean open){
-        this(userService);
+    public JwtInterceptor(IUserService userService,IAdminService adminService,boolean open){
+        this(userService,adminService);
         this.open = open;
     }
 
-    public JwtInterceptor(IUserService userService){
+    public JwtInterceptor(IUserService userService, IAdminService adminService){
         this.userService = userService;
+        this.adminService = adminService;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         if(!open){return true;}
-
-//        String uri = request.getRequestURI();
-////
-////        if (uri.endsWith("/v1/admin/authenticate") || uri.endsWith("/api/admin/authenticate") || uri.endsWith("/v1/admin/init") || uri.endsWith("/v1/admin/installed")) {
-////            return true;
-////        }
 
         String jwtToken = getTokenFromRequest(request);
 
@@ -85,19 +84,19 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     private String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader(ISparksConstant.AUTHORIZATION);
 
-        if(StringUtils.isEmpty(token)){
-            // 从cookie中获取
-            Cookie[] cookies = request.getCookies();
-            if(cookies != null){
-                int len = cookies.length;
-                for (int i = 0 ; i < len ; ++i){
-                    if (cookies[i].getName().equals(ISparksConstant.AUTHORIZATION)){
-                        token = cookies[i].getValue();
-                        break;
-                    }
-                }
-            }
-        }
+//        if(StringUtils.isEmpty(token)){
+//            // 从cookie中获取
+//            Cookie[] cookies = request.getCookies();
+//            if(cookies != null){
+//                int len = cookies.length;
+//                for (int i = 0 ; i < len ; ++i){
+//                    if (cookies[i].getName().equals(ISparksConstant.AUTHORIZATION)){
+//                        token = cookies[i].getValue();
+//                        break;
+//                    }
+//                }
+//            }
+//        }
         if (StringUtils.isEmpty(token)) {
             // 从属性获取
             Map<String, String[]> map = request.getParameterMap();
@@ -108,6 +107,10 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         }
         if(!StringUtils.isEmpty(token) && token.startsWith(prefix)){
             token = token.replace(prefix,"");
+        }
+
+        if( StringUtils.isEmpty(token) && !isAsyncRequest(request)){
+            token = adminService.authToken(IpUtils.obtainIp(request)).orElse(null);
         }
 
         return token;
