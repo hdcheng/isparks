@@ -84,19 +84,6 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
     private String getTokenFromRequest(HttpServletRequest request) {
         String token = request.getHeader(ISparksConstant.AUTHORIZATION);
 
-//        if(StringUtils.isEmpty(token)){
-//            // 从cookie中获取
-//            Cookie[] cookies = request.getCookies();
-//            if(cookies != null){
-//                int len = cookies.length;
-//                for (int i = 0 ; i < len ; ++i){
-//                    if (cookies[i].getName().equals(ISparksConstant.AUTHORIZATION)){
-//                        token = cookies[i].getValue();
-//                        break;
-//                    }
-//                }
-//            }
-//        }
         if (StringUtils.isEmpty(token)) {
             // 从属性获取
             Map<String, String[]> map = request.getParameterMap();
@@ -105,13 +92,28 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 token = values[0];
             }
         }
+
+        if(StringUtils.isEmpty(token)){
+            // 从cookie中获取
+            Cookie[] cookies = request.getCookies();
+            if(cookies != null){
+                int len = cookies.length;
+                for (int i = 0 ; i < len ; ++i){
+                    if (cookies[i].getName().equals(ISparksConstant.AUTHORIZATION)){
+                        token = cookies[i].getValue();
+                        break;
+                    }
+                }
+            }
+        }
+
         if(!StringUtils.isEmpty(token) && token.startsWith(prefix)){
             token = token.replace(prefix,"");
         }
 
-        if( StringUtils.isEmpty(token) && !isAsyncRequest(request)){
-            token = adminService.authToken(IpUtils.obtainIp(request)).orElse(null);
-        }
+//        if( StringUtils.isEmpty(token) && !isAsyncRequest(request)){
+//            token = adminService.authToken(IpUtils.obtainIp(request)).orElse(null);
+//        }
 
         return token;
     }

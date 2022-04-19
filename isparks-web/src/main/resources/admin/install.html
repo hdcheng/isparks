@@ -168,6 +168,7 @@
 <script th:src="@{/static/js/uikit.min.js}" type="text/javascript"></script>
 <script th:src="@{/static/js/uikit-icons.min.js}" type="text/javascript"></script>
 <script th:src="@{/static/js/vue.min.js}"></script>
+<script src="../static/js/isparks.js" th:src="@{/static/js/isparks.js}"></script>
 <script>
     
     window.onload = function(){
@@ -213,6 +214,8 @@
                     const request = new XMLHttpRequest();
                     request.open('POST', url, true);
                     request.setRequestHeader("Content-type", "application/json");
+                    // 密码加密
+                    this.params.password = i$.algorithm.md5(this.params.password);
                     request.send(JSON.stringify(this.params));
                     // 相应回调函数
                     request.onreadystatechange = function () {

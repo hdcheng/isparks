@@ -123,12 +123,16 @@ function buildApp(){
                             token : i$.auth.getToken()
                         }
                     },(res,msg) => {
-                        console.log(msg);
+                        i$.cookies.set("authorization",i$.auth.getToken());
+                        window.location.href = "/admin";
                     });
                 }
             },
             login(){
                 const login_params = this.loginParams;
+                // 密码加密
+                login_params.password = i$.algorithm.md5(login_params.password);
+
                 i$.cache.set("login_username",login_params.username);
                 i$.cache.set("login_remember",login_params.remember);
                 if(app.loginParams.password == password_placeholder){
@@ -138,9 +142,9 @@ function buildApp(){
                         href :"v1/admin/authenticate",
                         params : login_params
                     },(res) => {
-                        console.log(res);
                         i$.toast.info("欢迎：" + res.nickName + " 登录成功");
                         i$.auth.setToken(res.token);
+                        i$.cookies.set("authorization",res.token);
                         window.location.href = "/admin";
                     },(msg) => {
                         this.captcha = null;
