@@ -4,37 +4,16 @@ description = "isparks for person"
 
 buildscript {
     ext{
-        springBootVersion = '2.3.4.RELEASE'
+        springBootVersion = '2.6.6'
     }
     repositories {
-        maven { url = 'https://maven.aliyun.com/repository/public' }
-        jcenter()
         mavenCentral()
+        google()
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
     }
 }
-
-repositories {
-    mavenLocal()
-    maven {
-        url 'https://maven.aliyun.com/repository/spring-plugin'
-    }
-    maven {
-        url 'https://maven.aliyun.com/repository/spring'
-    }
-    maven {
-        url 'https://maven.aliyun.com/repository/public'
-    }
-    maven {
-        url "https://maven.aliyun.com/repository/public"
-    }
-
-    mavenCentral()
-    jcenter()
-}
-
 
 // 版本统一管理
 ext {
@@ -56,7 +35,7 @@ ext {
     yamlVersion = '1.26'
     servletVersion = '4.0.1'
     slf4jVersion = '1.7.30'
-    logbackVersion = '1.2.3'
+    logbackVersion = '1.2.11'
     logbackExpSpringVersion = '0.1.5'
     pf4jVersion = '3.5.0'
     commonsioVersion = '2.8.0'
@@ -69,6 +48,12 @@ ext {
  * 所有项目共享的配置
  */
 allprojects {
+
+    repositories {
+        mavenCentral()
+        google()
+    }
+
     apply plugin: 'idea'
     //apply plugin: 'eclipse'
     apply plugin: 'java'
@@ -93,10 +78,10 @@ allprojects {
     // 依赖
     dependencies {
         // log
-        compile "ch.qos.logback:logback-classic:$logbackVersion"
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
-        compile "org.logback-extensions:logback-ext-spring:$logbackExpSpringVersion"
-        compile "org.slf4j:jcl-over-slf4j:$slf4jVersion"
+        implementation "ch.qos.logback:logback-classic:$logbackVersion"
+        implementation "org.slf4j:slf4j-api:$slf4jVersion"
+        implementation "org.logback-extensions:logback-ext-spring:$logbackExpSpringVersion"
+        implementation "org.slf4j:jcl-over-slf4j:$slf4jVersion"
 
         // test
         testCompileOnly "org.springframework:spring-test:$springVersion"

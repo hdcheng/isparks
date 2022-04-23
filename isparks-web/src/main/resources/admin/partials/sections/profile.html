@@ -404,23 +404,25 @@ app = new Vue({
                 href:"v1/admin/user/pwd",
                 params:{
                     userName:this.user.userName,
-                    oldPwd:this.oldPwd,
-                    newPwd:this.newPwd
+                    oldPwd: i$.algorithm.md5(this.oldPwd),
+                    newPwd: i$.algorithm.md5(this.newPwd)
                 }
             },(res) => {
                 // TODO:清除 token，更换方法
-                if(Utils.auth.removeToken()){
+                if(i$.auth.removeToken()){
                     window.location.href = "/admin/login";
                 }
             });
         },
         logout(){ // 注销登录
-            const userName = Utils.auth.getInfoFromToken("user");
-            i$.get("v1/admin/logout/"+userName,(res)=> {
-                if(Utils.auth.removeToken()){
-                    window.location.href = "/admin/login";
-                }
-            });
+            const userName = i$.auth.getClaims().user;
+            if(userName){
+                i$.get("v1/admin/logout/"+userName,(res)=> {
+                    if(i$.auth.removeToken()){
+                        window.location.href = "/admin/login";
+                    }
+                });
+            }
         }
     },
     created(){

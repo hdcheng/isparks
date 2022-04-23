@@ -1071,6 +1071,38 @@ const kit = {
             }
             return format;
         }
+    },
+    object: {
+        deepClone: function(obj) {
+            let copy;
+            if (null == obj || "object" != typeof obj) return obj;
+            if (obj instanceof Date) {
+                copy = new Date();
+                copy.setTime(obj.getTime());
+                return copy;
+            }
+            if (obj instanceof Array) {
+                copy = [];
+                for(let i = 0, len = obj.length; i < len; i++){
+                    copy[i] = kit.object.deepClone(obj[i]);
+                }
+                return copy;
+            }
+            if (obj instanceof Function) {
+                copy = function() {
+                    return obj.apply(this, arguments);
+                };
+                return copy;
+            }
+            if (obj instanceof Object) {
+                copy = {};
+                for(let attr in obj){
+                    if (obj.hasOwnProperty(attr)) copy[attr] = kit.object.deepClone(obj[attr]);
+                }
+                return copy;
+            }
+            throw new Error("Unable to copy obj as type isn't supported " + obj.constructor.name);
+        }
     }
 };
 const cookies = {
@@ -1355,6 +1387,7 @@ const auth = {
     removeToken: function() {
         cookies.delete(AUTH_KEY);
         cache.delete(AUTH_KEY);
+        return true;
     }
 };
 const line = "==============================";
@@ -1491,7 +1524,9 @@ const is_request = function(api, success, fail, error) {
     switch(api.method.toUpperCase()){
         case "GET":
             http.get(api.href, DEFAULT_HEADERS).then((res)=>{
-                page_info_storage(api, res);
+                if (res && res.data && res.data.page) {
+                    page_info_storage(api, res);
+                }
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
@@ -1499,7 +1534,9 @@ const is_request = function(api, success, fail, error) {
             break;
         case "POST":
             http.post(api.href, JSON.stringify(api.body), DEFAULT_HEADERS).then((res)=>{
-                page_info_storage(api, res);
+                if (res && res.data && res.data.page) {
+                    page_info_storage(api, res);
+                }
                 resolveResult(res, success, fail, error);
             }).catch((err)=>{
                 resolveError(err, error);
@@ -1557,7 +1594,9 @@ const page_info_storage = function(api, res) {
         localStorage.setItem(title + "[page]", typeof res.data.page === 'number' ? res.data.page + "" : "1");
         localStorage.setItem(title + "[total_page]", typeof res.data.totalPage === 'number' ? res.data.totalPage + "" : "1");
         localStorage.setItem(title + "[total_data]", typeof res.data.totalData === 'number' ? res.data.totalData + "" : "0");
-        localStorage.setItem(title + "[size]", typeof api.params.size === 'number' ? api.params.size + "" : "10");
+        if (api.params) {
+            localStorage.setItem(title + "[size]", typeof api.params.size === 'number' ? api.params.size + "" : "10");
+        }
     }
 };
 const is_request_page = function(api, success, fail, error, page, size) {

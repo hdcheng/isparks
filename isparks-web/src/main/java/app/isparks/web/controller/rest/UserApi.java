@@ -4,8 +4,10 @@ import app.isparks.core.anotation.Log;
 import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.enums.LogType;
 import app.isparks.core.pojo.param.UpdateUserParam;
+import app.isparks.core.service.IAdminService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.web.support.Result;
+import app.isparks.service.impl.AdminServiceImpl;
 import app.isparks.service.impl.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +25,11 @@ public class UserApi extends BasicApi{
 
     private IUserService userService;
 
-    public UserApi(UserServiceImpl userService){
+    private IAdminService adminService;
+
+    public UserApi(UserServiceImpl userService, AdminServiceImpl adminService){
         this.userService = userService;
+        this.adminService = adminService;
     }
 
     @GetMapping("user/login")
@@ -53,7 +58,7 @@ public class UserApi extends BasicApi{
     public Result updatePassword(@RequestParam("userName")String userName,
                                  @RequestParam("oldPwd")String oldPwd,
                                  @RequestParam("newPwd")String newPwd){
-        return build(userService.updatePwd(userName,oldPwd,newPwd));
+        return build(userService.updatePwd(userName,oldPwd,newPwd) && adminService.logout(userName));
     }
 
 }

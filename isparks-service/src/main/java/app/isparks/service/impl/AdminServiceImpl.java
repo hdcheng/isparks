@@ -90,7 +90,7 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
                 default: TOKEN_CACHE_MILLIS = 1000 * 60 * 8;
             }
 
-            cacheService.saveStringWithExpires(ISparksConstant.AUTHORIZATION + userDTO.getUserName(),tokenId,TOKEN_CACHE_MILLIS);
+            cacheService.saveStringWithExpires(usernameTokenIdCacheKey(userDTO.getUserName()),tokenId,TOKEN_CACHE_MILLIS);
 
             // ip 跟 token 的 映射
             HttpServletRequest request= HttpUtils.getHttpServletRequest();
@@ -107,7 +107,7 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
     public boolean logout(String username) {
         notEmpty(username, "username must not be empty");
 
-        return cacheService.invalidate(username);
+        return cacheService.invalidate(usernameTokenIdCacheKey(username));
     }
 
     @Override
@@ -118,4 +118,12 @@ public class AdminServiceImpl extends BaseService implements IAdminService {
         String token = cacheService.getString(AUTH_CACHE_KEY_PREFIX + key);
         return (token == null || token.isEmpty())? Optional.empty() : Optional.ofNullable(token);
     }
+
+    /**
+     * cache jwt token id key
+     */
+    private String usernameTokenIdCacheKey(String username){
+        return ISparksConstant.AUTHORIZATION + username;
+    }
+
 }

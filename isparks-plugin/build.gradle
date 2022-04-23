@@ -12,6 +12,5 @@ dependencies {
 
     // 依赖核心库
     implementation project(":isparks-core")
-    //implementation project(":addons")
 
 }

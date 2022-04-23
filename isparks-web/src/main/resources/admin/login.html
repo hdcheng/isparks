@@ -125,11 +125,13 @@ function buildApp(){
                     },(res,msg) => {
                         i$.cookies.set("authorization",i$.auth.getToken());
                         window.location.href = "/admin";
+                    },() => {
+                        i$.auth.removeToken();
                     });
                 }
             },
             login(){
-                const login_params = this.loginParams;
+                const login_params = i$.kit.object.deepClone(this.loginParams);
                 // 密码加密
                 login_params.password = i$.algorithm.md5(login_params.password);
 

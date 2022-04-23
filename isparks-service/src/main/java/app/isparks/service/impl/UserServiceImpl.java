@@ -9,6 +9,7 @@ import app.isparks.core.pojo.dto.UserDTO;
 import app.isparks.core.pojo.entity.User;
 import app.isparks.core.pojo.param.UpdateUserParam;
 import app.isparks.core.pojo.param.UserParam;
+import app.isparks.core.service.IAdminService;
 import app.isparks.core.service.ICacheService;
 import app.isparks.core.service.IUserService;
 import app.isparks.core.util.BeanUtils;
@@ -47,7 +48,7 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
 
     private ICacheService cacheService;
 
-    public UserServiceImpl(UserCurdImpl userCurd,CacheServiceImpl cacheService) {
+    public UserServiceImpl(UserCurdImpl userCurd,CacheServiceImpl cacheService ) {
         super(userCurd);
         this.userCurd = userCurd;
 
@@ -108,7 +109,9 @@ public class UserServiceImpl extends AbstractService<User> implements IUserServi
         String encryptPwd = encryptPassword(newPwd);
         newUser.setPassword(encryptPwd);
 
-        return abstractUpdate(newUser).isPresent();
+        boolean success = abstractUpdate(newUser).isPresent();
+
+        return success;
     }
 
     @Override

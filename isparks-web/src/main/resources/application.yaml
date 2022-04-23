@@ -24,3 +24,5 @@ spring:
     #aop:
     #使用 cglib 生成代理
     #proxy-target-class: true
+  main:
+    allow-circular-references: true
