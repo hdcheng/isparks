@@ -24,4 +24,7 @@ public interface CommentMapper {
     // 根据id更新
     int updateById(Comment c);
 
+    // 根据IP查找
+    Long selectRecentTimestampByIp(String ip);
+
 }

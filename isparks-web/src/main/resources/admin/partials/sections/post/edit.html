@@ -28,7 +28,7 @@
         flex-wrap:wrap-reverse;
     }
     .is-eidt-menu-button{
-
+        margin-right: 0.6rem;
     }
     .is-edit-content{
         display: flex;
@@ -157,6 +157,7 @@
                 </div>
             </div>
             <!-- md content modal -->
+            <span class="is-eidt-menu-button" @click="resolve_file"><span uk-icon="icon: cloud-upload"></span></span>
         </div>
         <div class="is-edit-content">
             <textarea id="markdownTextContent" class="is-edit-content-left uk-border-rounded" contenteditable="true" v-model="markdownText" >
@@ -363,6 +364,29 @@ loadJS("/static/plugins/marked/marked.min.js",function(){
                 if(app_params && app_params.edit_post_id){
                     this.postId = app_params.edit_post_id;
                     app_params.edit_post_id = null;
+                }
+            },
+            resolve_file(){
+                let input = document.createElement("input");
+                input.accept = '.md,.txt';
+                input.type = "file";
+                input.click();
+                input.onchange = () => {
+                    let file = input.files[0];
+                    let form = new FormData();
+                    form.append("file", file); //第一个参数是后台读取的请求key值
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "v1/admin/file/content");
+                    xhr.setRequestHeader("authorization", i$.auth.getToken());
+                    xhr.send(form); //发送表单数据
+                    xhr.onreadystatechange = () => {
+                        if(xhr.readyState==4 && xhr.status==200 ){
+                            let resultObj = JSON.parse(xhr.responseText);
+                            if(resultObj.code == 8101){
+                                this.markdownText = resultObj.data
+                            }
+                        }
+                    }
                 }
             }
         },

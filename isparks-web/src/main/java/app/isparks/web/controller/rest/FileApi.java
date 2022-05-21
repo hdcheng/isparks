@@ -17,7 +17,10 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 /**
@@ -121,6 +124,24 @@ public class FileApi extends BasicApi{
     public Result restoreById(@PathVariable("id") String id){
         return ResultUtils.build(fileService.restoreById(id));
     }
+
+    @PostMapping("file/content")
+    @ApiOperation(" Read file content | 读取文件信息")
+    public Result resolveFileContent(@RequestParam("file") MultipartFile file)throws IOException{
+        try (InputStream is = file.getInputStream()){
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder content = new StringBuilder();
+            String line ;
+            while ((line = br.readLine()) != null){
+                content.append(line);
+                content.append("\r\n");
+            }
+            return build(true).withData(content.toString());
+        }catch (IOException e){
+            return build(false).withMsg("Read file failed.");
+        }
+    }
+
 
     public static void parseResourceLocationToLinks(PageData<FileDTO> pageData){
         UrlUtils.parseStaticResourceToUrlLinks(pageData.getData(),dto -> dto.getLocation(), (dto,location) -> dto.setLocation(location));

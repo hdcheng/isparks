@@ -36,7 +36,6 @@ public class Comment extends BaseEntity {
      */
     private String ip;
 
-
     public String getContent() {
         return content;
     }

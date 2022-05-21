@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 import org.springframework.util.unit.DataUnit;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -27,6 +30,18 @@ public class HttpConfig {
         // 所有文件上传总最大值 20 MB
         factory.setMaxRequestSize(DataSize.of(20, DataUnit.MEGABYTES));
         return factory.createMultipartConfig();
+    }
+
+
+    @Bean
+    public CorsFilter corsFilter(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedMethod("*");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(source);
     }
 
 }

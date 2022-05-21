@@ -1,9 +1,13 @@
 package app.isparks.service.impl;
 
+import app.isparks.core.exception.InvalidValueException;
 import app.isparks.core.pojo.enums.DataStatus;
 import app.isparks.core.pojo.enums.EntityType;
 import app.isparks.core.pojo.page.PageData;
 import app.isparks.core.pojo.page.PageInfo;
+import app.isparks.core.util.HttpUtils;
+import app.isparks.core.util.IpUtils;
+import app.isparks.core.util.StringUtils;
 import org.slf4j.Logger;
 import java.util.Optional;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl extends AbstractService<Comment> implements ICommentService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private final static long MIN_COMMENT_INTERVAL = 1000 * 60;
 
     private IPostService postService;
 
@@ -49,6 +55,16 @@ public class CommentServiceImpl extends AbstractService<Comment> implements ICom
     @Transactional
     public Optional<CommentDTO> create(CommentParam param) {
         notNull(param,"comment must not be null");
+
+        String ip = IpUtils.obtainIp(HttpUtils.getHttpServletRequest());
+
+        notEmpty(ip,"can't get ip info.");
+
+        Long recentCommentTime = commentCurd.selectRecentTimeByIp(ip);
+
+        if(recentCommentTime != null && MIN_COMMENT_INTERVAL > System.currentTimeMillis() - recentCommentTime){
+            throw new InvalidValueException("comment too often.");
+        }
 
         if(postService.existId(param.getPostId())){
             Comment comment = commentConverter.map(param);

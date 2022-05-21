@@ -67,4 +67,14 @@ public class CommentCurdImpl extends CommentCurd {
         });
         return comments;
     }
+
+    @Override
+    public Long selectRecentTimeByIp(String ip) {
+        if(ip == null || ip.isEmpty()){
+            return null;
+        }
+        return mapper.selectRecentTimestampByIp(ip);
+    }
+
+
 }

@@ -165,4 +165,9 @@
         WHERE
         id = #{id}
     </update>
+
+    <select id="selectRecentTimestampByIp" resultType="long">
+        SELECT create_time FROM  <include refid="table"/> WHERE ip = #{ip} ORDER BY create_time DESC LIMIT 1
+    </select>
+
 </mapper>

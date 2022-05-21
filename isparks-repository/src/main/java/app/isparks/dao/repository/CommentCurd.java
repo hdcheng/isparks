@@ -16,5 +16,10 @@ public abstract class CommentCurd extends AbstractCurd<Comment> {
 
     public abstract List<Comment> selectByIds(List<String> ids);
 
+    /**
+     * select recent comment timestamp by ip.
+     * @return Long or null
+     */
+    public abstract Long selectRecentTimeByIp(String ip);
 
 }
