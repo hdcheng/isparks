@@ -26,10 +26,10 @@ public class Router {
     private static final String DEFAULT_PAGE_FRAGMENT = "fra";
 
     // 页面模块路径
-    private static final String PAGE_PATH = "partials/sections/";
+    private static final String PAGE_PATH = "partials/";
 
     // 插件文件路径
-    private static final String PLUGIN_PATH = "plugin/sections/";
+    private static final String PLUGIN_PATH = "plugin/";
 
     // 目录
     private final static List<Menu> DEFAULT_MENUS = new ArrayList<>();
