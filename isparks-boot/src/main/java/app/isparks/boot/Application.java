@@ -1,10 +1,11 @@
-package app.isparks.web;
+package app.isparks.boot;
 
 import app.addons.AddonBoot;
 import app.isparks.core.config.ISparksProperties;
 import app.isparks.core.framework.ISparksApplication;
 import app.isparks.plugin.PluginBoot;
 import app.isparks.service.ServiceBoot;
+import app.isparks.web.WebBoot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -29,10 +30,7 @@ public class Application {
 
         Arrays.asList(args).forEach((arg) -> System.out.println(arg) );
 
-        ISparksApplication
-                .instance()
-                .register("service",new ServiceBoot(args))
-                .register("plugin",new PluginBoot(args))
+        ISparksApplication.instance()
                 .register("web",new WebBoot(args))
                 .register("addons",new AddonBoot());
 

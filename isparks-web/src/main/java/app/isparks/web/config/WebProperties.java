@@ -1,8 +1,6 @@
 package app.isparks.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
@@ -14,7 +12,7 @@ import java.io.File;
  * @date 2020/7/22
  */
 @Configuration
-public class WebProperties implements ApplicationRunner {
+public class WebProperties{
 
     /**
      * 静态资源访问路径
@@ -26,12 +24,6 @@ public class WebProperties implements ApplicationRunner {
      */
     public static String HOST = "http://127.0.0.1:8174";
 
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-
-
-    }
 
     @Value("${spring.application.name}")
     public void setAppName(String name){

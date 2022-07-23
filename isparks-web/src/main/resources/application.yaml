@@ -16,8 +16,8 @@ spring:
   application:
     name: isparks!
   profiles:
+    #active: dev
     active: test
-    #active: test
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss

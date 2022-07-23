@@ -1,4 +1,4 @@
-package app.isparks.web.config;
+package app.isparks.boot.config;
 
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.Map;
 
 /**
@@ -63,7 +64,7 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         }
 
         if(!isAsyncRequest(request)){
-            response.sendRedirect("/admin/login");
+            response.sendRedirect("admin/login");
             return false;
         }
 

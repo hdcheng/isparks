@@ -97,7 +97,4 @@ public class MyBatisConfig {
         return resources.toArray(new Resource[resources.size()]);
     }
 
-
-
-
 }

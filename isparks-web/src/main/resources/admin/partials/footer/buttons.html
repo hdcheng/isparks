@@ -1,8 +1,9 @@
-<div th:fragment="fra" style="display: flex;">
+<div th:fragment="fra" style="display: flex;padding: 0 5px;">
 <script>
     function hideSideBar(){
         let sidebarHidden = document.getElementById("sidebar").hidden;
         localStorage.setItem('sidebar.hidden',!sidebarHidden);
+        document.getElementById("sidebar").hidden = !sidebarHidden;
     }
 </script>
 <style>
@@ -10,5 +11,9 @@
         background: #848484;
     }
 </style>
-<span class="is-buttom-buttons" uk-icon="icon: chevron-double-left; ratio: 1.5" uk-toggle="target: #sidebar; animation: uk-animation-slide-left" style="color: #EDEDED;" onclick="hideSideBar()"></span>
+<!--<span class="is-buttom-buttons" uk-icon="icon: chevron-double-left; ratio: 1.5" uk-toggle="target: #sidebar; animation: uk-animation-slide-left" style="color: #EDEDED;" onclick="hideSideBar()">-->
+<!--</span>-->
+<span class="is-buttom-buttons" style="color: #EDEDED;width:30px;height:30px;" onclick="hideSideBar()">
+    <svg fill="aliceblue;" t="1658554170870" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1315" width="128" height="128"><path d="M160 448a31.146667 31.146667 0 0 1-23.04-8.96 31.146667 31.146667 0 0 1-8.96-23.04v-256a31.146667 31.146667 0 0 1 8.96-23.04 31.146667 31.146667 0 0 1 23.04-8.96h256a31.146667 31.146667 0 0 1 23.04 8.96c5.973333 6.016 8.96 13.696 8.96 23.04v256a31.146667 31.146667 0 0 1-8.96 23.04 31.146667 31.146667 0 0 1-23.04 8.96h-256z m448 0a31.146667 31.146667 0 0 1-23.04-8.96 31.146667 31.146667 0 0 1-8.96-23.04v-256a31.146667 31.146667 0 0 1 8.96-23.04 31.146667 31.146667 0 0 1 23.04-8.96h256a31.146667 31.146667 0 0 1 23.04 8.96c5.973333 6.016 8.96 13.696 8.96 23.04v256a31.146667 31.146667 0 0 1-8.96 23.04 31.146667 31.146667 0 0 1-23.04 8.96h-256zM160 896a31.146667 31.146667 0 0 1-23.04-8.96 31.146667 31.146667 0 0 1-8.96-23.04v-256a31.146667 31.146667 0 0 1 8.96-23.04 31.146667 31.146667 0 0 1 23.04-8.96h256a31.146667 31.146667 0 0 1 23.04 8.96c5.973333 6.016 8.96 13.696 8.96 23.04v256a31.146667 31.146667 0 0 1-8.96 23.04 31.146667 31.146667 0 0 1-23.04 8.96h-256z m448 0a31.146667 31.146667 0 0 1-23.04-8.96 31.146667 31.146667 0 0 1-8.96-23.04v-256a31.146667 31.146667 0 0 1 8.96-23.04 31.146667 31.146667 0 0 1 23.04-8.96h256a31.146667 31.146667 0 0 1 23.04 8.96c5.973333 6.016 8.96 13.696 8.96 23.04v256a31.146667 31.146667 0 0 1-8.96 23.04 31.146667 31.146667 0 0 1-23.04 8.96h-256z" p-id="1316"></path></svg>
+</span>
 </div>

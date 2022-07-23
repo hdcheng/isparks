@@ -52,7 +52,7 @@ public class HandlerRestControllerExceptionAdvice {
      */
     @ExceptionHandler(value = AuthException.class)
     public Result authException(AuthException e) {
-        return ResultUtils.error(e.getSubject() + ":" + e.getMsg());
+        return ResultUtils.fail(e.getSubject() + ":" + e.getMsg());
     }
 
     /**
@@ -62,12 +62,12 @@ public class HandlerRestControllerExceptionAdvice {
     public Result noFoundException(Exception e) {
         if (e instanceof NoFoundException) {
             NoFoundException nfe = (NoFoundException) e;
-            return ResultUtils.fail(nfe.getMsg());
+            return ResultUtils.error(nfe.getMsg());
         } else if (e instanceof NoSuchElementException) {
             NoSuchElementException nse = (NoSuchElementException) e;
-            return ResultUtils.fail("不存在");
+            return ResultUtils.error("不存在");
         }
-        return ResultUtils.fail("error" + e.getMessage());
+        return ResultUtils.error("error" + e.getMessage());
     }
 
     /**

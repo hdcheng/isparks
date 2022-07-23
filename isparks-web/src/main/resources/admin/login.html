@@ -132,13 +132,12 @@ function buildApp(){
             },
             login(){
                 const login_params = i$.kit.object.deepClone(this.loginParams);
-                // 密码加密
-                login_params.password = i$.algorithm.md5(login_params.password);
 
+                login_params.password = i$.algorithm.md5(login_params.password);
                 i$.cache.set("login_username",login_params.username);
                 i$.cache.set("login_remember",login_params.remember);
                 if(app.loginParams.password == password_placeholder){
-                    window.location.href = "/admin";
+                    window.location.href = "admin";
                 }else{
                     i$.get({
                         href :"v1/admin/authenticate",

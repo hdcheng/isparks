@@ -5,3 +5,5 @@ include 'isparks-repository'
 include 'isparks-plugin'
 include 'isparks-web'
 include 'isparks-addons'
+include 'isparks-boot'
+

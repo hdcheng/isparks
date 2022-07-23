@@ -180,7 +180,7 @@
 
     <!-- 简介开始 -->
     <div class="uk-margin">
-        <label class="uk-form-label" for="form-stacked-select">简介</label>
+        <label class="uk-form-label" >简介</label>
         <textarea class="uk-textarea uk-border-rounded" rows="3" v-model="summary"></textarea>
     </div>
     <!-- 简介结束 -->
@@ -190,8 +190,8 @@
     <!-- 按钮开始 -->
     <div class="uk-margin">
         <div class="uk-button-group">
-            <button class="uk-button uk-button-secondary uk-border-rounded" v-if="!isUpdate" @click="create" >发布</button>
-            <button class="uk-button uk-button-secondary uk-border-rounded" v-if="!isUpdate" @click="createTemp" >草稿箱</button>
+            <button class="uk-button uk-button-secondary uk-border-rounded" style="margin-right: 10px;" v-if="!isUpdate" @click="create" >发布</button>
+            <button class="uk-button uk-button-secondary uk-border-rounded"  style="margin-right: 10px;" v-if="!isUpdate" @click="createTemp" >草稿箱</button>
             <button class="uk-button uk-border-rounded" v-if="isUpdate" @click="update" >更新</button>
         </div>
     </div>
