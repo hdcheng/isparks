@@ -1,0 +1,222 @@
+<!-- 模板内容开始 -->
+<section th:fragment="fra" style="height: 100%;width: 100%;display: flex;justify-content: center;align-items: flex-start;">
+<style>
+    .file-table th{
+        text-align: left;
+    }
+</style>
+
+<div id="file-page" style="width: 100%;padding-top: 2rem;" v-cloak >
+    
+    <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+    <div class="js-upload uk-placeholder uk-text-center">
+        <span uk-icon="icon: cloud-upload"></span>
+        <span class="uk-text-middle">上传文件 拖拽到此处或者</span>
+        <div uk-form-custom>
+            <input type="file" multiple>
+            <span class="uk-link">选择一个</span>
+        </div>
+    </div>
+    <ul class="uk-iconnav" style="justify-content: flex-end;">
+        <li><a href="#" uk-icon="icon: trash" uk-toggle="target: #trash-box" @click="openTrash"> 回收站</a></li>
+    </ul>
+    
+    <hr class="uk-divider-icon">
+
+    <div class="uk-overflow-auto">
+        <table class="uk-table uk-table-divider uk-table-responsive file-table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>文件名</th>
+                    <th>文件链接 <span uk-icon="link"></span></th>
+                    <th>文件类型</th>
+                    <th>媒体类型</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(f,index) in files">
+                    <td >{{index+1}}</td>
+                    <td>{{f.origin}}</td>
+                    <td>{{f.location}}</td>
+                    <td style="color: white;background: #6b6b6b;">{{f.fileType}}</td>
+                    <td>{{f.mediaType}}</td>
+                    <td>
+                        <a href="javascript:void(0);" uk-icon="icon: trash" @click="removeById(f.id)"></a>
+                        <a href="javascript:void(0);" uk-icon="icon: copy" @click="copyLink(f.location)"></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ul class="uk-pagination uk-flex-center" uk-margin>
+        <li><a href="#" @click="pre"><span uk-pagination-previous></span></a></li>
+        <li v-for="i of totalPage" :class="page == i ? 'uk-active' : ''"><span v-if="page == i">{{i}}</span><a href="#" v-if="page != i" @click="skip(i)">{{i}}</a></li>
+        <li><a href="#" @click="next"><span uk-pagination-next></span></a></li>
+    </ul>
+    <!-- 回收站开始 -->
+    <div id="trash-box" uk-offcanvas>
+        <div class="uk-offcanvas-bar">
+    
+            <button class="uk-offcanvas-close" type="button" uk-close></button>
+            
+            <ul class="uk-iconnav" style="justify-content:center;margin-top: 1rem;border: 1px solid;padding: 1rem;">
+                <li><a href="#"> 全部清空 </a></li>
+                <li><a href="#"> 全部恢复 </a></li>
+            </ul>
+
+            <table class="uk-table uk-table-hover uk-table-divider">
+                <thead>
+                    <tr>
+                        <th style="text-align: start;">文件名</th>
+                        <th style="text-align: start;">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for = "(file,index) in removedFiles">
+                        <td>{{file.name}}</td>
+                        <td><a href="javascript:void(0);" uk-icon="icon: trash" @click="deleteById(file.id)"></a>
+                            <a href="javascript:void(0);" uk-icon="icon: refresh" @click="restoreById(file.id)"></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+    <!-- 回收站结束 -->
+</div>
+
+<script>
+app = new Vue({
+    el: '#file-page',
+    data:{
+        removedFiles:[],
+        files:[],
+        page:1,
+        totalPage:0,
+        totalData:0
+    },
+    methods:{
+        initPageData(){
+            i$.page("v1/admin/file/page",(res) => {
+                console.log(res);
+                this.files = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
+        },
+        refreshTrashData(){
+            i$.get("v1/admin/file/removed",(res) => {
+                this.removedFiles = res;
+            });
+        },
+        removeById(id){
+            i$.patch("v1/admin/file/remove/"+id,(res) => {
+                this.initPageData();
+                this.removedFiles = [];
+            });
+        },
+        restoreById(id){
+            i$.patch("v1/admin/file/restore/"+id,(res) => {
+                this.initPageData();
+                this.refreshTrashData();
+            });
+        },
+        deleteById(id){
+            i$.delete("v1/admin/file/delete/"+id,(res) => {
+                this.refreshTrashData();
+            });
+        },
+        copyLink(link){ // 复制链接到粘贴板
+            let transfer = document.createElement('input');
+            document.body.appendChild(transfer);
+            transfer.value = link;  // 这里表示想要复制的内容
+            transfer.focus();
+            transfer.select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+            }
+            transfer.blur();
+            document.body.removeChild(transfer);
+            alert("文件链接已经复制");
+        },
+        openTrash(){
+            if(this.removedFiles.length == 0){
+                this.refreshTrashData();
+            }
+        },
+        pre(){
+            i$.pre_page("v1/admin/file/page",(res) => {
+                this.files = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
+        },
+        next(){
+            i$.next_page("v1/admin/file/page",(res) => {
+                this.files = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
+        },
+        skip(page){
+            i$.page({
+                href:"v1/admin/file/page",
+                page:page
+            },(res) => {
+                this.files = res.data;
+                this.page = res.page;
+                this.totalPage = res.totalPage;
+                this.totalData = res.totalData;
+            });
+        }
+        
+    },
+    created(){
+        this.initPageData();
+    }
+});
+var bar = document.getElementById('js-progressbar');
+UIkit.upload('.js-upload', {
+
+    url: '/v1/admin/file/upload',
+    multiple: true,
+    name:'file',
+    params:{
+        "authorization":i$.auth.getToken()
+    },
+    error: function () {
+        console.log('error', arguments);
+    },
+    loadStart: function (e) {
+        bar.removeAttribute('hidden');
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
+    progress: function (e) {
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
+
+    loadEnd: function (e) {
+        bar.max = e.total;
+        bar.value = e.loaded;
+    },
+
+    completeAll: function () {
+        app.initPageData();
+        setTimeout(function () {
+            bar.setAttribute('hidden', 'hidden');
+        }, 1000);
+    }
+
+});
+
+</script>
+</section>
+<!-- 模板内容结束 -->

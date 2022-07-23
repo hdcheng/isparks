@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <title th:text="${title}">预览</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+    <link href="../../static/images/favicon.ico" th:href="@{/static/images/favicon.ico}" rel="icon" >
+    <link rel="stylesheet" th:href="@{/static/css/main.css}">
+</head>
+<style>
+    body{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .post-box{
+        width: 760px;
+        padding:3rem;
+        background-color: snow;
+        border-radius: 3px;
+    }
+    #title{
+        border-bottom: 3px solid slategray;
+        padding:0 1rem;
+        text-align: center;
+    }
+    #content{
+        width: 100%;
+        padding: 1rem;
+        display: contents;
+    }
+    #category{
+        border-top: 3px solid slategray;
+        text-align: center;
+    }
+    #tags{
+        text-align: center;
+    }
+    img{
+        max-width: 100%;
+    }
+
+</style>
+<body style="background-image: url(/static/images/bg.png);">
+<div class="post-box">
+    <h1 id="title"></h1>
+    <div id="content"></div>
+    <div id="category"></div>
+    <div id="tags"></div>
+</div>
+<script th:inline="javascript">
+const content = [[${content}]];
+const title = [[${title}]];
+const tags = [[${tags}]];
+const category = [[${category}]];
+
+window.onload = function(){
+    const tagLen = tags.length;
+    let tagString = "";
+    for(let i = 0 ; i < tagLen ;){
+        tagString += tags[i++].name;
+        if(i < tagLen){
+            tagString += ",";
+        }
+    }
+    document.getElementById("content").innerHTML = marked(content || "");
+    document.getElementById("title").innerHTML = title || "";
+    document.getElementById("category").innerHTML = category.name || "";
+    document.getElementById("tags").innerHTML = tagString || "";
+    hljs.highlightAll();
+}
+</script>
+<script th:src="@{/static/plugins/marked/marked.min.js}"></script>
+<script th:src="@{/static/plugins/highlight/highlight.min.js}"></script>
+</body>
+</html>
